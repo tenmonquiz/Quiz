@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天文4択クイズ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tenmon_quiz.css">
+    </head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="quiz-container" class="container w-full">
+
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-4">
+                <button id="home-button" class="hidden px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-md transition duration-150">
+                    HOME
+                </button>
+                <h1 class="text-3xl font-bold text-gray-100">天文クイズ</h1> 
+            </div>
+            
+            <div id="score-display" class="text-xl font-semibold text-sky-400 p-2 rounded-lg bg-gray-800 shadow-lg">
+                スコア: 0 / 0
+            </div>
+        </div>
+
+        <div id="game-area" class="question-card relative rounded-xl p-6 md:p-8">
+
+            <div id="difficulty-select-screen" class="text-center">
+                <h1 class="text-3xl font-bold text-gray-100 mb-2">天文クイズ</h1>
+                <p class="text-xl text-sky-400 mb-8">難易度を選択してください</p>
+
+                <div class="flex flex-col gap-4">
+                    <button onclick="selectDifficulty('1')" class="difficulty-button level-1 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        難易度 1
+                    </button>
+                    <button onclick="selectDifficulty('2')" class="difficulty-button level-2 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        難易度 2
+                    </button>
+                    <button onclick="selectDifficulty('3')" class="difficulty-button level-3 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        難易度 3
+                    </button>
+                    <button onclick="selectDifficulty('4')" class="difficulty-button level-4 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        難易度 4
+                    </button>
+                    <button onclick="selectDifficulty('5')" class="difficulty-button level-5 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        難易度 5
+                    </button>
+                </div>
+
+                <div class="absolute bottom-3 right-4">
+                    <a href="secret.html" 
+                       class="text-xs text-[#171c23] hover:text-sky-400 no-underline transition-colors"
+                       title="?????????????">
+                        *
+                    </a>
+                </div>
+            </div>
+
+            <div id="start-screen" class="text-center hidden">
+                <h2 class="text-2xl font-bold mb-4 text-white">宇宙の知識を試そう！</h2>
+                <p class="text-gray-400 mb-6">スタートボタンを押してクイズを開始してください。</p>
+                <button id="start-button" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+                    クイズスタート
+                </button>
+            </div>
+            
+            <div id="quiz-screen" class="hidden">
+                <div class="mb-6">
+                    <p id="question-number" class="text-sm font-medium text-sky-400 mb-2">問題 1 / 10</p>
+                    <div id="question-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg">
+                        問題文がここに表示されます
+                    </div>
+                </div>
+                <div id="choices-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+                <div id="feedback-area" class="mt-6 h-8 text-center text-xl font-bold">
+                </div>
+            </div>
+
+            <div id="exp-screen" class="hidden">
+                <div class="mb-6">
+                    <p class="text-lg font-semibold text-gray-100 mb-2">正解</p>
+                    <div id="answer-area" class="text-2xl md:text-3xl font-bold text-green-500 p-4 bg-gray-800 rounded-lg mb-4 text-center">
+                    </div>
+                    <p class="text-sm font-medium text-sky-400 mb-2">解説</p>
+                    <div id="exp-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg" style="min-height: 100px;">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button id="next-button" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+                        次へ進む
+                    </button>
+                </div>
+            </div>
+            
+            <div id="result-screen" class="hidden text-center">
+                <h2 id="result-title" class="text-3xl font-bold mb-4 text-yellow-300"></h2>
+                <p id="final-score-text" class="text-5xl font-extrabold text-green-500 mb-6"></p>
+                <p class="text-gray-400 mb-6">また挑戦して、宇宙博士を目指そう！</p>
+                <a href="index.html" id="restart-button" class="inline-block no-underline px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+                    もう一度プレイ
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // ▼▼▼ JavaScriptの処理開始 ▼▼▼
+        
+        // --- 1. 全レベルのクイズデータを定義 ---
+        // const: 定数（中身が変わらないデータ）を宣言します。
+        // allQuizData: すべてのクイズデータをまとめた「オブジェクト」です。
+        // "1": [ ... ], "2": [ ... ] のように、難易度レベルごとにクイズの配列（リスト）を持っています。
+        // { question: "...", choices: ["...", ...], answer: "...", exp: "..." } が1問分のデータです。
+        const allQuizData = {
+            "1": [
+                { question: "月は地球の周りを回りながら自転しています。月は約何日で1回自転をするでしょう？", choices: ["約1日", "約27日", "約60日", "約243日"], answer: "約27日", exp:"" },
+                { question: "日本の一年のうち、一番昼が短い日は、次のうちどれでしょう？", choices: ["春分の日", "夏至", "秋分の日", "冬至"], answer: "冬至", exp:"" },
+                { question: "国際天文学連合によると、現在星座は何個あるとされているでしょう？", choices: ["44個", "66個", "88個", "102個"], answer: "88個", exp:"" },
+                { question: "自ら光を発している星をなんというでしょう？", choices: ["恒星", "惑星", "光星", "彗星"], answer: "恒星", exp:"" },
+                { question: "太陽系の惑星の中で最も大きいものはどれでしょう？", choices: ["地球", "火星", "木星", "土星"], answer: "木星", exp:"" },
+                { question: "現在の北極星は次のうちどれでしょう？", choices: ["ベガ", "ポラリス", "エライ", "デネブ"], answer: "ポラリス", exp:"" },
+                { question: "次のうち黄道12星座に含まれていないものはどれでしょう？", choices: ["おうし座", "おおぐま座", "おひつじ座", "やぎ座"], answer: "おおぐま座", exp:"" },
+                { question: "惑星の周りをまわる星をなんと呼ぶでしょう？", choices: ["恒星", "小惑星", "衛星", "周惑星"], answer: "衛星", exp:"" },
+                { question: "主成分が氷と塵であり、別名ほうき星と呼ばれる星は何でしょう？", choices: ["衛星", "氷星", "塵星", "彗星"], answer: "彗星", exp:"" },
+                { question: "冬の大三角を構成する星はオリオン座のベテルギウス、おおいぬ座のシリウスとこいぬ座のなんでしょう？", choices: ["ベガ", "アルタイル", "プロキオン", "アルデバラン"], answer: "プロキオン", exp:"" }
+            ],
+            "2": [
+                { question: "太陽と地球の距離は何kmでしょう？", choices: ["約100万km", "約5000万km", "約1億5000万km", "約5億km"], answer: "約1億5000万km", exp:"" },
+                { question: "火星を表す惑星記号はどれでしょう？", choices: ["♀", "♂", "♄", "♃"], answer: "♂", exp:"" },
+                { question: "太陽の表面温度は約何度でしょう？", choices: ["約6000℃", "約10000℃", "約12000℃", "約16000℃"], answer: "約6000℃", exp:"" },
+                { question: "最近、ミクロの研究が盛んなことでよく聞く「μ」や「n」ですが、10の-9乗を表すのはどれでしょう？", choices: ["μ（マイクロ）", "n（ナノ）", "Å（オングストローム）", "m（ミリ）"], answer: "n（ナノ）", exp:"" },
+                { question: "有名な源平合戦ですが、ある天文的な現象が勝敗を分けた戦いがあると言われています。その現象とは何でしょう？", choices: ["月食", "日食", "新月", "太陽フレア"], answer: "日食", exp:"" },
+                { question: "太陽系の惑星の中で衛星を持たないものはどれでしょう？", choices: ["木星", "金星", "地球", "火星"], answer: "金星", exp:"" },
+                { question: "現在、世界の多くの国々で採用されている太陽暦は何でしょう？", choices: ["ハアブ暦", "グレゴリオ暦", "ユリウス暦", "ツォルキン暦"], answer: "グレゴリオ暦", exp:"" },
+                { question: "主成分はガスと塵であり、自ら光らず背後の星の光を遮ることで観測される星間雲を何というでしょう？", choices: ["暗黒星雲", "反射星雲", "散光星雲", "惑星上星雲"], answer: "暗黒星雲", exp:"" },
+                { question: "北極星を見つける際に用いられる北斗七星とカシオペヤ座ですが、いずれも基準となる線を何倍すると北極星に辿り着けるでしょう？", choices: ["2倍", "3倍", "5倍", "8倍"], answer: "5倍", exp:"" },
+                { question: "天球上における太陽の通り道をなんと呼ぶでしょう？", choices: ["赤道", "金道", "白道", "黄道"], answer: "黄道", exp:"" }
+            ],
+            "3": [
+                { question: "地球で体重30kgの人が月面で体重計に乗ると何kgになるでしょう？", choices: ["5kg", "10kg", "30kg", "180kg"], answer: "5kg", exp:"" },
+                { question: "地球は月の何倍の大きさ（直径）を持つでしょう？", choices: ["2倍", "4倍", "6倍", "8倍"], answer: "4倍", exp:"" },
+                { question: "最近話題となったレモン彗星は、何から名付けられたでしょう？", choices: ["発見者", "観測地", "色", "形"], answer: "観測地", exp:"" },
+                { question: "88星座の中で、1つの星座が2つの領域に分けられているものはどれでしょう？", choices: ["うお座", "てんびん座", "へび座", "しし座"], answer: "へび座", exp:"" },
+                { question: "三大流星群とはしぶんぎ座流星群、ペルセウス流星群となんでしょう？", choices: ["オリオン流星群", "おうし座流星群", "しし座流星群", "ふたご座流星群"], answer: "ふたご座流星群", exp:"" },
+                { question: "太陽の表面には「黒点」というものがありますが、その特徴として、当てはまらないものはどれでしょう？", choices: ["表面温度が周りより低い", "磁場が周りより強い", "場所が変わる", "直径約500km"], answer: "直径約500km", exp:"" },
+                { question: "一等星は2等星の何倍の明るさをもつでしょう？", choices: ["約2倍", "約2.5倍", "約5倍", "約10倍"], answer: "約2.5倍", exp:"" },
+                { question: "太陽風とは何でしょう？", choices: ["風", "プラズマ", "光", "圧力"], answer: "プラズマ", exp:"" },
+                { question: "次のうち、星座に描かれていない動物はなんでしょう？", choices: ["うし", "とら", "うさぎ", "へび"], answer: "とら", exp:"" },
+                { question: "天の北極があるのはこぐま座ですが、天の南極があるのは何座でしょう？", choices: ["しぶんぎ座", "ろくぶんぎ座", "はちぶんぎ座", "じゅうぶんぎ座"], answer: "はちぶんぎ座", exp:"" }
+            ],
+            "4": [
+                { question: "古代ギリシャ語で木星のことをなんと呼ぶでしょう？", choices: ["ゼウス", "ジュピター", "ビーナス", "アレス"], answer: "ゼウス", exp:"" },
+                { question: "新潟を本拠地とするサッカーチーム・野球チームの名称の由来にもなっている、橙色と青色のコントラストが美しいはくちょう座の二重星はなんでしょう？", choices: ["デネブ", "アルビレオ", "アルコル", "デネボラ"], answer: "アルビレオ", exp:"" },
+                { question: "国旗に描かれている星にはそれぞれ一つの州が当てられている国はどこでしょう？", choices: ["メキシコ", "中国", "アメリカ", "ブラジル"], answer: "ブラジル", exp:"" },
+                { question: "かつて最も大きな星座であったアルゴ船座は4つに分割されましたが、その4つの星座に含まれないのは次のうちどれでしょう？", choices: ["らしんばん座", "ポンプ座", "ほ座", "りゅうこつ座"], answer: "ポンプ座", exp:"" },
+                { question: "古代ギリシャ語で月をなんと呼ぶでしょう？", choices: ["セレーネ", "ルナ", "リュヌ", "テッラ"], answer: "セレーネ", exp:"" },
+                { question: "ラテン語で穀物の穂の意味を持つ星は、次のうちどれでしょう？", choices: ["シリウス", "プロキオン", "スピカ", "リゲル"], answer: "スピカ", exp:"" },
+                { question: "天文単位(au)について、間違った説明文はどれでしょう？", choices: ["太陽-冥王星間は約40auと表される", "地球-太陽間の平均距離に由来する単位である", "1auを約1億5000kmとする距離の単位である", "auとは、astronomical unitの略称である"], answer: "太陽-冥王星間は約40auと表される", exp:"" },
+                { question: "地球上では観測できない天体現象は次のうちどれでしょう？", choices: ["火星の太陽通過", "プレアデス星団食", "ブラッドムーン", "月の天王星食"], answer: "火星の太陽通過", exp:"" },
+                { question: "地球の重力を振り切って進むことが出来るようになる「第二宇宙速度」の値はどれでしょう？", choices: ["約7.9km/s", "約9.8km/s", "約11.2km/s", "約16.7km/s"], answer: "約11.2km/s", exp:"" },
+                { question: "次に日本で皆既日食が見られると予想されている日は次のうちどれでしょう？", choices: ["2031年5月21日", "2032年11月3日", "2035年9月2日", "2117年12月11日"], answer: "2035年9月2日", exp:"" }
+            ],
+            "5": [
+                { question: "太陽系の惑星の中で公転周期の離心率が最も大きいのはどれでしょう？", choices: ["水星", "金星", "海王星", "冥王星"], answer: "水星", exp:"" },
+                { question: "歳差運動によって北極星は移り変わっていきます。次のうち、北極星の役割とならない星はどれでしょう？", choices: ["ベガ", "デネブ", "ポラリス", "アルデバラン"], answer: "アルデバラン", exp:"" },
+                { question: "ニコラウス・コペルニクスについての間違った説明文はどれでしょう？", choices: ["ポーランド出身である", "「天球の回転について」の著者であり、地動説を唱えた", "天動説を否定したため、カトリック教会の宗教裁判にかけられた", "ヨーロッパルネサンス時代の天文学者である"], answer: "天動説を否定したため、カトリック教会の宗教裁判にかけられた", exp:"" },
+                { question: "世界で初めて月に軟着陸をした月探査機はどれでしょう？", choices: ["ルナ2号", "ルナ9号", "アポロ8号", "アポロ9号"], answer: "ルナ9号", exp:"" },
+                { question: "世界で初めて有人での月周回に成功した月探査機はどれでしょう？", choices: ["ルナ9号", "かぐや", "アポロ8号", "アポロ11号"], answer: "アポロ8号", exp:"" },
+                { question: "各国の月探査機の名前で、月が由来になっていないものはどれでしょう？", choices: ["中国の嫦娥", "ロシアのルナ", "インドのチャンドラヤーン", "アメリカのアポロ"], answer: "アメリカのアポロ", exp:"" },
+                { question: "次のうち、最も公転周期の短い彗星はどれでしょう？", choices: ["ヘール・ボップ彗星", "エンケ彗星", "レモン彗星", "スワン彗星"], answer: "エンケ彗星", exp:"" },
+                { question: "現在、星空保護区に認定されていない場所はどこでしょう？", choices: ["神津島(東京)", "南六呂師(福井)", "西表石垣国立公園(沖縄)", "阿智村(長野)"], answer: "阿智村(長野)", exp:"" },
+                { question: "恒星の最後の姿として有名な「超新星爆発」ですが、これを起こすかどうかの境目になるのは太陽質量の何倍でしょう？", choices: ["約4倍", "約8倍", "約16倍", "約32倍"], answer: "約8倍", exp:"" },
+                { question: "最初に国産の反射望遠鏡を作ったのは誰でしょう？", choices: ["岩橋善兵衛", "森仁左衛門", "伊能忠敬", "国友藤兵衛"], answer: "国友藤兵衛", exp:"" }
+            ]
+        };
+
+        // --- 2. グローバル変数 ---
+        // let: 変数（中身が変わるデータ）を宣言します。
+        // これらはプログラム全体で使う「状態」を保存・管理するための変数です。
+        let currentQuestionIndex = 0; // 現在、第何問目か (0からスタート)
+        let score = 0;                // 現在の正解数
+        let quizActive = false;       // クイズが回答可能状態か (true=はい, false=いいえ)
+        let shuffledQuizData = [];    // 出題順をシャッフルしたクイズデータを入れる配列
+        let selectedQuizData = [];    // 選択された難易度のクイズデータを入れる配列
+        let currentLevel = '1';       // 現在選択されている難易度レベル
+
+        
+        // --- 3. (更新メモは削除しました) ---
+
+
+        // --- 4. DOM要素の取得 ---
+        // HTMLの要素（部品）を、JavaScriptで操作できるように変数に入れています。
+        // document.getElementById('ID名'): HTML側で指定した 'id' を持つ要素を探して取得します。
+        const homeButton = document.getElementById('home-button'); // ★ 追加: HOMEボタン
+        const difficultySelectScreen = document.getElementById('difficulty-select-screen'); // 難易度選択画面
+        const startScreen = document.getElementById('start-screen');     // スタート画面
+        const quizScreen = document.getElementById('quiz-screen');       // クイズ画面
+        const expScreen = document.getElementById('exp-screen');         // 解説画面
+        const resultScreen = document.getElementById('result-screen');   // 結果画面
+        const startButton = document.getElementById('start-button');     // スタートボタン
+        const nextButton = document.getElementById('next-button');       // 次へ進むボタン
+        const scoreDisplay = document.getElementById('score-display');   // スコア表示エリア
+        const questionNumber = document.getElementById('question-number'); // 問題番号エリア
+        const questionArea = document.getElementById('question-area');     // 問題文エリア
+        const choicesArea = document.getElementById('choices-area');       // 選択肢エリア
+        const feedbackArea = document.getElementById('feedback-area');     // 正解/不正解フィードバックエリア
+        const answerArea = document.getElementById('answer-area');       // (解説画面の)正解表示エリア
+        const expArea = document.getElementById('exp-area');           // (解説画面の)解説文エリア
+        const resultTitle = document.getElementById('result-title');     // (結果画面の)タイトルエリア
+        const finalScoreText = document.getElementById('final-score-text'); // (結果画面の)最終スコアエリア
+        
+        // document.querySelector('セレクタ'): CSSと同じ方法で要素を探します (これは h1 タグを探しています)
+        const mainTitle = document.querySelector('#quiz-container h1'); // ページ上部の「天文クイズ」タイトル
+        const startScreenTitle = document.getElementById('start-screen').querySelector('h2'); // スタート画面の「宇宙の知識を試そう！」タイトル
+
+
+        // --- 5. 関数定義 ---
+        // function 関数名(引数) { ... }: 「関数」を定義します。
+        // 関数は、特定の処理をひとまとめにしたもので、名前を呼ぶことで何度でも実行できます。
+
+        /**
+         * @function selectDifficulty
+         * @description 難易度を選択し、テーマとクイズデータを設定する
+         * @param {string} level - 選択された難易度レベル (例: '1')
+         */
+        function selectDifficulty(level) {
+            // 1. レベルとクイズデータをセット
+            currentLevel = level; // 選ばれたレベルを保存
+            selectedQuizData = allQuizData[currentLevel]; // 全クイズデータから、選ばれたレベルのデータを取り出す
+            
+            // 2. テーマ(CSS)を適用
+            // bodyタグのクラスを、選ばれたレベル用のものに変更します (背景色などが変わります)
+            document.body.className = 'min-h-screen flex items-center justify-center p-4 level-' + currentLevel;
+
+            // 3. タイトルと問題数を更新
+            mainTitle.textContent = `天文クイズレベル${currentLevel}`; // 上部のタイトルを変更
+            const totalQuestions = selectedQuizData.length; // 問題数を取得
+            startScreenTitle.textContent = `全${totalQuestions}問！宇宙の知識を試そう！`; // スタート画面のタイトルを変更
+            scoreDisplay.textContent = `スコア: 0 / ${totalQuestions}`; // スコア表示を初期化
+
+            // 4. 画面を切り替え
+            // classList.add('hidden'): 'hidden' クラスを追加して非表示にする
+            // classList.remove('hidden'): 'hidden' クラスを削除して表示する
+            difficultySelectScreen.classList.add('hidden'); // 難易度選択画面を隠す
+            startScreen.classList.remove('hidden');       // スタート画面を表示する
+            homeButton.classList.remove('hidden');        // ★ 追加: HOMEボタンを表示する
+        }
+
+        // ★★★ ここから追加 ★★★
+        /**
+         * @function handleHomeClick
+         * @description HOMEボタンが押された時の処理。クイズ中か判定して確認ダイアログを出す
+         */
+        function handleHomeClick() {
+            // クイズ画面または解説画面が表示されているか（= hiddenクラスが付いていないか）
+            const isQuizInProgress = !quizScreen.classList.contains('hidden') || !expScreen.classList.contains('hidden');
+
+            // もしクイズ進行中なら
+            if (isQuizInProgress) {
+                // confirm() で「OK」「キャンセル」のダイアログ（警告）を表示
+                if (confirm("クイズの進行度は失われます。それでもHOMEに戻りますか？")) {
+                    // 「OK」(true) が押されたらHOMEに戻る
+                    returnToHome();
+                } else {
+                    // 「キャンセル」(false) が押されたら何もしない
+                }
+            } else {
+                // クイズ中でなければ（スタート画面や結果画面）、確認なしでHOMEに戻る
+                returnToHome();
+            }
+        }
+
+        /**
+         * @function returnToHome
+         * @description 状態をすべてリセットし、難易度選択画面（HOME）に戻る
+         */
+        function returnToHome() {
+            // 1. すべての画面を非表示にする
+            startScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            expScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+
+            // 2. 難易度選択画面を表示する
+            difficultySelectScreen.classList.remove('hidden');
+
+            // 3. HOMEボタン自体を非表示にする
+            homeButton.classList.add('hidden');
+
+            // 4. タイトルやスコア表示を初期状態に戻す
+            mainTitle.textContent = "天文クイズ";
+            scoreDisplay.textContent = "スコア: 0 / 0";
+            startScreenTitle.textContent = "宇宙の知識を試そう！"; // スタート画面のタイトルもリセット
+
+            // 5. bodyのテーマクラスをリセット（背景などを初期状態に）
+            document.body.className = 'min-h-screen flex items-center justify-center p-4';
+
+            // 6. クイズの状態管理変数をリセット
+            currentQuestionIndex = 0;
+            score = 0;
+            quizActive = false;
+            shuffledQuizData = [];
+            selectedQuizData = [];
+            currentLevel = '1'; // （念のため初期レベルに戻す）
+        }
+
+
+        /**
+         * @function shuffleArray
+         * @description 配列の要素をランダムにシャッフルする（フィッシャー・イェーツのシャッフル）
+         * @param {array} array - シャッフルしたい配列
+         * @returns {array} - シャッフルされた新しい配列
+         */
+        function shuffleArray(array) {
+            let newArray = array.slice(); // 元の配列をコピーして新しい配列を作る
+            // 配列の後ろから順番に、ランダムに選んだ要素と入れ替えていく
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; 
+            }
+            return newArray; // シャッフル後の配列を返す
+        }
+
+        /**
+         * @function startGame
+         * @description クイズゲームを開始する
+         */
+        function startGame() {
+            // 選ばれた難易度のクイズデータをシャッフルして、出題用データ(shuffledQuizData)に保存
+            shuffledQuizData = shuffleArray(selectedQuizData);
+            currentQuestionIndex = 0; // 問題番号をリセット (0問目から)
+            score = 0;                // スコアをリセット
+            quizActive = true;        // 回答可能な状態にする
+            
+            // 画面切り替え
+            startScreen.classList.add('hidden');  // スタート画面を隠す
+            resultScreen.classList.add('hidden'); // 結果画面を隠す
+            expScreen.classList.add('hidden');    // 解説画面を隠す
+            quizScreen.classList.remove('hidden'); // クイズ画面を表示する
+            
+            updateScoreDisplay(); // スコア表示を更新 (0 / 10 のように)
+            displayQuestion();    // 最初の問題を表示
+        }
+
+        /**
+         * @function updateScoreDisplay
+         * @description 現在のスコアを画面上部のスコア表示エリアに反映する
+         */
+        function updateScoreDisplay() {
+            scoreDisplay.textContent = `スコア: ${score} / ${shuffledQuizData.length}`;
+        }
+
+        /**
+         * @function displayQuestion
+         * @description 次の問題を表示する。もし全問終了していれば結果画面へ
+         */
+        function displayQuestion() {
+            // 解説画面が表示されていれば隠し、クイズ画面を表示する
+            expScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            // もし現在の問題番号(index)が問題数以上なら、全問終了
+            if (currentQuestionIndex >= shuffledQuizData.length) {
+                endGame(); // 結果発表関数を呼ぶ
+                return;    // この関数の処理をここで終了
+            }
+
+            // 出題する現在のクイズデータを取得
+            const currentQuiz = shuffledQuizData[currentQuestionIndex];
+            
+            // 問題番号と問題文を画面に表示
+            // (indexは0から始まるので、+1 して「問題 1」のように表示)
+            questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
+            questionArea.textContent = currentQuiz.question;
+            
+            // 選択肢エリア(choicesArea)の中身を一旦空にする
+            choicesArea.innerHTML = ''; 
+
+            // クイズデータの choices (選択肢の配列) を1つずつ取り出してボタンを作成
+            currentQuiz.choices.forEach(choice => {
+                // <button> 要素をプログラムで作成
+                const button = document.createElement('button');
+                button.textContent = choice; // ボタンのテキストを選択肢の文字列に設定
+                
+                // ボタンのデザイン（クラス）を設定
+                button.classList.add(
+                    'choice-button', 'p-4', 'bg-gray-800', 'text-gray-100', 'font-semibold',
+                    'rounded-lg', 'text-left', 'shadow-md', 'transition', 'duration-200'
+                );
+                
+                // ボタンがクリックされた時の動作を設定
+                // 'click' したら、checkAnswer関数を呼ぶ
+                button.addEventListener('click', () => checkAnswer(choice, button));
+                
+                // 作成したボタンをHTMLの choicesArea に追加
+                choicesArea.appendChild(button);
+            });
+            
+            quizActive = true; // 回答可能な状態にする
+            feedbackArea.textContent = ''; // 正解/不正解の表示を空にする
+        }
+
+        /**
+         * @function checkAnswer
+         * @description 選択された答えが合っているか判定する
+         * @param {string} selectedChoice - ユーザーが選んだ選択肢の文字列
+         * @param {HTMLElement} selectedButton - ユーザーが押したボタン要素
+         */
+        function checkAnswer(selectedChoice, selectedButton) {
+            // もし quizActive が false (回答不可状態) なら、何もせず処理を終了
+            // (連打防止のため)
+            if (!quizActive) return;
+            quizActive = false; // 回答不可状態にする
+
+            // 現在の問題のデータを取得
+            const currentQuiz = shuffledQuizData[currentQuestionIndex];
+            // 選んだ答え(selectedChoice)と正解(currentQuiz.answer)が同じか判定
+            const isCorrect = selectedChoice === currentQuiz.answer;
+
+            // 選択肢ボタンすべてに対して処理
+            Array.from(choicesArea.children).forEach(button => {
+                button.disabled = true; // ボタンを押せないようにする
+                
+                // もしボタンのテキストが正解の答えなら
+                if (button.textContent === currentQuiz.answer) {
+                    button.classList.add('bg-green-600', 'ring-4', 'ring-green-400'); // 緑色にする
+                    button.classList.remove('bg-gray-800'); // 元の灰色を消す
+                // もし、押したボタン(selectedButton)で、かつ、不正解(isCorrectがfalse)なら
+                } else if (button === selectedButton && !isCorrect) {
+                    button.classList.add('bg-red-600', 'ring-4', 'ring-red-400'); // 赤色にする
+                    button.classList.remove('bg-gray-800'); // 元の灰色を消す
+                }
+            });
+
+            // 正解だった場合
+            if (isCorrect) {
+                score++; // スコアを1増やす
+                feedbackArea.textContent = '✅ 正解！！';
+                feedbackArea.classList.remove('text-red-500'); // 赤文字クラスを削除
+                feedbackArea.classList.add('text-green-500'); // 緑文字クラスを追加
+            // 不正解だった場合
+            } else {
+                feedbackArea.textContent = '❌ 不正解...';
+                feedbackArea.classList.remove('text-green-500'); // 緑文字クラスを削除
+                feedbackArea.classList.add('text-red-500');   // 赤文字クラスを追加
+            }
+            
+            updateScoreDisplay(); // スコア表示を更新
+            
+            // 2秒後（2000ミリ秒後）に showExplanation 関数を実行する
+            setTimeout(showExplanation, 2000);
+        }
+
+        /**
+         * @function showExplanation
+         * @description 解説画面を表示する
+         */
+        function showExplanation(){
+            // 現在の問題データを取得
+            const currentQuiz = shuffledQuizData[currentQuestionIndex];
+            
+            // 正解と解説文を画面にセット
+            answerArea.textContent = currentQuiz.answer;
+            // もし解説文(exp)が空なら、デフォルトのメッセージを表示
+            expArea.textContent = currentQuiz.exp || '解説は準備中です。'; 
+            
+            // 画面切り替え
+            quizScreen.classList.add('hidden'); // クイズ画面を隠す
+            expScreen.classList.remove('hidden'); // 解説画面を表示する
+        }
+
+        /**
+         * @function nextQuestion
+         * @description 次の問題へ進む（「次へ進む」ボタンが押された時に呼ばれる）
+         */
+        function nextQuestion() {
+            expScreen.classList.add('hidden'); // 解説画面を隠す
+            currentQuestionIndex++; // 問題番号を1増やす
+            displayQuestion(); // 次の問題を表示する関数を呼ぶ
+        }
+
+        /**
+         * @function endGame
+         * @description クイズがすべて終了した時に呼ばれ、結果画面を表示する
+         */
+        function endGame() {
+            // 画面切り替え
+            quizScreen.classList.add('hidden');     // クイズ画面を隠す
+            expScreen.classList.add('hidden');      // 解説画面を隠す
+            resultScreen.classList.remove('hidden'); // 結果画面を表示する
+            
+            const total = shuffledQuizData.length; // 全問題数を取得
+            
+            // スコアに応じて結果メッセージを変更
+            let titleText = "";
+            if (score === total) {
+                titleText = "満点！Perafect！";
+            } else if (score >= total * 0.7) { // 7割以上正解
+                titleText = "7割越え！すごい！！";
+            } else { // それ以外
+                titleText = "再度挑戦！!";
+            }
+            
+            // 結果画面にメッセージと最終スコアを表示
+            resultTitle.textContent = titleText; 
+            finalScoreText.textContent = `${score} / ${total}`; 
+            // 画面上部のスコア表示も最終スコアに更新
+            scoreDisplay.textContent = `最終スコア: ${score} / ${total}`;
+        }
+
+        // --- 6. イベントリスナーの登録 ---
+        // addEventListener: HTML要素が「～された時」に「～する」という処理を予約します。
+        
+        homeButton.addEventListener('click', handleHomeClick); 
+        // 'start-button' が 'click' された時、'startGame' 関数を実行する
+        startButton.addEventListener('click', startGame);
+        // 'next-button' が 'click' された時、'nextQuestion' 関数を実行する
+        nextButton.addEventListener('click', nextQuestion); 
+        
+        // ▲▲▲ JavaScriptの処理終了 ▲▲▲
+    </script>
+</body>
+</html>

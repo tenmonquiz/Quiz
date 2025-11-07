@@ -1,0 +1,89 @@
+/* quiz-style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* --- 基本スタイル --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0d1117;
+}
+.container {
+    max-width: 768px;
+}
+
+/* --- カード共通スタイル --- */
+.question-card, .result-card, .selection-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* --- クイズボタン スタイル --- */
+.choice-button {
+    transition: all 0.2s;
+}
+.choice-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+/* --- 難易度選択ボタン スタイル --- */
+.difficulty-button {
+    transition: all 0.2s;
+}
+.difficulty-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ################################### */
+/* ### テーマ（難易度）別スタイル ### */
+/* ################################### */
+
+/* * ここで各難易度の色を定義します。
+ * この色コードを変更するだけで、サイト全体のテーマ色を変更できます。
+ */
+
+/* --- 難易度 1 (デフォルト: 水色) --- */
+body.level-1 #quiz-container h1,
+body.level-1 #score-display,
+body.level-1 #question-number,
+body.level-1 .selection-card .text-sky-400 {
+    color: #38bdf8; /* 水色 */
+}
+
+
+/* --- 難易度 2 ( 緑色) --- */
+body.level-2 #quiz-container h1,
+body.level-2 #score-display,
+body.level-2 #question-number,
+body.level-2 .selection-card .text-sky-400 {
+    color: #4ade80; /* 緑 */
+}
+
+
+/* --- 難易度 3 (黄色) --- */
+body.level-3 #quiz-container h1,
+body.level-3 #score-display,
+body.level-3 #question-number,
+body.level-3 .selection-card .text-sky-400 {
+    color: #facc15; /* 黄 */
+}
+
+
+/* --- 難易度 4 (オレンジ色) --- */
+body.level-4 #quiz-container h1,
+body.level-4 #score-display,
+body.level-4 #question-number,
+body.level-4 .selection-card .text-sky-400 {
+    color: #fb923c; /* オレンジ */
+}
+
+
+/* --- 難易度 5 (赤色) --- */
+body.level-5 #quiz-container h1,
+body.level-5 #score-display,
+body.level-5 #question-number,
+body.level-5 .selection-card .text-sky-400 {
+    color: #f87171; /* 赤 */
+}
