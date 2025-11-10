@@ -1,0 +1,80 @@
+/* quiz-style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* --- 基本スタイル --- */
+body {
+    font-family: 'Inter', sans-serif;
+
+
+    /* ▼▼▼ 背景画像の設定をここに追加します ▼▼▼ */
+    background-image: url('galaxy.jpg'); /* ここに背景画像のURLを指定 */
+    background-size: cover; /* 背景画像を画面全体に広げ、はみ出る部分は隠す */
+    background-position: center; /* 背景画像を中央に配置 */
+    background-repeat: no-repeat; /* 背景画像を繰り返さない */
+    background-attachment: fixed; /* 背景画像を固定し、スクロールしても動かないようにする */
+    /* ▲▲▲ ここまで追加 ▲▲▲ */
+}
+.container {
+    max-width: 768px;
+}
+
+/* --- カード共通スタイル --- */
+.question-card, .result-card, .selection-card {
+    background-color: rgba(22, 27, 34, 0.6); 
+    border: 1px solid #30363d;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* --- クイズボタン スタイル --- */
+.choice-button {
+    transition: all 0.2s;
+}
+.choice-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+/* --- 難易度選択ボタン スタイル --- */
+.difficulty-button {
+    transition: all 0.2s;
+}
+.difficulty-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+body #quiz-container h1,
+body #score-display,
+body #question-number,
+body.selection-card .text-sky-400 {
+    color: #EAC963; /* 色 */
+	text-shadow: 
+        -1px -1px 0 #FFFFFF, /* 左上 */
+         1px -1px 0 #FFFFFF, /* 右上 */
+        -1px  1px 0 #FFFFFF, /* 左下 */
+         1px  1px 0 #FFFFFF, /* 右下 */
+         0px 0px 20px #FFFFFF; /* 元の光る影 */
+}
+.sns-icon {
+    color: #EAC963; /* タイトルと同じ色 */
+    transition: all 0.2s ease-in-out; /* なめらかな変化 */
+    
+    /* タイトルと同じ枠線（text-shadow）を適用 */
+    text-shadow: 
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+}
+
+.sns-icon:hover {
+    color: #FFFFFF; /* ホバー時に白くする */
+    transform: scale(1.15); /* 少し大きくする */
+    /* ホバー時に光るエフェクトも追加 */
+    text-shadow: 
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px 0px 15px #FFFFFF;
+}
