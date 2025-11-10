@@ -53,7 +53,7 @@ body.selection-card .text-sky-400 {
          1px -1px 0 #FFFFFF, /* 右上 */
         -1px  1px 0 #FFFFFF, /* 左下 */
          1px  1px 0 #FFFFFF, /* 右下 */
-         0px 0px 20px #FFFFFF; /* 元の光る影 */
+
 }
 .sns-icon {
     color: #EAC963; /* タイトルと同じ色 */
