@@ -40,110 +40,110 @@
 		</div>
         <div id="game-area" class="question-card relative rounded-xl p-6 md:p-8">
 
-            <div id="difficulty-select-screen" class="text-center">
-                <h1 class="text-3xl font-bold text-gray-100 mb-2">天文クイズ</h1>
-                <p class="text-xl text-sky-400 mb-8">難易度を選択してください</p>
+                        <div class="text-center">                 <div class="mt-8">                     <button id="show-ranking-button" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg rounded-full shadow-lg transition duration-150">
+                        🏆 ランキングを見る
+                    </button>
+							</div>
+                <div id="ranking-display-area" 
+                     class="hidden mt-6 p-4 bg-gray-900 rounded-lg text-left text-white"
+                     style="max-height: 400px; overflow-y: auto;">
+                    
+                    <div id="ranking-level-select">
+                        <h3 class="text-xl font-bold text-yellow-400 text-center mb-4">🏆 ランキング 🏆</h3>
+                        <p class="text-center mb-4">見るレベルを選択してください</p>
+                        <div class="flex flex-col gap-3">
+                            <button onclick="fetchAndDisplayRanking('1')" class="difficulty-button level-1 p-3">レベル 1</button>
+                            <button onclick="fetchAndDisplayRanking('2')" class="difficulty-button level-2 p-3">レベル 2</button>
+                            <button onclick="fetchAndDisplayRanking('3')" class="difficulty-button level-3 p-3">レベル 3</button>
+                            <button onclick="fetchAndDisplayRanking('4')" class="difficulty-button level-4 p-3">レベル 4</button>
+                            <button onclick="fetchAndDisplayRanking('5')" class="difficulty-button level-5 p-3">レベル 5</button>
+                        </div>
+                        <button onclick="closeRankingDisplay()" class="mt-4 w-full p-2 bg-gray-600 hover:bg-gray-700 rounded">閉じる</button>
+                    </div>
+                    
+                    <div id="ranking-result-display" class="hidden">
+                                            </div>
 
-                <div class="flex flex-col gap-4">
-                    <button onclick="selectDifficulty('1')" class="difficulty-button level-1 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
-                        レベル 1
-                    </button>
-                    <button onclick="selectDifficulty('2')" class="difficulty-button level-2 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
-                        レベル 2
-                    </button>
-                    <button onclick="selectDifficulty('3')" class="difficulty-button level-3 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
-                        レベル 3
-                    </button>
-                    <button onclick="selectDifficulty('4')" class="difficulty-button level-4 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
-                        レベル 4
-                    </button>
-                    <button onclick="selectDifficulty('5')" class="difficulty-button level-5 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
-                        レベル 5
-                    </button>
-                </div>
-				<div class="mt-8">
-            <button id="show-ranking-button" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg rounded-full shadow-lg transition duration-150">
-                🏆 ランキングを見る
-            </button>
-				</div>
-				<div id="ranking-display-area" 
-                     class="hidden mt-6 p-4 bg-gray-900 rounded-lg text-left text-white"
-                     style="max-height: 400px; overflow-y: auto;">
-                    
-                    <div id="ranking-level-select">
-                        <h3 class="text-xl font-bold text-yellow-400 text-center mb-4">🏆 ランキング 🏆</h3>
-                        <p class="text-center mb-4">見るレベルを選択してください</p>
-                        <div class="flex flex-col gap-3">
-                            <button onclick="fetchAndDisplayRanking('1')" class="difficulty-button level-1 p-3">レベル 1</button>
-                            <button onclick="fetchAndDisplayRanking('2')" class="difficulty-button level-2 p-3">レベル 2</button>
-                            <button onclick="fetchAndDisplayRanking('3')" class="difficulty-button level-3 p-3">レベル 3</button>
-                            <button onclick="fetchAndDisplayRanking('4')" class="difficulty-button level-4 p-3">レベル 4</button>
-                            <button onclick="fetchAndDisplayRanking('5')" class="difficulty-button level-5 p-3">レベル 5</button>
-                        </div>
-                        <button onclick="closeRankingDisplay()" class="mt-4 w-full p-2 bg-gray-600 hover:bg-gray-700 rounded">閉じる</button>
-                    </div>
-                    
-                    <div id="ranking-result-display" class="hidden">
-                        </div>
+                </div>
+            </div>
+                        <div id="difficulty-select-screen" class="text-center">
+                <h1 class="text-3xl font-bold text-gray-100 mb-2">天文クイズ</h1>
+                <p class="text-xl text-sky-400 mb-8">難易度を選択してください</p>
 
-                </div>
+                <div class="flex flex-col gap-4">
+                    <button onclick="selectDifficulty('1')" class="difficulty-button level-1 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        レベル 1
+                    </button>
+                    <button onclick="selectDifficulty('2')" class="difficulty-button level-2 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        レベル 2
+                    </button>
+                    <button onclick="selectDifficulty('3')" class="difficulty-button level-3 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        レベル 3
+                  _E38080 </button>
+                    <button onclick="selectDifficulty('4')" class="difficulty-button level-4 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+                        レベル 4
+                    </button>
+              _E38080_E38080 <button onclick="selectDifficulty('5')" class="difficulty-button level-5 block w-full p-4 bg-gray-800 text-gray-100 font-semibold text-lg rounded-lg text-center shadow-md transition duration-200">
+nbsp;                     レベル 5
+                    </button>
+                </div>
+				
+                                                                <div class="absolute bottom-3 right-4">
+                    <a href="secret.html" 
+                        class="text-xs text-[#171c23] hover:text-sky-400 no-underline transition-colors"
+s                     title="?????????????">
+                        *
+                    </a>
+route_tokens:             </div>
+            </div>
 
-                <div class="absolute bottom-3 right-4">
-                    <a href="secret.html" 
-                        class="text-xs text-[#171c23] hover:text-sky-400 no-underline transition-colors"
-                        title="?????????????">
-                        *
-                    </a>
-                </div>
-            </div>
+            <div id="start-screen" class="text-center hidden">
+                <h2 class="text-2xl font-bold mb-4 text-white">宇宙の知識を試そう！</h2>
+                <p class="text-gray-400 mb-6">スタートボタンを押してクイズを開始してください。</p>
+E            <button id="start-button" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+                    クイズスタート
+                </button>
+            </div>
+            
+            <div id="quiz-screen" class="hidden">
+Image           <div class="mb-6">
+                    <p id="question-number" class="text-sm font-medium text-sky-400 mb-2">問題 1 / 10</p>
+                    <div id="question-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg">
+                        問題文がここに表示されます
+                    </div>
+                </div>
+A             <div id="choices-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+                <div id="feedback-area" class="mt-6 h-8 text-center text-xl font-bold">
+.               </div>
+            </div>
 
-            <div id="start-screen" class="text-center hidden">
-                <h2 class="text-2xl font-bold mb-4 text-white">宇宙の知識を試そう！</h2>
-                <p class="text-gray-400 mb-6">スタートボタンを押してクイズを開始してください。</p>
-                <button id="start-button" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
-                    クイズスタート
-                </button>
-            </div>
-            
-            <div id="quiz-screen" class="hidden">
-                <div class="mb-6">
-                    <p id="question-number" class="text-sm font-medium text-sky-400 mb-2">問題 1 / 10</p>
-                    <div id="question-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg">
-                        問題文がここに表示されます
-                    </div>
-                </div>
-                <div id="choices-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                </div>
-                <div id="feedback-area" class="mt-6 h-8 text-center text-xl font-bold">
-                </div>
-            </div>
-
-            <div id="exp-screen" class="hidden">
-                <div class="mb-6">
-                    <p class="text-lg font-semibold text-gray-100 mb-2">正解</p>
-                    <div id="answer-area" class="text-2xl md:text-3xl font-bold text-green-500 p-4 bg-gray-800 rounded-lg mb-4 text-center">
-                    </div>
-                    <p class="text-sm font-medium text-sky-400 mb-2">解説</p>
-                    <div id="exp-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg" style="min-height: 100px;">
-                    </div>
-                </div>
-                <div class="text-center">
-                    <button id="next-button" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
-                        次へ進む
-                    </button>
-                </div>
-            </div>
-            
-            <div id="result-screen" class="hidden text-center">
-                <h2 id="result-title" class="text-3xl font-bold mb-4 text-yellow-300"></h2>
-                <p id="final-score-text" class="text-5xl font-extrabold text-green-500 mb-6"></p>
-                <p class="text-gray-400 mb-6">また挑戦して、宇宙博士を目指そう！</p>
-                <a href="index.html" id="restart-button" class="inline-block no-underline px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
-                    もう一度プレイ
-                </a>
-            </div>
-        </div>
-    </div>
+            <div id="exp-screen" class="hidden">
+                <div class="mb-6">
+                    <p class="text-lg font-semibold text-gray-100 mb-2">正解</p>
+                    <div id="answer-area" class="text-2xl md:text-3xl font-bold text-green-500 p-4 bg-gray-800 rounded-lg mb-4 text-center">
+                    </div>
+                    <p class="text-sm font-medium text-sky-400 mb-2">解説</p>
+S               <div id="exp-area" class="text-xl md:text-2xl font-semibold text-gray-100 p-4 bg-gray-700 rounded-lg" style="min-height: 100px;">
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button id="next-button" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+                        次へ進む
+                    </button>
+                </div>
+            </div>
+            
+            <div id="result-screen" class="hidden text-center">
+S             <h2 id="result-title" class="text-3xl font-bold mb-4 text-yellow-300"></h2>
+                <p id="final-score-text" class="text-5xl font-extrabold text-green-500 mb-6"></p>
+ci             <p class="text-gray-400 mb-6">また挑戦して、宇宙博士を目指そう！</p>
+                <a href="index.html" id="restart-button" class="inline-block no-underline px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-xl transition duration-150 transform hover:scale-105">
+Sure                 もう一度プレイ
+                </a>
+            </div>
+        </div>    
+	</div>
 
     <script>
         // ▼▼▼ JavaScriptの処理開始 ▼▼▼
@@ -705,24 +705,70 @@
         }
 		
         /**
-         * @function displayRanking
-         * @description GASからランキングデータを取得して画面に表示する
-         */
-        function displayRanking() {
-            // 既に表示されている場合は非表示に戻す
-            if (!rankingDisplayArea.classList.contains('hidden')) {
-                closeRankingDisplay(); // 閉じる関数を呼ぶ
-                return;
-            }
+         * @function displayRanking
+         * @description ランキング表示の開閉機能（表示/非表示）
+         * （メインの「ランキングを見る/閉じる」ボタンから呼ばれる）
+         */
+        function displayRanking() {
+            const isRankingVisible = !rankingDisplayArea.classList.contains('hidden');
+            
+            if (isRankingVisible) {
+                // --- 既に表示されている場合 → 閉じる
+                closeRankingDisplay();
+            } else {
+                // --- 非表示の場合 → 開く
+                document.getElementById('ranking-result-display').classList.add('hidden');
+                document.getElementById('ranking-level-select').classList.remove('hidden');
+                rankingDisplayArea.classList.remove('hidden');
+                
+                // ボタンのテキストを「閉じる」に変更
+                showRankingButton.innerHTML = '🏆 ランキングを閉じる';
+            }
+        }
 
-            // レベル選択画面を表示
-            document.getElementById('ranking-level-select').classList.remove('hidden');
-            // （もし開いていたら）結果表示画面は隠す
-            document.getElementById('ranking-result-display').classList.add('hidden');
-            
-            // ランキングエリア全体を表示
-            rankingDisplayArea.classList.remove('hidden');
-        }
+        /**
+         * @function fetchAndDisplayRanking
+         * (変更なし)
+         */
+        function fetchAndDisplayRanking(level) {
+            // (処理内容は変更なし)
+            const levelSelectArea = document.getElementById('ranking-level-select');
+            const resultDisplayArea = document.getElementById('ranking-result-display');
+            resultDisplayArea.innerHTML = `<p class="text-center">レベル ${level} のランキングを読み込み中...</p>`;
+            levelSelectArea.classList.add('hidden');
+            resultDisplayArea.classList.remove('hidden');
+
+            fetch(GAS_WEB_APP_URL + "?level=" + level) 
+                .then(response => response.json())
+                .then(data => {
+                    // (処理内容は変更なし)
+                    if (data.status === 'error') {
+                        throw new Error(data.message);
+                    }
+                    let html = `<h3 class="text-xl font-bold text-yellow-400 text-center mb-3">🏆 レベル ${level} TOP 10 🏆</h3>`;
+                    if (data.length === 0) {
+                        html += '<p class="text-center">まだランキングデータがありません。</p>';
+                    } else {
+                        html += '<ol class="list-decimal list-inside space-y-2">';
+                        data.forEach((item, index) => {
+                            let medal = '';
+                            if(index === 0) medal = '🥇';
+                            if(index === 1) medal = '🥈';
+                            if(index === 2) medal = '🥉';
+                            const formattedTime = formatTime(item.time);
+                            html += `<li>${medal} <strong>${item.name}</strong>: ${item.score}点 (${formattedTime})</li>`;
+                        });
+                        html += '</ol>';
+                    }
+                    // 「レベル選択に戻る」ボタンが showLevelSelect() を呼ぶ
+                    html += '<button onclick="showLevelSelect()" class="mt-4 w-full p-2 bg-gray-600 hover:bg-gray-700 rounded">レベル選択に戻る</button>';
+                    resultDisplayArea.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('ランキング取得エラー:', error);
+                    resultDisplayArea.innerHTML = `<p class="text-center text-red-500">ランキングの取得に失敗しました。</p><button onclick="showLevelSelect()" class="mt-4 w-full p-2 bg-gray-600 hover:bg-gray-700 rounded">レベル選択に戻る</button>`;
+                });
+        }
 
         /**
          * @function fetchAndDisplayRanking
@@ -780,6 +826,18 @@
                     resultDisplayArea.innerHTML = `<p class="text-center text-red-500">ランキングの取得に失敗しました。</p><button onclick="displayRanking()" class="mt-4 w-full p-2 bg-gray-600 hover:bg-gray-700 rounded">レベル選択に戻る</button>`;
                 });
         }
+		function closeRankingDisplay() {
+            // (処理内容は変更なし)
+            rankingDisplayArea.classList.add('hidden');
+            document.getElementById('ranking-result-display').classList.add('hidden');
+            document.getElementById('ranking-level-select').classList.remove('hidden');
+            showRankingButton.innerHTML = '🏆 ランキングを見る';
+        }
+		function showLevelSelect() {
+            // (処理内容は変更なし)
+            document.getElementById('ranking-result-display').classList.add('hidden');
+            document.getElementById('ranking-level-select').classList.remove('hidden');
+        }
         // --- 5. イベントリスナーの登録 ---
         // addEventListener: HTML要素が「～された時」に「～する」という処理を予約します。
         
