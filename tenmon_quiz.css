@@ -29,31 +29,25 @@ body {
 .choice-button {
     transition: all 0.2s;
 }
-.choice-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+.choice-button:active {
+    transform: translateY(1px);
 }
 
 /* --- 難易度選択ボタン スタイル --- */
 .difficulty-button {
     transition: all 0.2s;
 }
-.difficulty-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+.difficulty-button:active {
+    transform: translateY(1px);
 }
 
 body #quiz-container h1,
 body #score-display,
 body #question-number,
 body.selection-card .text-sky-400 {
-    color: #EAC963; /* 色 */
-	text-shadow: 
-        -1px -1px 0 #FFFFFF, /* 左上 */
-         1px -1px 0 #FFFFFF, /* 右上 */
-        -1px  1px 0 #FFFFFF, /* 左下 */
-         1px  1px 0 #FFFFFF, /* 右下 */
-         0px 0px 20px #FFFFFF; /* 元の光る影 */
+    color: #EAC963; /* 文字の「塗り」の色 */
+	-webkit-text-stroke-width: 1px; /* 枠線の太さ */
+	-webkit-text-stroke-color: #FFFFFF; /* 枠線の色 (白) */
 }
 .sns-icon {
     color: #EAC963; /* タイトルと同じ色 */
@@ -64,13 +58,12 @@ body.selection-card .text-sky-400 {
         -1px -1px 0 #000,
          1px -1px 0 #000,
         -1px  1px 0 #000,
-         1px  1px 0 #000;
+         1px  1px 0 #000,
+		0px 0px 8px #FFFFFF;
 }
-
 .sns-icon:hover {
     color: #FFFFFF; /* ホバー時に白くする */
     transform: scale(1.15); /* 少し大きくする */
-    /* ホバー時に光るエフェクトも追加 */
     text-shadow: 
         -1px -1px 0 #000,
          1px -1px 0 #000,
