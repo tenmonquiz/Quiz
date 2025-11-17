@@ -1,11 +1,16 @@
 /* quiz-style.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=Noto+Sans+JP:wght@700;900&display=swap');
 
 /* --- 基本スタイル --- */
 body {
-    font-family: 'Inter', sans-serif;
+    /* ▼▼▼ 変更点 2: フォント指定に 'Noto Sans JP' を追加 ▼▼▼ */
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    
+    /* ▼▼▼ 変更点 3: サイト全体の文字をデフォルトで「太字(700)」にする ▼▼▼ */
+    font-weight: 700; 
 
-
+    /* ▼▼▼ 変更点 4: 文字間隔を少し広げて、太字でも読みやすくする ▼▼▼ */
+    letter-spacing: 0.05em;
     /* ▼▼▼ 背景画像の設定をここに追加します ▼▼▼ */
     background-image: url('galaxy.jpg'); /* ここに背景画像のURLを指定 */
     background-size: cover; /* 背景画像を画面全体に広げ、はみ出る部分は隠す */
@@ -42,6 +47,12 @@ body {
 }
 
 body #quiz-container h1,
+#final-score-text {
+    color: #EAC963; /* 塗り */
+    -webkit-text-stroke-width: 1.5px; /* 枠線の太さ */
+    -webkit-text-stroke-color: #FFFFFF; /* 枠線の色 */
+    paint-order: stroke fill; /* 枠線を文字の「後ろ」に描画して、文字が痩せるのを防ぐ */
+}
 body #score-display,
 body #question-number,
 body.selection-card .text-sky-400 {
