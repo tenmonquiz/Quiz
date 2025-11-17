@@ -15,9 +15,9 @@
         <div class="flex justify-between items-center mb-6">
             
             <div class="flex items-center gap-4">
-                <button id="home-button" class="hidden px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-md transition duration-150">
-                    HOME
-                </button>
+				<button id="home-button" class="hidden fixed top-4 left-4 z-50 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-full shadow-md transition duration-150">
+					HOME
+				</button>
                 <h1 class="text-3xl font-bold text-gray-100">天文クイズ</h1> 
             </div>
             
@@ -32,9 +32,12 @@
                     </a>
                 </div>
 
-                <div id="score-display" class="text-lg font-semibold text-sky-400 p-2 rounded-lg bg-gray-800 shadow-lg">
-                    スコア: 0 / 0
-                </div>
+                <div class="flex flex-col items-center justify-center px-4 py-2 rounded-lg bg-gray-800 shadow-lg">
+					<span class="text-xs font-bold text-gray-400 mb-1">スコア</span>
+					<div id="score-display" class="text-xl font-bold text-yellow-400 leading-none">
+						0 / 0
+					</div>
+				</div>
             </div>
 		</div>
 
@@ -278,7 +281,7 @@
             mainTitle.textContent = `天文クイズレベル${currentLevel}`;
             const totalQuestions = selectedQuizData.length;
             startScreenTitle.textContent = `全${totalQuestions}問！宇宙の知識を試そう！`;
-            scoreDisplay.textContent = `スコア: 0 / ${totalQuestions}`;
+            scoreDisplay.textContent = ` 0 / ${totalQuestions}`;
 
             // 4. 画面を切り替え（難易度選択 → スタート画面）
             difficultySelectScreen.classList.add('hidden');
@@ -330,7 +333,7 @@
 
             // 4. タイトルやスコア表示を初期状態に戻す
             mainTitle.textContent = "天文クイズ";
-            scoreDisplay.textContent = "スコア: 0 / 0";
+            scoreDisplay.textContent = " 0 / 0";
             startScreenTitle.textContent = "宇宙の知識を試そう！";
 
             // 5. ランキング表示も閉じる
@@ -391,7 +394,7 @@
          * @description 現在のスコアを画面上部のスコア表示エリアに反映する
          */
         function updateScoreDisplay() {
-            scoreDisplay.textContent = `スコア: ${score} / ${shuffledQuizData.length}`;
+            scoreDisplay.textContent = ` ${score} / ${shuffledQuizData.length}`;
         }
 
         /**
@@ -544,11 +547,30 @@
             // 4. 結果を画面に表示
             resultTitle.textContent = titleText; 
             finalScoreText.textContent = `${score} / ${total} (${formattedTime})`; 
-            scoreDisplay.textContent = `最終スコア: ${score} / ${total}`;
+            scoreDisplay.textContent = `${score} / ${total}`;
 			
 			// 5.シェアするテキストを生成
-            const shareText = `天文クイズ🚀 (レベル${currentLevel}) で ${score} / ${total} 問正解しました！ (クリアタイム: ${formattedTime}) ６号館4階でプラネタリウムも開催中⭐️#千葉工大 ＃天文研究部 #津田沼祭 #第76回津田沼祭`;
+            let shareText = "";
 
+            if (score === total) {
+                // ★満点の時のテキスト
+                shareText = `天文クイズ🚀 (レベル${currentLevel})で
+【 👑 全問正解達成！！ 👑 】
+クリアタイム: ${formattedTime}
+
+あなたも宇宙博士を目指そう！
+６号館4階でプラネタリウムも開催中⭐️
+
+#千葉工大 #天文研究部 #津田沼祭 #第76回津田沼祭 #沼祭天文クイズ`;
+            } else {
+                // ★それ以外の時のテキスト
+                shareText = `天文クイズ🚀 (レベル${currentLevel})
+${score} / ${total} 問正解しました！ (クリアタイム: ${formattedTime})
+
+６号館4階でプラネタリウムも開催中⭐️
+
+#千葉工大 #天文研究部 #津田沼祭 #第76回津田沼祭 #沼祭天文クイズ`;
+            }
             //  XのシェアURL（Web Intent）を作成
             // encodeURIComponent() は、テキストやURLをツイートで安全に使えるように変換します
             const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
