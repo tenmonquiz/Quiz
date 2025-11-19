@@ -23,13 +23,10 @@ body {
     max-width: 720px; /* スマホ〜タブレットで見やすい幅 */
 }
 
-/* --- カードデザイン (透明度維持 + 金色の枠線) --- */
+/* --- カードデザイン (透明度維持 ) --- */
 .question-card, .result-card, .selection-card {
     /* 背景: 濃紺の半透明 (星空が透けるように) */
-    background: rgba(26, 30, 43, 0.80);
-    
-
-    
+    background: rgba(26, 30, 43, 0.80);   
 }
 
 /* --- ボタン共通スタイル --- */
@@ -46,7 +43,6 @@ body {
     background: rgba(44, 51, 69, 0.9); /* 背景も少し透過 */
     color: #FFD700; /* 文字色: 金 */
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2); /* ボタンの影 */
 }
 
 /* ボタンを押した瞬間 (:active) の挙動 */
@@ -108,7 +104,7 @@ body #quiz-container h1,
     color: #FFD700; /* 金色 */
     
     /* 文字の縁取り線 */
-    -webkit-text-stroke-width: 1.2px;
+    /*-webkit-text-stroke-width: 5.0px;
     -webkit-text-stroke-color: #FFFFFF;
     paint-order: stroke fill; /* 線で文字が痩せるのを防ぐ */
 

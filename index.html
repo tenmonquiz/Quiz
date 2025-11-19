@@ -63,11 +63,11 @@
                         <h3 class="text-lg font-bold text-yellow-400 text-center mb-3">🏆 ランキング 🏆</h3>
                         <p class="text-center text-sm mb-3">見るレベルを選択してください</p>
                         <div class="flex flex-col gap-2">
-                            <button data-rank-level="1" class="rank-level-btn difficulty-button level-1 p-2 text-sm">レベル 1</button>
-                            <button data-rank-level="2" class="rank-level-btn difficulty-button level-2 p-2 text-sm">レベル 2</button>
-                            <button data-rank-level="3" class="rank-level-btn difficulty-button level-3 p-2 text-sm">レベル 3</button>
-                            <button data-rank-level="4" class="rank-level-btn difficulty-button level-4 p-2 text-sm">レベル 4</button>
-                            <button data-rank-level="5" class="rank-level-btn difficulty-button level-5 p-2 text-sm">レベル 5</button>
+                            <button data-rank-level="1" class="rank-level-btn  level-1 p-2 text-sm">レベル 1</button>
+                            <button data-rank-level="2" class="rank-level-btn  level-2 p-2 text-sm">レベル 2</button>
+                            <button data-rank-level="3" class="rank-level-btn  level-3 p-2 text-sm">レベル 3</button>
+                            <button data-rank-level="4" class="rank-level-btn  level-4 p-2 text-sm">レベル 4</button>
+                            <button data-rank-level="5" class="rank-level-btn  level-5 p-2 text-sm">レベル 5</button>
                         </div>
                         <button id="close-ranking-btn" class="mt-3 w-full p-2 bg-gray-600 text-sm rounded">閉じる</button>
                     </div>
@@ -299,7 +299,7 @@
             // 難易度選択ボタン (修正: クラス名を difficulty-button に統一)
             document.querySelectorAll('.difficulty-button').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const level = e.target.dataset.level;
+                    const level = btn.dataset.level;
                     selectDifficulty(level);
                 });
             });
@@ -307,7 +307,7 @@
             // ランキングのレベル選択ボタン
             document.querySelectorAll('.rank-level-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const level = e.target.dataset.rankLevel;
+                    const level = btn.dataset.rankLevel;
                     fetchAndDisplayRanking(level);
                 });
             });
