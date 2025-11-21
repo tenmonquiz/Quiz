@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合言葉入力サイト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&family=Roboto:wght@700&display=swap');
+
+        body {
+            font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+            background-image: url('galaxy.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+
+        .glass-panel {
+            background-color: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .premium-title {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 10px rgba(245, 158, 11, 0.3));
+            letter-spacing: 0.1em;
+        }
+
+        .clean-input {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 2px solid #374151;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .clean-input:focus {
+            border-color: #F59E0B;
+            background-color: rgba(0, 0, 0, 0.5);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+        }
+        .clean-input::placeholder {
+            color: #9CA3AF;
+        }
+
+        .btn-gold {
+            background: linear-gradient(to bottom right, #F59E0B, #D97706);
+            border: none;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+        .btn-gold:hover {
+            background: linear-gradient(to bottom right, #FBBF24, #F59E0B);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+        }
+
+        /* --- プレビューエリアの調整 (スマホ縦長比率) --- */
+        .wallpaper-preview {
+            width: 100%;
+            /* スマホの一般的なアスペクト比 (9:16) に変更 */
+            padding-top: 177.77%; /* (16 / 9) * 100% */
+            background-color: #1F2937;
+            background-size: cover;
+            background-position: center;
+            border-radius: 0.75rem;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            border: 1px solid #374151;
+            max-height: 500px; /* プレビューが大きくなりすぎないように最大高さを設定 */
+            margin-left: auto; /* 中央寄せ */
+            margin-right: auto; /* 中央寄せ */
+        }
+        /* 横幅がある程度ある場合は、プレビューの横幅を調整して大きくなりすぎないようにする */
+        @media (min-width: 640px) { /* sm breakpoint */
+            .wallpaper-preview {
+                max-width: 280px; /* PC画面で見た時のスマホプレビューの最大幅 */
+            }
+        }
+
+
+        .fade-in {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center py-12 px-4 overflow-y-auto">
+
+    <div class="max-w-lg w-full glass-panel rounded-2xl overflow-hidden">
+        
+        <div class="p-8 text-center border-b border-gray-700/50">
+            <h1 class="text-3xl premium-title mb-3">
+                <i class="fa-solid fa-gift mr-2 text-yellow-500"></i>天文研究部の合言葉
+            </h1>
+            <p class="text-gray-300 text-sm font-medium">
+                合言葉を入力してオリジナルの限定壁紙をゲット！
+            </p>
+        </div>
+
+        <div id="input-area" class="p-8">
+            <label for="keyword" class="block text-xs font-bold text-yellow-500 uppercase tracking-wider mb-2">
+                SECRET WORD
+            </label>
+            <div class="flex flex-col gap-4">
+                <input type="text" id="keyword" placeholder="合言葉を入力..." 
+                    class="clean-input w-full rounded-lg px-4 py-3 text-lg">
+                
+                <button onclick="checkKeyword()" 
+                    class="btn-gold w-full py-3 rounded-lg shadow-lg transition duration-200">
+                    送信する
+                </button>
+            </div>
+            
+            <div id="error-msg" class="hidden mt-4 flex items-center text-red-400 text-sm font-bold bg-red-900/20 p-3 rounded border border-red-900/50">
+                <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                合言葉が違います。もう一度試してください。
+            </div>
+        </div>
+
+        <div id="result-area" class="hidden p-8 border-t border-gray-700/50 fade-in">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-900/30 text-green-400 mb-4 ring-1 ring-green-500/50">
+                    <i class="fa-solid fa-check text-3xl"></i>
+                </div>
+                
+                <h2 class="text-2xl font-bold text-white mb-6">認証成功！</h2>
+                
+                <div class="relative group mb-6">
+                    <div id="wallpaper-preview-container" class="wallpaper-preview"></div>
+                    <div class="absolute bottom-3 right-3 bg-black/80 text-[10px] text-gray-300 px-3 py-1 rounded-full backdrop-blur border border-gray-600">
+                        Preview (Mobile)
+                    </div>
+                </div>
+
+                <div class="bg-gray-800/50 rounded-xl p-5 mb-6 text-left border border-gray-700">
+                    <p id="desc-text" class="text-gray-200 text-sm leading-relaxed"></p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <a id="download-pc" href="#" download class="flex flex-col items-center justify-center bg-slate-700 hover:bg-slate-600 text-white rounded-xl p-4 transition duration-200 no-underline group border border-slate-600 hover:border-slate-500">
+                        <i class="fa-solid fa-desktop text-2xl mb-2 text-blue-400 group-hover:scale-110 transition"></i>
+                        <span class="text-xs text-gray-400 mb-1">PC用</span>
+                        <span class="font-bold text-sm">ダウンロード</span>
+                    </a>
+                    
+                    <a id="download-mobile" href="#" download class="flex flex-col items-center justify-center bg-slate-700 hover:bg-slate-600 text-white rounded-xl p-4 transition duration-200 no-underline group border border-slate-600 hover:border-slate-500">
+                        <i class="fa-solid fa-mobile-screen text-2xl mb-2 text-pink-400 group-hover:scale-110 transition"></i>
+                        <span class="text-xs text-gray-400 mb-1">スマホ用</span>
+                        <span class="font-bold text-sm">ダウンロード</span>
+                    </a>
+                </div>
+
+                <button onclick="resetForm()" class="mt-8 text-gray-400 text-sm hover:text-white transition flex items-center justify-center mx-auto gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    戻る
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ▼▼▼ 設定エリア ▼▼▼
+        const secretData = {
+            // キーは小文字で統一。aliases に表記揺れを追加。
+            "金星": {
+                file_pc: "ポスターイラスト.jpg",
+                file_mobile: "ポスターイラスト.jpg",
+                desc: "今年度のビラに使用されているデザインです。部員が作成しました。",
+                aliases: ["きんせい", "いんせき","隕石"] 
+            },
+            "合言葉": {
+                file_pc: "sky_pc.png",
+                file_mobile: "sky_mobile.png",
+                desc: "絶対そういうことすると思ったよ。しょうがねぇなこれやるよ",
+                aliases: ["あいことば,合言葉を入力"]
+            },
+            "secret123": {
+                file_pc: "rare_pc.jpg",
+                file_mobile: "rare_mobile.jpg",
+                desc: "【Congratulations!】シークレットコードの発見おめでとうございます。限定壁紙をお受け取りください。",
+                aliases: [] // 別名がない場合は空の配列
+            }
+        };
+        // ▲▲▲ 設定エリア終了 ▲▲▲
+
+        const inputArea = document.getElementById('input-area');
+        const resultArea = document.getElementById('result-area');
+        const keywordInput = document.getElementById('keyword');
+        const errorMsg = document.getElementById('error-msg');
+        
+        const descText = document.getElementById('desc-text');
+        const previewContainer = document.getElementById('wallpaper-preview-container');
+        
+        const btnPc = document.getElementById('download-pc');
+        const btnMobile = document.getElementById('download-mobile');
+
+        function checkKeyword() {
+            const inputVal = keywordInput.value.trim().toLowerCase(); // 入力を小文字に変換
+
+            let foundData = null;
+
+            // secretDataのキーを直接チェック
+            if (secretData[inputVal]) {
+                foundData = secretData[inputVal];
+            } else {
+                // aliasesを検索
+                for (const key in secretData) {
+                    if (secretData[key].aliases && secretData[key].aliases.includes(inputVal)) {
+                        foundData = secretData[key];
+                        break;
+                    }
+                }
+            }
+
+            if (foundData) {
+                // 合言葉が見つかった場合
+                errorMsg.classList.add('hidden');
+                
+                // 【変更点】プレビューにスマホ版画像をセット
+                previewContainer.style.backgroundImage = `url('${foundData.file_mobile}')`;
+                descText.textContent = foundData.desc;
+
+                btnPc.href = foundData.file_pc;
+                btnPc.download = foundData.file_pc.split('/').pop();
+
+                btnMobile.href = foundData.file_mobile;
+                btnMobile.download = foundData.file_mobile.split('/').pop();
+
+                inputArea.classList.add('hidden');
+                resultArea.classList.remove('hidden');
+            } else {
+                // 合言葉が間違っている場合
+                errorMsg.classList.remove('hidden');
+                keywordInput.classList.add('ring-2', 'ring-red-500');
+                setTimeout(() => keywordInput.classList.remove('ring-2', 'ring-red-500'), 500);
+            }
+        }
+
+        function resetForm() {
+            keywordInput.value = '';
+            errorMsg.classList.add('hidden');
+            resultArea.classList.add('hidden');
+            inputArea.classList.remove('hidden');
+            
+            setTimeout(() => {
+                previewContainer.style.backgroundImage = '';
+            }, 500);
+        }
+
+        keywordInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkKeyword();
+            }
+        });
+    </script>
+</body>
+</html>
