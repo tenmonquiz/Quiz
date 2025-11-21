@@ -75,8 +75,10 @@
                 </div>
 
                 <div class="absolute bottom-2 right-3">
-                    <a href="secret.html" class="text-xs text-[#171c23] no-underline">*</a>
-                </div>
+					<button id="secret-button" class="text-xs text-[#171c23] font-bold bg-transparent border-none cursor-default focus:outline-none">
+		0
+					</button>
+				</div>
             </div>
 
             <div id="start-screen" class="screen hidden text-center">
@@ -89,6 +91,10 @@
             
             <div id="quiz-screen" class="screen hidden">
                 <div class="mb-4">
+					<div class="w-full bg-gray-700 rounded-full h-2.5 mb-4 overflow-hidden">
+						<div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%">
+						</div>
+					</div>
                     <p id="question-number" class="text-sm font-medium text-sky-400 mb-1">問題 1 / 10</p>
                     <div id="question-area" class="text-lg font-semibold text-gray-100 p-3 bg-gray-700 rounded-lg">
                         問題文がここに表示されます
@@ -142,6 +148,10 @@
 
         // --- 1. クイズデータ ---
         const allQuizData = {
+			"0": [
+				{ question: "次の中で存在する星座は？", choices: ["ぎょうざ", "あかざ", "さそりざ", "ピザ"], answer: "さそりざ", exp:"素晴らしい提案をしよう。お前も天文部にならないか？" },
+				{ question: "現在、宇宙の始まりに起きた現象として最も有力なのは？", choices: ["ビッグマム", "ビックバン", "ビックカメラ", "びっくりした"], answer: "ビックバン", exp:"回答の候補としてビックリマン、ビックカツなどもあった。" },
+				  ],
             "1": [
                 { question: "月は地球の周りを回りながら自転しています。月は約何日で1回自転をするでしょう？", choices: ["約1日", "約27日", "約60日", "約243日"], answer: "約27日", exp:"月の自転周期は27.3日で、約1カ月かけて自転しています。公転周期も同じく27.3日のため、地球からは月の裏側を観測することはできません。" },
 				
@@ -275,6 +285,7 @@
             
             scoreDisplay: document.getElementById('score-display'),
             questionNumber: document.getElementById('question-number'),
+			progressBar: document.getElementById('progress-bar'),
             questionArea: document.getElementById('question-area'),
             choicesArea: document.getElementById('choices-area'),
             feedbackArea: document.getElementById('feedback-area'),
@@ -291,7 +302,8 @@
             
             rankingDisplayArea: document.getElementById('ranking-display-area'),
             rankingLevelSelect: document.getElementById('ranking-level-select'),
-            rankingResultDisplay: document.getElementById('ranking-result-display')
+            rankingResultDisplay: document.getElementById('ranking-result-display'),
+			secretButton: document.getElementById('secret-button')
         };
 
         // --- 4. 初期化 & イベントリスナー設定 ---
@@ -301,8 +313,13 @@
                 btn.addEventListener('click', (e) => {
                     const level = btn.dataset.level;
                     selectDifficulty(level);
-                });
-            });
+					});
+				});
+				dom.secretButton.addEventListener('click', () => {
+					if (confirm("⚠️ 隠しコマンド検出 ⚠️\n\n難易度「レベル 0 (Special)」に挑戦しますか？")) {
+						selectDifficulty('0');
+						}
+				});
 
             // ランキングのレベル選択ボタン
             document.querySelectorAll('.rank-level-btn').forEach(btn => {
@@ -402,6 +419,9 @@
             
             dom.expScreen.classList.add('hidden');
             dom.quizScreen.classList.remove('hidden');
+			
+			const progressPercent = ((currentQuestionIndex + 1) / shuffledQuizData.length) * 100;
+			dom.progressBar.style.width = `${progressPercent}%`;
 
             const currentQuiz = shuffledQuizData[currentQuestionIndex];
             dom.questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
