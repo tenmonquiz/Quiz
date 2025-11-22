@@ -3,172 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>合言葉入力サイト</title>
+    <title>天文研究部｜こたえ入力</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&family=Roboto:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Montserrat:wght@600;800&display=swap');
+
+        :root {
+            --glass-bg: rgba(20, 25, 40, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --accent-gold: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.4);
+        }
 
         body {
-            font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+            /* 日本語は丸ゴシック、英語はMontserratを使用 */
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            background-attachment: fixed;
+            color: #f3f4f6;
+            min-height: 100dvh;
+            position: relative;
+            letter-spacing: 0.05em; /* 文字間を少し空けて読みやすく */
+        }
+
+        .bg-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: url('galaxy.jpg'); 
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: #e5e7eb;
-            line-height: 1.6;
+            opacity: 0.6;
+            z-index: -1;
         }
 
-        .glass-panel {
-            background-color: rgba(13, 17, 23, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
 
-        .premium-title {
-            font-family: 'Noto Sans JP', sans-serif;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 2px 10px rgba(245, 158, 11, 0.3));
+        .font-en {
+            font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.1em;
         }
 
-        .clean-input {
-            background-color: rgba(0, 0, 0, 0.3);
-            border: 2px solid #374151;
-            color: #ffffff;
+        /* タイトルのデザイン強化 */
+        .title-gradient {
+            background: linear-gradient(to right, #fff 20%, #fbbf24 50%, #fff 80%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 5s linear infinite;
+            /* 丸ゴシックの太字はポップで可愛い */
+            font-weight: 900; 
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .input-group {
+            position: relative;
             transition: all 0.3s ease;
         }
-        .clean-input:focus {
-            border-color: #F59E0B;
-            background-color: rgba(0, 0, 0, 0.5);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
-        }
-        .clean-input::placeholder {
-            color: #9CA3AF;
-        }
-
-        .btn-gold {
-            background: linear-gradient(to bottom right, #F59E0B, #D97706);
-            border: none;
+        .clean-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-weight: bold;
-            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            font-family: 'Zen Maru Gothic', sans-serif; /* 入力文字も丸く */
         }
-        .btn-gold:hover {
-            background: linear-gradient(to bottom right, #FBBF24, #F59E0B);
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+        .clean-input:focus {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px var(--accent-glow);
+            outline: none;
         }
 
-        /* --- プレビューエリアの調整 (スマホ縦長比率) --- */
-        .wallpaper-preview {
-            width: 100%;
-            /* スマホの一般的なアスペクト比 (9:16) に変更 */
-            padding-top: 177.77%; /* (16 / 9) * 100% */
-            background-color: #1F2937;
-            background-size: cover;
-            background-position: center;
-            border-radius: 0.75rem;
+        .btn-cosmic {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             position: relative;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-            border: 1px solid #374151;
-            max-height: 500px; /* プレビューが大きくなりすぎないように最大高さを設定 */
-            margin-left: auto; /* 中央寄せ */
-            margin-right: auto; /* 中央寄せ */
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* 横幅がある程度ある場合は、プレビューの横幅を調整して大きくなりすぎないようにする */
-        @media (min-width: 640px) { /* sm breakpoint */
-            .wallpaper-preview {
-                max-width: 280px; /* PC画面で見た時のスマホプレビューの最大幅 */
-            }
+        .btn-cosmic::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-cosmic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.5);
+        }
+        .btn-cosmic:hover::after {
+            left: 100%;
+        }
+        .btn-cosmic:active {
+            transform: translateY(1px);
         }
 
-
-        .fade-in {
-            animation: slideUp 0.5s ease-out forwards;
+        .preview-frame {
+            border: 4px solid #374151;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 9/16;
+            max-width: 220px;
+            margin: 0 auto;
+            background: #111827;
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .fade-enter {
+            animation: fadeEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeEnter {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center py-12 px-4 overflow-y-auto">
+<body class="flex items-center justify-center p-4">
 
-    <div class="max-w-lg w-full glass-panel rounded-2xl overflow-hidden">
+    <div class="bg-image-overlay"></div>
+
+    <div class="w-full max-w-md glass-card rounded-2xl overflow-hidden fade-enter relative z-10">
         
-        <div class="p-8 text-center border-b border-gray-700/50">
-            <h1 class="text-3xl premium-title mb-3">
-                <i class="fa-solid fa-gift mr-2 text-yellow-500"></i>天文研究部の合言葉
+        <div class="pt-10 pb-6 px-8 text-center">
+            <div class="inline-block p-3 rounded-full bg-white/5 mb-4 border border-white/10 shadow-[0_0_20px_rgba(251,191,36,0.15)]">
+                <i class="fa-solid fa-star text-2xl text-yellow-400"></i>
+            </div>
+            <h1 class="text-2xl tracking-wider mb-2">
+                <span class="title-gradient">クロスワード回答</span>
             </h1>
-            <p class="text-gray-300 text-sm font-medium">
-                合言葉を入力してオリジナルの限定壁紙をゲット！
+            <p class="text-gray-400 text-xs font-medium tracking-widest uppercase font-en">
+                Tenmon Kenkyu-bu
             </p>
         </div>
 
-        <div id="input-area" class="p-8">
-            <label for="keyword" class="block text-xs font-bold text-yellow-500 uppercase tracking-wider mb-2">
-                SECRET WORD
-            </label>
-            <div class="flex flex-col gap-4">
-                <input type="text" id="keyword" placeholder="合言葉を入力..." 
-                    class="clean-input w-full rounded-lg px-4 py-3 text-lg">
+        <div id="input-area" class="px-8 pb-10">
+            <p class="text-gray-300 text-sm text-center mb-8 leading-relaxed font-bold">
+                クロスワードの<br>「答え」を入力してください。
+            </p>
+
+            <div class="space-y-5">
+                <div class="input-group">
+                    <label for="keyword" class="block text-xs font-bold text-yellow-500/80 mb-1.5 font-en tracking-wide ml-1">ANSWER</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-pen absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                        <input type="text" id="keyword" placeholder="答えを入力..." 
+                            class="clean-input w-full rounded-xl py-3.5 pl-12 pr-4 text-base placeholder-gray-500 focus:placeholder-gray-400 font-bold">
+                    </div>
+                </div>
                 
                 <button onclick="checkKeyword()" 
-                    class="btn-gold w-full py-3 rounded-lg shadow-lg transition duration-200">
-                    送信する
+                    class="btn-cosmic w-full py-4 rounded-xl text-white font-bold tracking-widest text-sm shadow-lg flex items-center justify-center gap-2 font-en">
+                    <span>UNLOCK</span>
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
             
-            <div id="error-msg" class="hidden mt-4 flex items-center text-red-400 text-sm font-bold bg-red-900/20 p-3 rounded border border-red-900/50">
-                <i class="fa-solid fa-circle-exclamation mr-2"></i>
-                合言葉が違います。もう一度試してください。
+            <div id="error-msg" class="hidden mt-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3 text-red-200 text-sm animate-pulse">
+                <i class="fa-solid fa-circle-xmark text-red-400"></i>
+                <span>答えが間違っています</span>
             </div>
         </div>
 
-        <div id="result-area" class="hidden p-8 border-t border-gray-700/50 fade-in">
+        <div id="result-area" class="hidden px-6 pb-10 pt-2">
             <div class="text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-900/30 text-green-400 mb-4 ring-1 ring-green-500/50">
-                    <i class="fa-solid fa-check text-3xl"></i>
-                </div>
-                
-                <h2 class="text-2xl font-bold text-white mb-6">認証成功！</h2>
-                
-                <div class="relative group mb-6">
-                    <div id="wallpaper-preview-container" class="wallpaper-preview"></div>
-                    <div class="absolute bottom-3 right-3 bg-black/80 text-[10px] text-gray-300 px-3 py-1 rounded-full backdrop-blur border border-gray-600">
-                        Preview (Mobile)
-                    </div>
+                <div class="mb-6">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/20 text-green-300 text-xs font-bold border border-green-500/30">
+                        <i class="fa-solid fa-check"></i> 正解！
+                    </span>
                 </div>
 
-                <div class="bg-gray-800/50 rounded-xl p-5 mb-6 text-left border border-gray-700">
-                    <p id="desc-text" class="text-gray-200 text-sm leading-relaxed"></p>
+                <div class="relative mb-8">
+                    <div id="wallpaper-preview-container" class="preview-frame bg-cover bg-center"></div>
+                    <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-16 h-4 bg-black rounded-b-xl z-10 opacity-80"></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <a id="download-pc" href="#" download class="flex flex-col items-center justify-center bg-slate-700 hover:bg-slate-600 text-white rounded-xl p-4 transition duration-200 no-underline group border border-slate-600 hover:border-slate-500">
-                        <i class="fa-solid fa-desktop text-2xl mb-2 text-blue-400 group-hover:scale-110 transition"></i>
-                        <span class="text-xs text-gray-400 mb-1">PC用</span>
-                        <span class="font-bold text-sm">ダウンロード</span>
+                <p id="desc-text" class="text-gray-300 text-sm mb-8 px-2 leading-loose border-l-2 border-yellow-500/50 pl-4 text-left bg-white/5 py-2 rounded-r-lg">
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <a id="download-pc" href="#" download class="flex flex-col items-center justify-center bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl p-4 border border-slate-600 hover:border-slate-500 transition group">
+                        <i class="fa-solid fa-desktop text-xl mb-2 text-blue-400 group-hover:scale-110 transition"></i>
+                        <span class="text-[10px] text-gray-400 font-en tracking-wide">FOR PC</span>
+                        <span class="font-bold text-xs">ダウンロード</span>
                     </a>
                     
-                    <a id="download-mobile" href="#" download class="flex flex-col items-center justify-center bg-slate-700 hover:bg-slate-600 text-white rounded-xl p-4 transition duration-200 no-underline group border border-slate-600 hover:border-slate-500">
-                        <i class="fa-solid fa-mobile-screen text-2xl mb-2 text-pink-400 group-hover:scale-110 transition"></i>
-                        <span class="text-xs text-gray-400 mb-1">スマホ用</span>
-                        <span class="font-bold text-sm">ダウンロード</span>
+                    <a id="download-mobile" href="#" download class="flex flex-col items-center justify-center bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl p-4 border border-slate-600 hover:border-slate-500 transition group">
+                        <i class="fa-solid fa-mobile-screen text-xl mb-2 text-pink-400 group-hover:scale-110 transition"></i>
+                        <span class="text-[10px] text-gray-400 font-en tracking-wide">FOR MOBILE</span>
+                        <span class="font-bold text-xs">ダウンロード</span>
                     </a>
                 </div>
 
-                <button onclick="resetForm()" class="mt-8 text-gray-400 text-sm hover:text-white transition flex items-center justify-center mx-auto gap-2">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    戻る
+                <button onclick="resetForm()" class="mt-8 text-gray-500 text-sm hover:text-white transition flex items-center justify-center mx-auto gap-2 py-2 px-4 rounded-lg hover:bg-white/5">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                    <span>戻る</span>
                 </button>
             </div>
         </div>
@@ -177,24 +221,23 @@
     <script>
         // ▼▼▼ 設定エリア ▼▼▼
         const secretData = {
-            // キーは小文字で統一。aliases に表記揺れを追加。
             "金星": {
                 file_pc: "ポスターイラスト.jpg",
                 file_mobile: "ポスターイラスト.jpg",
-                desc: "今年度のビラに使用されているデザインです。部員が作成しました。",
+                desc: "今年度のビラに使用されているデザインです。部員が作成しました。実はもう一種類正解があります。並び替えてみてね",
                 aliases: ["きんせい", "いんせき","隕石"] 
             },
             "合言葉": {
-                file_pc: "sky_pc.png",
-                file_mobile: "sky_mobile.png",
+                file_pc: "十三夜.jpg",
+                file_mobile: "十三夜.jpg",
                 desc: "絶対そういうことすると思ったよ。しょうがねぇなこれやるよ",
-                aliases: ["あいことば,合言葉を入力"]
+                aliases: ["あいことば","合言葉を入力","こたえ","答え"]
             },
-            "secret123": {
-                file_pc: "rare_pc.jpg",
-                file_mobile: "rare_mobile.jpg",
-                desc: "【Congratulations!】シークレットコードの発見おめでとうございます。限定壁紙をお受け取りください。",
-                aliases: [] // 別名がない場合は空の配列
+            "隕石": {
+                file_pc: "星空.jpg",
+                file_mobile: "星空.jpg",
+                desc: "クロスワード完成おめでとう！実はもう一種類正解があります。並び替えてみてね",
+                aliases: [きんせい] 
             }
         };
         // ▲▲▲ 設定エリア終了 ▲▲▲
@@ -211,15 +254,12 @@
         const btnMobile = document.getElementById('download-mobile');
 
         function checkKeyword() {
-            const inputVal = keywordInput.value.trim().toLowerCase(); // 入力を小文字に変換
-
+            const inputVal = keywordInput.value.trim().toLowerCase();
             let foundData = null;
 
-            // secretDataのキーを直接チェック
             if (secretData[inputVal]) {
                 foundData = secretData[inputVal];
             } else {
-                // aliasesを検索
                 for (const key in secretData) {
                     if (secretData[key].aliases && secretData[key].aliases.includes(inputVal)) {
                         foundData = secretData[key];
@@ -229,44 +269,55 @@
             }
 
             if (foundData) {
-                // 合言葉が見つかった場合
                 errorMsg.classList.add('hidden');
-                
-                // 【変更点】プレビューにスマホ版画像をセット
+                keywordInput.classList.remove('border-red-500', 'ring-red-500');
+
                 previewContainer.style.backgroundImage = `url('${foundData.file_mobile}')`;
                 descText.textContent = foundData.desc;
-
                 btnPc.href = foundData.file_pc;
                 btnPc.download = foundData.file_pc.split('/').pop();
-
                 btnMobile.href = foundData.file_mobile;
                 btnMobile.download = foundData.file_mobile.split('/').pop();
 
-                inputArea.classList.add('hidden');
-                resultArea.classList.remove('hidden');
+                inputArea.style.opacity = '0';
+                setTimeout(() => {
+                    inputArea.classList.add('hidden');
+                    resultArea.classList.remove('hidden');
+                    
+                    resultArea.animate([
+                        { opacity: 0, transform: 'translateY(10px)' },
+                        { opacity: 1, transform: 'translateY(0)' }
+                    ], { duration: 400, fill: 'forwards', easing: 'ease-out' });
+                }, 300);
+
             } else {
-                // 合言葉が間違っている場合
                 errorMsg.classList.remove('hidden');
-                keywordInput.classList.add('ring-2', 'ring-red-500');
-                setTimeout(() => keywordInput.classList.remove('ring-2', 'ring-red-500'), 500);
+                keywordInput.classList.add('animate-pulse', 'border-red-500');
+                setTimeout(() => keywordInput.classList.remove('animate-pulse'), 500);
             }
         }
 
         function resetForm() {
             keywordInput.value = '';
             errorMsg.classList.add('hidden');
-            resultArea.classList.add('hidden');
-            inputArea.classList.remove('hidden');
-            
+            keywordInput.classList.remove('border-red-500');
+
+            resultArea.style.opacity = '0';
             setTimeout(() => {
+                resultArea.classList.add('hidden');
+                inputArea.classList.remove('hidden');
+                inputArea.style.opacity = '1';
                 previewContainer.style.backgroundImage = '';
-            }, 500);
+            }, 300);
         }
 
         keywordInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkKeyword();
-            }
+            if (e.key === 'Enter') checkKeyword();
+        });
+        
+        keywordInput.addEventListener('focus', function() {
+            errorMsg.classList.add('hidden');
+            this.classList.remove('border-red-500');
         });
     </script>
 </body>
