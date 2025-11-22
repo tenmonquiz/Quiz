@@ -274,10 +274,20 @@
 
                 previewContainer.style.backgroundImage = `url('${foundData.file_mobile}')`;
                 descText.textContent = foundData.desc;
-                btnPc.href = foundData.file_pc;
-                btnPc.download = foundData.file_pc.split('/').pop();
-                btnMobile.href = foundData.file_mobile;
-                btnMobile.download = foundData.file_mobile.split('/').pop();
+                // PCボタンの設定（クリック時の動作を上書き）
+btnPc.onclick = (e) => {
+    e.preventDefault(); // 普通のリンク移動をキャンセル
+    forceDownload(foundData.file_pc, foundData.file_pc.split('/').pop());
+};
+// 見た目上リンクっぽくするためにhrefも一応入れておく（機能はしない）
+btnPc.href = "#"; 
+
+// スマホボタンの設定
+btnMobile.onclick = (e) => {
+    e.preventDefault();
+    forceDownload(foundData.file_mobile, foundData.file_mobile.split('/').pop());
+};
+btnMobile.href = "#";
 
                 inputArea.style.opacity = '0';
                 setTimeout(() => {
@@ -314,6 +324,31 @@
         keywordInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') checkKeyword();
         });
+		async function forceDownload(url, filename) {
+    try {
+        // 1. 画像データを取得
+        const response = await fetch(url);
+        const blob = await response.blob();
+
+        // 2. 一時的なダウンロード用URLを作成
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // 3. 一時的なリンクを作成してクリック
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+
+        // 4. 後片付け
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+        // 失敗した場合（別ドメインの画像など）は、通常の新規タブ開きにする
+        console.error('Download failed:', e);
+        window.open(url, '_blank');
+    }
+}
         
         keywordInput.addEventListener('focus', function() {
             errorMsg.classList.add('hidden');
