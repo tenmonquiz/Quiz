@@ -1,7 +1,7 @@
 // --- DOM要素の取得 ---
 const dom = {
     homeButton: document.getElementById('home-button'),
-    modeScreen: document.getElementById('mode-select-screen'), // 追加
+    modeScreen: document.getElementById('mode-select-screen'),
     difficultyScreen: document.getElementById('difficulty-select-screen'),
     startScreen: document.getElementById('start-screen'),
     quizScreen: document.getElementById('quiz-screen'),
@@ -9,12 +9,12 @@ const dom = {
     answersScreen: document.getElementById('answers-screen'),
     
     startButton: document.getElementById('start-button'),
-    showRankingBtns: document.querySelectorAll('.show-ranking-btn'), // 複数対応に変更
+    showRankingBtns: document.querySelectorAll('.show-ranking-btn'), 
     closeRankingBtn: document.getElementById('close-ranking-btn'),
     showAnswersBtn: document.getElementById('show-answers-button'),
     backToResultBtn: document.getElementById('back-to-result-button'),
-    backToModeBtn: document.getElementById('back-to-mode-button'), // 追加
-    restartBtn: document.getElementById('restart-button'), // aタグからbuttonに変更
+    backToModeBtn: document.getElementById('back-to-mode-button'), 
+    restartBtn: document.getElementById('restart-button'), 
     
     scoreDisplay: document.getElementById('score-display'),
     questionNumber: document.getElementById('question-number'),
@@ -24,11 +24,12 @@ const dom = {
     choicesArea: document.getElementById('choices-area'),
     feedbackArea: document.getElementById('feedback-area'),
     answersList: document.getElementById('answers-list'),
-    selectedModeDisplay: document.getElementById('selected-mode-display'), // 追加
+    selectedModeDisplay: document.getElementById('selected-mode-display'), 
     
     resultTitle: document.getElementById('result-title'),
     finalScoreText: document.getElementById('final-score-text'),
     shareButton: document.getElementById('share-button'),
+	answersTitle: document.getElementById('answers-title'),
     
     mainTitle: document.querySelector('#quiz-container h1'),
     startScreenTitle: document.getElementById('start-screen').querySelector('h2'),
@@ -101,6 +102,8 @@ function showLevelSelect() {
 }
 
 function showAnswersList() {
+    dom.answersTitle.textContent = `解答と解説 (レベル ${currentLevel})`;
+    
     dom.answersList.innerHTML = '';
     
     userAnswers.forEach((ans, index) => {

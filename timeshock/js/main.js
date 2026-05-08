@@ -15,7 +15,7 @@ let userAnswers = [];
 
 // --- イベントリスナー設定 ---
 function initEventListeners() {
-    // 💡 モード選択ボタン
+    //モード選択ボタン
     document.querySelectorAll('.mode-button').forEach(btn => {
         btn.addEventListener('click', () => {
             selectMode(btn.dataset.mode);
@@ -27,12 +27,6 @@ function initEventListeners() {
         btn.addEventListener('click', () => {
             selectDifficulty(btn.dataset.level);
         });
-    });
-
-    dom.secretButton.addEventListener('click', () => {
-        if (confirm("⚠️ 隠しコマンド検出 ⚠️\n\n難易度「レベル 0 (Special)」に挑戦しますか？")) {
-            selectDifficulty('0');
-        }
     });
 
     document.querySelectorAll('.rank-level-btn').forEach(btn => {
@@ -101,7 +95,6 @@ function returnToHome() {
     dom.scoreDisplay.textContent = "0 / 0";
     
     closeRankingDisplay();
-    // 💡 ホームボタンで戻る先をモード選択画面にする
     showScreen(dom.modeScreen);
 
     currentQuestionIndex = 0;
@@ -298,12 +291,12 @@ function endGame() {
     let shareText = "";
     if (currentMode === 'timed') {
         if (score === total) {
-            shareText = `天文クイズ⚡タイムショック (レベル${currentLevel}) で【 👑 全問正解達成！！ 👑 】\nクリアタイム: ${formattedTime}\n\nあなたも宇宙博士を目指そう！\n６号館4階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #津田沼祭 #第76回津田沼祭 #沼祭天文クイズ`;
+            shareText = `天文クイズ⚡タイムショック (レベル${currentLevel}) で【 👑 全問正解達成！！ 👑 】\nクリアタイム: ${formattedTime}\n\nあなたも宇宙博士を目指そう！\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`;
         } else {
-            shareText = `天文クイズ⚡タイムショック (レベル${currentLevel})\n${score} / ${total} 問正解しました！ (クリアタイム: ${formattedTime})\n\n６号館4階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #津田沼祭 #第76回津田沼祭 #沼祭天文クイズ`;
+            shareText = `天文クイズタイムショック (レベル${currentLevel})\n${score} / ${total} 問正解しました！ (クリアタイム: ${formattedTime})\n\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`;
         }
     } else {
-        shareText = `天文クイズ☕じっくりモード (レベル${currentLevel})\n${score} / ${total} 問正解しました！\n\n６号館4階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #津田沼祭 #第76回津田沼祭 #沼祭天文クイズ`;
+        shareText = `天文クイズ　じっくりモード (レベル${currentLevel})\n${score} / ${total} 問正解しました！\n\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`;
     }
     dom.shareButton.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
 
@@ -343,15 +336,14 @@ function endGame() {
                     });
                 }
                 const safeUserName = escapeHTML(userName);
-
+				
                 sendScoreToGAS(safeUserName, score, currentLevel, clearTime, formattedTime);
             }
         }, 1100);
     } else {
-        // じっくりモードの時はアラートを出すだけ
         document.getElementById('result-message').textContent = "（ランキング登録はタイムショック限定です）";
         setTimeout(() => {
-            alert("☕ じっくりモードお疲れ様でした！\n解説を読んで知識を深めよう！\n※ランキングへの登録は「タイムショック」のみ可能です。");
+            alert("じっくりモードお疲れ様でした！\n解説を読んで知識を深めよう！\n※ランキングへの登録は「タイムショック」のみ可能です。");
         }, 1100);
     }
 }

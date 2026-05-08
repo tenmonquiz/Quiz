@@ -13,9 +13,7 @@
     <div id="quiz-container" class="container w-full max-w-md">
         <div class="flex justify-between items-center mb-4">
             <div class="flex items-center gap-3">
-                <button id="home-button" class="hidden fixed top-3 left-3 z-50 px-3 py-2 bg-blue-600 text-white font-bold text-sm rounded-full shadow-md">
-                    HOME
-                </button>
+                <button id="home-button" class="hidden px-3 py-2 bg-blue-600 text-white font-bold text-sm rounded-full shadow-md hover:bg-blue-500 transition active:scale-95">HOME</button>
                 <h1 class="text-2xl font-bold text-gray-100">天文クイズ</h1> 
             </div>
             
@@ -143,7 +141,8 @@
             </div>
 
             <div id="answers-screen" class="screen hidden">
-                <h2 class="text-xl font-bold mb-4 text-white text-center">解答と解説</h2>
+                <h2 id="answers-title" class="text-xl font-bold mb-4 text-white text-center">解答と解説</h2>
+                
                 <div id="answers-list" class="flex flex-col gap-4 mb-6 pr-2" style="max-height: 60vh; overflow-y: auto;"></div>
                 <div class="text-center">
                     <button id="back-to-result-button" class="w-full max-w-xs mx-auto px-6 py-3 bg-gray-600 hover:bg-gray-500 transition text-white font-bold text-base rounded-full shadow-xl">
@@ -151,7 +150,6 @@
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 
