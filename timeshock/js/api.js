@@ -1,4 +1,4 @@
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyzvBFBRYLyrZzfdsGcWoaU7hXIUggbPUqGcX9zK4qL6Cg9F6kbtKKvplekCwMtOpH4/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxHrdoESDbaT9-8gojaV7FVQMgoDUlAWcicHnsHxZ0Vk7HL2Nk4wjFywxkvaDh_YveT7w/exec";
 
 // ==========================================
 // スコア送信処理
