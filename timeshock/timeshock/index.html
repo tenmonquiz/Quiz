@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天文4択クイズ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/tenmon_quiz.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body class="min-h-[100dvh] flex items-center justify-center p-3 bg-gray-900">
+
+    <div id="quiz-container" class="container w-full max-w-md">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-3">
+                <button id="home-button" class="hidden fixed top-3 left-3 z-50 px-3 py-2 bg-blue-600 text-white font-bold text-sm rounded-full shadow-md">
+                    HOME
+                </button>
+                <h1 class="text-2xl font-bold text-gray-100">天文クイズ</h1> 
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <a href="https://www.instagram.com/cit.tenmon207/" target="_blank" rel="noopener noreferrer" class="sns-icon text-gray-300 hover:text-white transition">
+                        <i class="fa-brands fa-instagram fa-lg"></i>
+                    </a>
+                    <a href="https://x.com/Cittenmon" target="_blank" rel="noopener noreferrer" class="sns-icon text-gray-300 hover:text-white transition">
+                        <i class="fa-brands fa-x-twitter fa-lg"></i>
+                    </a>
+                </div>
+                <div class="flex flex-col items-center justify-center px-3 py-1 rounded-lg bg-gray-800 shadow-lg min-w-[80px]">
+                    <span class="text-[10px] font-bold text-gray-400 mb-0.5">SCORE</span>
+                    <div id="score-display" class="text-lg font-bold text-yellow-400 leading-none">0 / 0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-area" class="question-card relative bg-gray-800 rounded-xl p-4 shadow-2xl border border-gray-700">
+
+            <div id="mode-select-screen" class="screen text-center">
+                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 mb-2">天文クイズ</h1>
+                <p class="text-base text-sky-400 mb-8">モードを選択してください</p>
+
+                <div class="flex flex-col gap-4 mb-8">
+                    <button data-mode="timed" class="mode-button w-full p-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                        <div class="text-xl mb-1">タイムショック</div>
+                        <div class="text-xs font-normal opacity-90">1問10秒！</div>
+                    </button>
+                    
+                    <button data-mode="untimed" class="mode-button w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                        <div class="text-xl mb-1">じっくり</div>
+                        <div class="text-xs font-normal opacity-90">時間無制限（ランキング登録不可）</div>
+                    </button>
+                </div>
+                
+                <div>
+                    <button id="show-ranking-button-main" class="show-ranking-btn px-6 py-2 bg-gray-700 hover:bg-gray-600 transition text-white font-bold text-base rounded-full shadow-lg border border-gray-600">
+                        🏆 ランキングを見る
+                    </button>
+                </div>
+
+                <div id="ranking-display-area" class="hidden mt-4 p-3 bg-gray-900 rounded-lg text-left text-white" style="max-height: 350px; overflow-y: auto;">
+                    <div id="ranking-level-select">
+                        <h3 class="text-lg font-bold text-yellow-400 text-center mb-3">🏆 ランキング 🏆</h3>
+                        <p class="text-center text-sm mb-3">見るレベルを選択してください</p>
+                        <div class="flex flex-col gap-2">
+                            <button data-rank-level="1" class="rank-level-btn level-1 p-2 text-sm bg-gray-700 rounded hover:bg-gray-600">レベル 1</button>
+                            <button data-rank-level="2" class="rank-level-btn level-2 p-2 text-sm bg-gray-700 rounded hover:bg-gray-600">レベル 2</button>
+                            <button data-rank-level="3" class="rank-level-btn level-3 p-2 text-sm bg-gray-700 rounded hover:bg-gray-600">レベル 3</button>
+                            <button data-rank-level="4" class="rank-level-btn level-4 p-2 text-sm bg-gray-700 rounded hover:bg-gray-600">レベル 4</button>
+                            <button data-rank-level="5" class="rank-level-btn level-5 p-2 text-sm bg-gray-700 rounded hover:bg-gray-600">レベル 5</button>
+                        </div>
+                        <button id="close-ranking-btn" class="mt-3 w-full p-2 bg-gray-600 hover:bg-gray-500 text-sm rounded">閉じる</button>
+                    </div>
+                    <div id="ranking-result-display" class="hidden text-sm"></div>
+                </div>
+                
+                <div class="absolute bottom-2 right-3">
+                    <button id="secret-button" class="text-xs text-[#FFFFFF] font-bold bg-transparent border-none cursor-default focus:outline-none opacity-0 hover:opacity-100 transition">0</button>
+                </div>
+            </div>
+
+            <div id="difficulty-select-screen" class="screen text-center hidden">
+                <h1 class="text-2xl font-bold text-gray-100 mb-2">難易度選択</h1>
+                <p id="selected-mode-display" class="text-sm font-bold text-yellow-400 mb-4"></p>
+
+                <div class="flex flex-col gap-3">
+                    <button data-level="1" class="difficulty-button level-1 w-full p-3 bg-gray-700 text-gray-100 font-bold text-base rounded-lg shadow-md hover:bg-gray-600 transition">レベル 1</button>
+                    <button data-level="2" class="difficulty-button level-2 w-full p-3 bg-gray-700 text-gray-100 font-bold text-base rounded-lg shadow-md hover:bg-gray-600 transition">レベル 2</button>
+                    <button data-level="3" class="difficulty-button level-3 w-full p-3 bg-gray-700 text-gray-100 font-bold text-base rounded-lg shadow-md hover:bg-gray-600 transition">レベル 3</button>
+                    <button data-level="4" class="difficulty-button level-4 w-full p-3 bg-gray-700 text-gray-100 font-bold text-base rounded-lg shadow-md hover:bg-gray-600 transition">レベル 4</button>
+                    <button data-level="5" class="difficulty-button level-5 w-full p-3 bg-gray-700 text-gray-100 font-bold text-base rounded-lg shadow-md hover:bg-gray-600 transition">レベル 5</button>
+                </div>
+                
+                <div class="mt-6">
+                    <button id="back-to-mode-button" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 transition text-white font-bold text-base rounded-full shadow-lg border border-gray-500">
+                        戻る
+                    </button>
+                </div>
+            </div>
+
+            <div id="start-screen" class="screen hidden text-center">
+                <h2 class="text-xl font-bold mb-4 text-white">宇宙の知識を試そう！</h2>
+                <p class="text-gray-400 text-sm mb-6">スタートボタンを押してクイズを開始してください。</p>
+                <button id="start-button" class="px-8 py-3 bg-green-600 hover:bg-green-500 transition text-white font-bold text-lg rounded-full shadow-xl">
+                    クイズスタート
+                </button>
+            </div>
+            
+            <div id="quiz-screen" class="screen hidden">
+                <div class="mb-4">
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mb-2 overflow-hidden">
+                        <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+                    </div>
+                    <div class="flex justify-between items-end mb-2">
+                        <p id="question-number" class="text-sm font-medium text-sky-400 mb-1">問題 1 / 10</p>
+                        <div class="text-yellow-400 font-bold text-sm"><i class="fa-regular fa-clock"></i> 残り <span id="time-left" class="text-lg">10</span> 秒</div>
+                    </div>
+                    <div id="question-area" class="text-lg font-semibold text-gray-100 p-3 bg-gray-700 rounded-lg min-h-[80px]">
+                        問題文がここに表示されます
+                    </div>
+                </div>
+                <div id="choices-area" class="grid grid-cols-1 gap-3"></div>
+                <div id="feedback-area" class="mt-4 h-6 text-center text-lg font-bold transition-opacity"></div>
+            </div>
+            
+            <div id="result-screen" class="screen hidden text-center">
+                <h2 id="result-title" class="text-2xl font-bold mb-3 text-yellow-300"></h2>
+                <p id="final-score-text" class="text-4xl font-extrabold text-green-500 mb-5"></p>
+                <p class="text-gray-400 text-sm mb-6" id="result-message">また挑戦して、宇宙博士を目指そう！</p>
+                
+                <div class="flex flex-col gap-3 justify-center w-full max-w-xs mx-auto">
+                    <button id="show-answers-button" class="block w-full px-6 py-3 bg-sky-600 hover:bg-sky-500 transition text-white font-bold text-base rounded-full shadow-xl">
+                        <i class="fa-solid fa-book-open"></i> 答えと解説を見る
+                    </button>
+                    <button id="restart-button" class="block w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 transition text-white font-bold text-base rounded-full shadow-xl">
+                        もう一度プレイ
+                    </button>
+                    <a id="share-button" href="#" target="_blank" rel="noopener noreferrer" class="block w-full px-6 py-3 bg-gray-900 hover:bg-gray-700 border border-gray-600 transition text-white font-bold text-base rounded-full shadow-xl">
+                        <i class="fa-brands fa-x-twitter"></i> 結果をシェア
+                    </a>
+                </div>
+            </div>
+
+            <div id="answers-screen" class="screen hidden">
+                <h2 class="text-xl font-bold mb-4 text-white text-center">解答と解説</h2>
+                <div id="answers-list" class="flex flex-col gap-4 mb-6 pr-2" style="max-height: 60vh; overflow-y: auto;"></div>
+                <div class="text-center">
+                    <button id="back-to-result-button" class="w-full max-w-xs mx-auto px-6 py-3 bg-gray-600 hover:bg-gray-500 transition text-white font-bold text-base rounded-full shadow-xl">
+                        結果画面に戻る
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
