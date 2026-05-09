@@ -218,11 +218,11 @@
     <script>
         // ▼▼▼ 設定エリア ▼▼▼
         const secretData = {
-            "金星": {
-                file_pc: "irast.jpg",
-                file_mobile: "irast.jpg",
-                desc: "今年度のビラに使用されているデザインです。部員が作成しました。実はもう一種類正解があります。並び替えてみてね",
-                aliases: ["きんせい", "いんせき","隕石"] 
+            "コクテン": {
+                file_pc: "star.jpg",
+                file_mobile: "star_p.jpg",
+                desc: "正解！！遊んでくれてありがとう！！",
+                aliases: ["こくてん","黒点"] 
             },
             "合言葉": {
                 file_pc: "moon.jpg",
@@ -230,11 +230,11 @@
                 desc: "絶対そういうことすると思ったよ。しょうがねぇなこれやるよ",
                 aliases: ["あいことば","合言葉を入力","こたえ","答え"]
             },
-            "隕石": {
-                file_pc: "star.jpg",
-                file_mobile: "star.jpg",
-                desc: "クロスワード完成おめでとう！実はもう一種類正解があります。並び替えてみてね",
-                aliases: ["きんせい"] 
+            "インセキ": {
+                file_pc: "irast_PC.jpg",
+                file_mobile: "irast.jpg",
+                desc: "それ前回の答えだよよく覚えてたな",
+                aliases: ["金星","きんせい","隕石","いんせき","キンセイ"] 
             }
         };
         // ▲▲▲ 設定エリア終了 ▲▲▲
@@ -273,7 +273,6 @@
                 previewContainer.style.backgroundImage = `url('${foundData.file_mobile}')`;
                 descText.textContent = foundData.desc;
                 
-                // ▼▼▼ ダウンロードボタンの動作書き換え（ここが重要） ▼▼▼
                 
                 // PCボタンの設定
                 btnPc.onclick = (e) => {
@@ -289,7 +288,6 @@
                 };
                 btnMobile.href = "#";
 
-                // ▲▲▲ 書き換え終了 ▲▲▲
 
                 inputArea.style.opacity = '0';
                 setTimeout(() => {
