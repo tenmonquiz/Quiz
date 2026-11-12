@@ -207,27 +207,6 @@ body #score-display,
     box-shadow: 0 0 14px rgba(250, 204, 21, 0.2);
 }
 
-.kanji-setting {
-    display: flex;
-    min-height: 62px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    border-radius: 0.75rem;
-    background: rgba(44, 51, 69, 0.78);
-    color: #d1d5db;
-}
-
-.kanji-setting strong {
-    color: #fcd34d;
-    font-size: 1.1rem;
-}
-
-.kanji-setting span {
-    font-size: 0.7rem;
-}
-
 .kanji-result-stats {
     background: rgba(13, 18, 34, 0.82);
     border: 1px solid rgba(148, 163, 184, 0.3);

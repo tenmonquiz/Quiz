@@ -42,7 +42,6 @@ const dom = {
     secretButton: document.getElementById('secret-button'),
 
     kanjiModeSummary: document.getElementById('kanji-mode-summary'),
-    kanjiQuestionCount: document.getElementById('kanji-question-count'),
     kanjiLevelButtons: document.querySelectorAll('.kanji-level-button'),
     kanjiBeginnerCount: document.getElementById('kanji-beginner-count'),
     kanjiIntermediateCount: document.getElementById('kanji-intermediate-count'),

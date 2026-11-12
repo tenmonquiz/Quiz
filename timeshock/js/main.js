@@ -23,6 +23,9 @@ let questionTransitionTimeout;
 let userAnswers = [];
 let kanjiLives = KANJI_INITIAL_LIVES;
 let kanjiIsComposing = false;
+let kanjiSubmitAfterComposition = false;
+let kanjiDeferredSubmitTimeout;
+let kanjiAutoSubmitQueued = false;
 let kanjiMissCount = 0;
 let kanjiSkippedCount = 0;
 let kanjiTimeoutCount = 0;
@@ -62,16 +65,42 @@ function initEventListeners() {
     dom.backToResultBtn.addEventListener('click', () => showScreen(dom.resultScreen));
     dom.kanjiAnswerForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        if (kanjiIsComposing) return;
+        if (kanjiIsComposing) {
+            kanjiSubmitAfterComposition = true;
+            return;
+        }
+        if (kanjiAutoSubmitQueued) return;
+        if (kanjiDeferredSubmitTimeout) {
+            clearTimeout(kanjiDeferredSubmitTimeout);
+            kanjiDeferredSubmitTimeout = null;
+            kanjiAutoSubmitQueued = false;
+        }
         submitKanjiAnswer();
     });
-    dom.kanjiAnswerInput.addEventListener('compositionstart', () => { kanjiIsComposing = true; });
-    dom.kanjiAnswerInput.addEventListener('compositionend', () => { kanjiIsComposing = false; });
-    dom.kanjiAnswerInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.isComposing && event.keyCode !== 229 && !kanjiIsComposing) {
-            event.preventDefault();
-            submitKanjiAnswer();
+    dom.kanjiAnswerInput.addEventListener('compositionstart', () => {
+        kanjiIsComposing = true;
+        kanjiSubmitAfterComposition = false;
+    });
+    dom.kanjiAnswerInput.addEventListener('compositionend', () => {
+        kanjiIsComposing = false;
+        if (kanjiSubmitAfterComposition) {
+            kanjiSubmitAfterComposition = false;
+            kanjiAutoSubmitQueued = true;
+            kanjiDeferredSubmitTimeout = window.setTimeout(() => {
+                kanjiDeferredSubmitTimeout = null;
+                kanjiAutoSubmitQueued = false;
+                submitKanjiAnswer();
+            }, 0);
         }
+    });
+    dom.kanjiAnswerInput.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return;
+        if (event.isComposing || event.keyCode === 229 || kanjiIsComposing) {
+            kanjiSubmitAfterComposition = true;
+            return;
+        }
+        event.preventDefault();
+        submitKanjiAnswer();
     });
     dom.kanjiSkipButton.addEventListener('click', skipKanjiQuestion);
     dom.kanjiNextQuestionButton.addEventListener('click', proceedToNextKanjiQuestion);
@@ -132,7 +161,6 @@ function selectKanjiLevel(level) {
     selectedQuizData = allKanjiQuizData[level];
     const hasQuestions = selectedQuizData.length > 0;
 
-    dom.kanjiQuestionCount.textContent = selectedQuizData.length;
     dom.scoreDisplay.textContent = `0 / ${selectedQuizData.length}`;
     dom.startButton.disabled = !hasQuestions;
     dom.startButton.classList.toggle('opacity-50', !hasQuestions);
@@ -198,6 +226,10 @@ function returnToHome() {
     currentKanjiLevel = 'beginner';
     kanjiLives = KANJI_INITIAL_LIVES;
     kanjiIsComposing = false;
+    kanjiSubmitAfterComposition = false;
+    clearTimeout(kanjiDeferredSubmitTimeout);
+    kanjiDeferredSubmitTimeout = null;
+    kanjiAutoSubmitQueued = false;
     kanjiMissCount = 0;
     kanjiSkippedCount = 0;
     kanjiTimeoutCount = 0;
@@ -318,6 +350,10 @@ function displayKanjiQuestion() {
     dom.kanjiSkipButton.disabled = false;
     dom.kanjiFeedbackArea.textContent = '';
     dom.kanjiExplanationArea.classList.add('hidden');
+    kanjiSubmitAfterComposition = false;
+    clearTimeout(kanjiDeferredSubmitTimeout);
+    kanjiDeferredSubmitTimeout = null;
+    kanjiAutoSubmitQueued = false;
     quizActive = true;
 
     if (window.matchMedia('(min-width: 768px)').matches) {
@@ -660,7 +696,7 @@ function endKanjiGame(total, clearTime) {
     dom.kanjiResultLives.textContent = `${kanjiLives} / ${KANJI_INITIAL_LIVES}`;
     dom.kanjiResultTime.textContent = formattedTime;
     dom.shareButton.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        `天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}\n${dom.resultTitle.textContent}　${score} / ${total}問正解\n挑戦 ${attemptedQuestions} / ${total}問　タイム ${formattedTime}`
+        `天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}\n${dom.resultTitle.textContent}　${score} / ${total}問正解\n挑戦 ${attemptedQuestions} / ${total}問　タイム ${formattedTime}\n\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`
     )}`;
 
     dom.kanjiResultStats.classList.remove('hidden');
