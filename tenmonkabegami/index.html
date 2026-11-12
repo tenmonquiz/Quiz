@@ -193,17 +193,10 @@
                 <p id="desc-text" class="text-gray-300 text-sm mb-8 px-2 leading-loose border-l-2 border-yellow-500/50 pl-4 text-left bg-white/5 py-2 rounded-r-lg">
                 </p>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <a id="download-pc" href="#" download class="flex flex-col items-center justify-center bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl p-4 border border-slate-600 hover:border-slate-500 transition group">
-                        <i class="fa-solid fa-desktop text-xl mb-2 text-blue-400 group-hover:scale-110 transition"></i>
-                        <span class="text-[10px] text-gray-400 font-en tracking-wide">FOR PC</span>
-                        <span class="font-bold text-xs">ダウンロード</span>
-                    </a>
-                    
-                    <a id="download-mobile" href="#" download class="flex flex-col items-center justify-center bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl p-4 border border-slate-600 hover:border-slate-500 transition group">
-                        <i class="fa-solid fa-mobile-screen text-xl mb-2 text-pink-400 group-hover:scale-110 transition"></i>
-                        <span class="text-[10px] text-gray-400 font-en tracking-wide">FOR MOBILE</span>
-                        <span class="font-bold text-xs">ダウンロード</span>
+                <div>
+                    <a id="download-wallpaper" href="#" download class="flex flex-col items-center justify-center bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl p-4 border border-slate-600 hover:border-slate-500 transition group">
+                        <i class="fa-solid fa-download text-xl mb-2 text-pink-400 group-hover:scale-110 transition"></i>
+                        <span class="font-bold text-sm">壁紙をダウンロード</span>
                     </a>
                 </div>
 
@@ -218,22 +211,24 @@
     <script>
         // ▼▼▼ 設定エリア ▼▼▼
         const secretData = {
-            "コクテン": {
-                file_pc: "star.jpg",
-                file_mobile: "star_p.jpeg",
+			"流れ星": {
+                wallpaper: "star_p.jpeg",
                 desc: "正解！！遊んでくれてありがとう！！",
+                aliases: ["ながれぼし"] 
+            },
+            "コクテン": {
+                wallpaper: "star_p.jpeg",
+                desc: "前回の答えだな、それ",
                 aliases: ["こくてん","黒点"] 
             },
             "合言葉": {
-                file_pc: "moon.jpg",
-                file_mobile: "moon.jpg",
-                desc: "絶対そういうことすると思ったよ。しょうがねぇなこれやるよ",
+                wallpaper: "moon.JPG",
+                desc: "はいはい。絶対そういうことすると思ったよ。しょうがねぇなこれやるよ",
                 aliases: ["あいことば","合言葉を入力","こたえ","答え"]
             },
             "インセキ": {
-                file_pc: "irast_PC.jpeg",
-                file_mobile: "irast.jpg",
-                desc: "それ前回の答えだよよく覚えてたな",
+                wallpaper: "irast.jpg",
+                desc: "前々回の答えだよ！？よく覚えてたね！？",
                 aliases: ["金星","きんせい","隕石","いんせき","キンセイ"] 
             }
         };
@@ -247,8 +242,7 @@
         const descText = document.getElementById('desc-text');
         const previewContainer = document.getElementById('wallpaper-preview-container');
         
-        const btnPc = document.getElementById('download-pc');
-        const btnMobile = document.getElementById('download-mobile');
+        const downloadButton = document.getElementById('download-wallpaper');
 
         function checkKeyword() {
             const inputVal = keywordInput.value.trim().toLowerCase();
@@ -270,23 +264,16 @@
                 keywordInput.classList.remove('border-red-500', 'ring-red-500');
 
                 // プレビューと説明の更新
-                previewContainer.style.backgroundImage = `url('${foundData.file_mobile}')`;
+                previewContainer.style.backgroundImage = `url('${foundData.wallpaper}')`;
                 descText.textContent = foundData.desc;
                 
                 
-                // PCボタンの設定
-                btnPc.onclick = (e) => {
-                    e.preventDefault(); 
-                    forceDownload(foundData.file_pc, foundData.file_pc.split('/').pop());
-                };
-                btnPc.href = "#"; 
-
-                // スマホボタンの設定
-                btnMobile.onclick = (e) => {
+                // 壁紙ダウンロードの設定
+                downloadButton.onclick = (e) => {
                     e.preventDefault();
-                    forceDownload(foundData.file_mobile, foundData.file_mobile.split('/').pop());
+                    forceDownload(foundData.wallpaper, foundData.wallpaper.split('/').pop());
                 };
-                btnMobile.href = "#";
+                downloadButton.href = "#";
 
 
                 inputArea.style.opacity = '0';
