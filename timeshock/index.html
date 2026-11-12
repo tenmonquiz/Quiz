@@ -150,6 +150,10 @@
                     </div>
                     <div class="kanji-question-card rounded-2xl flex items-center justify-center text-center p-5 mb-5" aria-live="polite">
                         <span id="kanji-character" class="kanji-character" role="heading" aria-level="2"></span>
+                        <div id="kanji-explanation-area" class="hidden kanji-explanation-area p-4 rounded-xl text-left" aria-live="polite">
+                            <h3 class="text-sm font-bold text-yellow-300 mb-2">解説</h3>
+                            <p id="kanji-explanation-text" class="text-sm text-gray-200 leading-relaxed"></p>
+                        </div>
                     </div>
                     <form id="kanji-answer-form" class="kanji-answer-form">
                         <label for="kanji-answer-input" class="block text-sm font-bold text-gray-200 mb-2">読み（ひらがな・カタカナ）</label>
@@ -162,11 +166,6 @@
                         <button id="kanji-skip-button" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-100 text-sm font-bold rounded-full border border-gray-500" type="button">スキップ</button>
                     </div>
                     <div id="kanji-feedback-area" class="mt-4 min-h-7 text-center text-lg font-bold" aria-live="assertive"></div>
-                    <div id="kanji-explanation-area" class="hidden kanji-explanation-area mt-3 p-4 rounded-xl text-left" aria-live="polite">
-                        <h3 class="text-sm font-bold text-yellow-300 mb-2">解説</h3>
-                        <p id="kanji-explanation-text" class="text-sm text-gray-200 leading-relaxed"></p>
-                        <button id="kanji-next-question-button" class="mt-4 w-full px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg shadow-lg" type="button">次の問題へ</button>
-                    </div>
                 </div>
             </div>
             

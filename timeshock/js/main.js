@@ -65,6 +65,10 @@ function initEventListeners() {
     dom.backToResultBtn.addEventListener('click', () => showScreen(dom.resultScreen));
     dom.kanjiAnswerForm.addEventListener('submit', (event) => {
         event.preventDefault();
+        if (kanjiAwaitingNext) {
+            proceedToNextKanjiQuestion();
+            return;
+        }
         if (kanjiIsComposing) {
             kanjiSubmitAfterComposition = true;
             return;
@@ -103,7 +107,6 @@ function initEventListeners() {
         submitKanjiAnswer();
     });
     dom.kanjiSkipButton.addEventListener('click', skipKanjiQuestion);
-    dom.kanjiNextQuestionButton.addEventListener('click', proceedToNextKanjiQuestion);
 
     window.addEventListener('keydown', (event) => {
         if (currentMode !== 'kanji' || !quizActive || event.repeat || kanjiIsComposing || event.isComposing || event.keyCode === 229) return;
@@ -242,7 +245,7 @@ function returnToHome() {
     dom.kanjiExplanationArea.classList.add('hidden');
     dom.kanjiAnswerInput.value = '';
     dom.kanjiAnswerInput.disabled = false;
-    dom.kanjiSubmitButton.disabled = false;
+    setKanjiActionButtonToAnswer();
     dom.kanjiSkipButton.disabled = false;
     clearInterval(timerInterval);
     clearTimeout(questionTransitionTimeout);
@@ -348,12 +351,16 @@ function displayKanjiQuestion() {
     dom.kanjiAnswerInput.disabled = false;
     dom.kanjiSubmitButton.disabled = false;
     dom.kanjiSkipButton.disabled = false;
+    dom.kanjiSkipButton.classList.remove('hidden');
     dom.kanjiFeedbackArea.textContent = '';
     dom.kanjiExplanationArea.classList.add('hidden');
+    dom.kanjiCharacter.classList.remove('hidden');
+    dom.kanjiQuestionCard.classList.remove('showing-explanation');
     kanjiSubmitAfterComposition = false;
     clearTimeout(kanjiDeferredSubmitTimeout);
     kanjiDeferredSubmitTimeout = null;
     kanjiAutoSubmitQueued = false;
+    setKanjiActionButtonToAnswer();
     quizActive = true;
 
     if (window.matchMedia('(min-width: 768px)').matches) {
@@ -383,6 +390,22 @@ function submitKanjiAnswer() {
 
 function skipKanjiQuestion() {
     resolveKanjiQuestion(null, 'skip');
+}
+
+function setKanjiActionButtonToAnswer() {
+    dom.kanjiSubmitButton.textContent = '解答';
+    dom.kanjiSubmitButton.classList.remove('bg-blue-600', 'hover:bg-blue-500', 'text-white');
+    dom.kanjiSubmitButton.classList.add('bg-amber-500', 'hover:bg-amber-400', 'text-gray-950');
+    dom.kanjiSubmitButton.disabled = false;
+}
+
+function setKanjiActionButtonToNext() {
+    dom.kanjiSubmitButton.textContent = kanjiLives <= 0 || currentQuestionIndex >= shuffledQuizData.length - 1
+        ? '結果を見る'
+        : '次の問題へ';
+    dom.kanjiSubmitButton.classList.remove('bg-amber-500', 'hover:bg-amber-400', 'text-gray-950');
+    dom.kanjiSubmitButton.classList.add('bg-blue-600', 'hover:bg-blue-500', 'text-white');
+    dom.kanjiSubmitButton.disabled = false;
 }
 
 function resolveKanjiQuestion(selectedReading, outcome) {
@@ -431,17 +454,16 @@ function resolveKanjiQuestion(selectedReading, outcome) {
     }
 
     dom.kanjiAnswerInput.disabled = true;
-    dom.kanjiSubmitButton.disabled = true;
     dom.kanjiSkipButton.disabled = true;
+    dom.kanjiSkipButton.classList.add('hidden');
     updateScoreDisplay();
     updateKanjiLivesDisplay();
 
     kanjiAwaitingNext = true;
+    dom.kanjiQuestionCard.classList.add('showing-explanation');
     dom.kanjiExplanationText.textContent = currentQuiz.exp || '解説はありません。';
-    dom.kanjiNextQuestionButton.textContent = kanjiLives <= 0 || currentQuestionIndex >= shuffledQuizData.length - 1
-        ? '結果を見る'
-        : '次の問題へ';
     dom.kanjiExplanationArea.classList.remove('hidden');
+    setKanjiActionButtonToNext();
 }
 
 function updateKanjiLivesDisplay() {
