@@ -28,16 +28,46 @@ const dom = {
     
     resultTitle: document.getElementById('result-title'),
     finalScoreText: document.getElementById('final-score-text'),
+    resultMessage: document.getElementById('result-message'),
     shareButton: document.getElementById('share-button'),
 	answersTitle: document.getElementById('answers-title'),
     
     mainTitle: document.querySelector('#quiz-container h1'),
     startScreenTitle: document.getElementById('start-screen').querySelector('h2'),
+    startScreenDescription: document.getElementById('start-screen-description'),
     
     rankingDisplayArea: document.getElementById('ranking-display-area'),
     rankingLevelSelect: document.getElementById('ranking-level-select'),
     rankingResultDisplay: document.getElementById('ranking-result-display'),
-    secretButton: document.getElementById('secret-button')
+    secretButton: document.getElementById('secret-button'),
+
+    kanjiModeSummary: document.getElementById('kanji-mode-summary'),
+    kanjiQuestionCount: document.getElementById('kanji-question-count'),
+    kanjiLevelButtons: document.querySelectorAll('.kanji-level-button'),
+    kanjiBeginnerCount: document.getElementById('kanji-beginner-count'),
+    kanjiIntermediateCount: document.getElementById('kanji-intermediate-count'),
+    kanjiAdvancedCount: document.getElementById('kanji-advanced-count'),
+    multipleChoiceContent: document.getElementById('multiple-choice-content'),
+    kanjiQuizContent: document.getElementById('kanji-quiz-content'),
+    kanjiLivesCount: document.getElementById('kanji-lives-count'),
+    kanjiLivesIcons: document.getElementById('kanji-lives-icons'),
+    kanjiCharacter: document.getElementById('kanji-character'),
+    kanjiAnswerForm: document.getElementById('kanji-answer-form'),
+    kanjiAnswerInput: document.getElementById('kanji-answer-input'),
+    kanjiSubmitButton: document.getElementById('kanji-submit-button'),
+    kanjiSkipButton: document.getElementById('kanji-skip-button'),
+    kanjiFeedbackArea: document.getElementById('kanji-feedback-area'),
+    kanjiExplanationArea: document.getElementById('kanji-explanation-area'),
+    kanjiExplanationText: document.getElementById('kanji-explanation-text'),
+    kanjiNextQuestionButton: document.getElementById('kanji-next-question-button'),
+    kanjiResultStats: document.getElementById('kanji-result-stats'),
+    kanjiResultCorrect: document.getElementById('kanji-result-correct'),
+    kanjiResultMisses: document.getElementById('kanji-result-misses'),
+    kanjiResultUnanswered: document.getElementById('kanji-result-unanswered'),
+    kanjiResultSkipped: document.getElementById('kanji-result-skipped'),
+    kanjiResultTimeouts: document.getElementById('kanji-result-timeouts'),
+    kanjiResultLives: document.getElementById('kanji-result-lives'),
+    kanjiResultTime: document.getElementById('kanji-result-time')
 };
 
 // --- UI制御関数 ---
@@ -102,7 +132,9 @@ function showLevelSelect() {
 }
 
 function showAnswersList() {
-    dom.answersTitle.textContent = `解答と解説 (レベル ${currentLevel})`;
+    dom.answersTitle.textContent = currentMode === 'kanji'
+        ? `解答と解説（天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}）`
+        : `解答と解説 (レベル ${currentLevel})`;
     
     dom.answersList.innerHTML = '';
     
@@ -111,7 +143,9 @@ function showAnswersList() {
         item.className = 'bg-gray-800 p-4 rounded-lg text-left text-sm text-gray-200 border border-gray-700';
         
         let statusBadge = '';
-        if (ans.isTimeUp) {
+        if (ans.isSkipped) {
+            statusBadge = '<span class="px-2 py-0.5 bg-gray-600 text-white rounded text-xs font-bold ml-2">スキップ</span>';
+        } else if (ans.isTimeUp) {
             statusBadge = '<span class="px-2 py-0.5 bg-yellow-600 text-white rounded text-xs font-bold ml-2">時間切れ</span>';
         } else if (ans.isCorrect) {
             statusBadge = '<span class="px-2 py-0.5 bg-green-600 text-white rounded text-xs font-bold ml-2">正解</span>';
@@ -119,27 +153,37 @@ function showAnswersList() {
             statusBadge = '<span class="px-2 py-0.5 bg-red-600 text-white rounded text-xs font-bold ml-2">不正解</span>';
         }
         
-        const userChoiceText = ans.isTimeUp ? '（未解答）' : ans.selectedChoice;
+        const userChoiceText = ans.isSkipped ? '（スキップ）' : (ans.isTimeUp ? '（未解答）' : ans.selectedChoice);
+        const questionLabel = ans.questionData.kanji
+            ? `「${ans.questionData.kanji}」の読み方`
+            : ans.questionData.question;
+        const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;'
+        }[character]));
                                          
         item.innerHTML = `
             <div class="mb-3 border-b border-gray-600 pb-2">
                 <span class="text-sky-400 font-bold text-base">Q${index + 1}.</span> 
-                <span class="text-base">${ans.questionData.question}</span>
+                <span class="text-base">${escapeHtml(questionLabel)}</span>
                 ${statusBadge}
             </div>
             <div class="mb-1">
                 <span class="text-gray-400">あなたの解答:</span> 
-                <span class="${ans.isCorrect ? 'text-green-400' : (ans.isTimeUp ? 'text-gray-500' : 'text-red-400')} font-bold">
-                    ${userChoiceText}
+                <span class="${ans.isCorrect ? 'text-green-400' : (ans.isTimeUp || ans.isSkipped ? 'text-gray-500' : 'text-red-400')} font-bold">
+                    ${escapeHtml(userChoiceText)}
                 </span>
             </div>
             <div class="mb-2">
                 <span class="text-gray-400">正解:</span> 
-                <span class="text-green-400 font-bold">${ans.questionData.answer}</span>
+                <span class="text-green-400 font-bold">${escapeHtml(ans.questionData.answer)}</span>
             </div>
             <div class="mt-2 bg-gray-700 p-3 rounded text-sm text-gray-300">
                 <span class="text-gray-400 text-xs font-bold block mb-1">解説:</span>
-                ${ans.questionData.exp || '解説はありません。'}
+                ${escapeHtml(ans.questionData.exp || '解説はありません。')}
             </div>
         `;
         dom.answersList.appendChild(item);
