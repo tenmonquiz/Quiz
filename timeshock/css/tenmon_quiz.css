@@ -170,6 +170,33 @@ body #score-display,
     border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
+.kanji-level-heading {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.kanji-level-heading-star {
+    justify-self: end;
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.kanji-secret-star {
+    justify-self: start;
+    padding: 0.3rem;
+    border-radius: 9999px;
+    background: transparent;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.kanji-secret-star:hover,
+.kanji-secret-star:focus-visible {
+    background: rgba(250, 204, 21, 0.16);
+    transform: scale(1.15);
+}
+
 .kanji-level-button {
     display: flex;
     min-height: 68px;
@@ -181,6 +208,16 @@ body #score-display,
     background: rgba(44, 51, 69, 0.88);
     color: #e5e7eb;
     transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.kanji-level-button.hidden {
+    display: none;
+}
+
+.kanji-secret-level-option {
+    grid-column: 2;
+    border-color: rgba(250, 204, 21, 0.7);
+    background: linear-gradient(145deg, rgba(91, 33, 182, 0.8), rgba(30, 41, 59, 0.95));
 }
 
 .kanji-level-button:hover {
@@ -250,6 +287,9 @@ body #score-display,
 }
 
 .kanji-character {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
     color: #fff7d6;
     font-family: 'Noto Sans JP', sans-serif;
     font-size: clamp(4rem, 18vw, 7.25rem);
@@ -260,10 +300,34 @@ body #score-display,
     text-shadow: 0 3px 18px rgba(250, 204, 21, 0.22);
 }
 
+.kanji-character-long {
+    font-size: clamp(1.75rem, 8.5vw, 2.7rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+}
+
+.kanji-character-extra-long {
+    font-size: clamp(1.25rem, 6vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: 0;
+}
+
 .kanji-question-card.showing-explanation .kanji-character {
     flex: 0 0 auto;
     font-size: clamp(2.5rem, 10vw, 3.25rem);
     line-height: 1;
+}
+
+.kanji-question-card.showing-explanation .kanji-character.kanji-character-long {
+    font-size: clamp(1.5rem, 7vw, 2.1rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+}
+
+.kanji-question-card.showing-explanation .kanji-character.kanji-character-extra-long {
+    font-size: clamp(1.15rem, 5vw, 1.65rem);
+    line-height: 1.05;
+    letter-spacing: 0;
 }
 
 .kanji-answer-input {

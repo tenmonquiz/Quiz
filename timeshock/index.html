@@ -108,7 +108,11 @@
                 <h2 class="text-xl font-bold mb-4 text-white">宇宙の知識を試そう！</h2>
                 <p id="start-screen-description" class="text-gray-400 text-sm mb-6"></p>
                 <div id="kanji-mode-summary" class="hidden kanji-mode-summary mb-6 p-4 rounded-xl text-left">
-                    <h3 class="text-center text-yellow-300 font-bold mb-3">レベル選択</h3>
+                    <div class="kanji-level-heading mb-3">
+                        <span class="kanji-level-heading-star" aria-hidden="true">⭐️</span>
+                        <h3 class="text-center text-yellow-300 font-bold">レベル選択</h3>
+                        <button id="kanji-secret-level-button" class="kanji-level-heading-star kanji-secret-star" type="button" aria-label="隠し難易度 早撃級を選択">⭐️</button>
+                    </div>
                     <div class="grid grid-cols-3 gap-2 mb-4">
                         <button data-kanji-level="beginner" class="kanji-level-button" type="button" aria-pressed="false">
                             <strong>初級</strong><span id="kanji-beginner-count">6問</span>
@@ -118,6 +122,9 @@
                         </button>
                         <button data-kanji-level="advanced" class="kanji-level-button" type="button" aria-pressed="false">
                             <strong>上級</strong><span id="kanji-advanced-count">5問</span>
+                        </button>
+                        <button data-kanji-level="hayauchi" class="kanji-level-button kanji-secret-level-option hidden" type="button" aria-pressed="false">
+                            <strong>早撃級</strong><span id="kanji-hayauchi-count">0問</span>
                         </button>
                     </div>
                 </div>

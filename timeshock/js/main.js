@@ -5,7 +5,8 @@ const KANJI_INITIAL_LIVES = 3;
 const KANJI_LEVEL_LABELS = {
     beginner: '初級',
     intermediate: '中級',
-    advanced: '上級'
+    advanced: '上級',
+    hayauchi: '早撃級'
 };
 let currentMode = 'timed'; // 'timed', 'untimed', or 'kanji'
 let currentQuestionIndex = 0;
@@ -49,6 +50,10 @@ function initEventListeners() {
 
     dom.kanjiLevelButtons.forEach(btn => {
         btn.addEventListener('click', () => selectKanjiLevel(btn.dataset.kanjiLevel));
+    });
+    dom.kanjiSecretLevelButton.addEventListener('click', () => {
+        dom.kanjiSecretLevelOption.classList.remove('hidden');
+        selectKanjiLevel('hayauchi');
     });
 
     document.querySelectorAll('.rank-level-btn').forEach(btn => {
@@ -140,6 +145,8 @@ function selectMode(mode) {
         dom.kanjiBeginnerCount.textContent = `${allKanjiQuizData.beginner.length}問`;
         dom.kanjiIntermediateCount.textContent = `${allKanjiQuizData.intermediate.length}問`;
         dom.kanjiAdvancedCount.textContent = `${allKanjiQuizData.advanced.length}問`;
+        dom.kanjiHayauchiCount.textContent = `${allKanjiQuizData.hayauchi.length}問`;
+        dom.kanjiSecretLevelOption.classList.add('hidden');
         selectKanjiLevel('beginner');
         dom.homeButton.classList.remove('hidden');
         showScreen(dom.startScreen);
@@ -347,6 +354,9 @@ function displayKanjiQuestion() {
     const currentQuiz = shuffledQuizData[currentQuestionIndex];
     dom.questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
     dom.kanjiCharacter.textContent = currentQuiz.kanji;
+    const kanjiLength = Array.from(currentQuiz.kanji).length;
+    dom.kanjiCharacter.classList.toggle('kanji-character-long', kanjiLength >= 4 && kanjiLength < 8);
+    dom.kanjiCharacter.classList.toggle('kanji-character-extra-long', kanjiLength >= 8);
     dom.kanjiAnswerInput.value = '';
     dom.kanjiAnswerInput.disabled = false;
     dom.kanjiSubmitButton.disabled = false;
