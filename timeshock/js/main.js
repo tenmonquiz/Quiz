@@ -387,9 +387,14 @@ function displayQuestion() {
     }
     
     const currentQuiz = shuffledQuizData[currentQuestionIndex];
-    dom.questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
-    dom.questionArea.textContent = currentQuiz.question;
     const isPhotoMode = currentMode === 'photo';
+    const showFurigana = !isPhotoMode && (currentLevel === '0' || currentLevel === '1');
+    dom.questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
+    if (isPhotoMode) {
+        dom.questionArea.textContent = currentQuiz.question;
+    } else {
+        dom.questionArea.innerHTML = formatQuizTextHtml(currentQuiz.question, showFurigana);
+    }
     dom.photoAnswerForm.classList.toggle('hidden', !isPhotoMode);
     dom.choicesArea.classList.toggle('hidden', isPhotoMode);
     dom.photoAnswerInput.value = '';
@@ -423,7 +428,8 @@ function displayQuestion() {
         const shuffledChoices = shuffleArray(currentQuiz.choices);
         shuffledChoices.forEach(choice => {
             const button = document.createElement('button');
-            button.textContent = choice;
+            button.dataset.choiceValue = choice;
+            button.innerHTML = formatQuizTextHtml(choice, showFurigana);
             button.className = 'choice-button w-full p-4 rounded-lg text-left shadow-md transition duration-200 text-base md:text-lg active:translate-y-1 bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600';
 
             button.addEventListener('click', () => checkAnswer(choice, button));
@@ -729,7 +735,7 @@ function handleTimeUp() {
     
     Array.from(dom.choicesArea.children).forEach(button => {
         button.disabled = true;
-        if (button.textContent === currentQuiz.answer) {
+        if (quizAnswersEqual(button.dataset.choiceValue, currentQuiz.answer)) {
             button.classList.replace('bg-gray-700', 'bg-green-600');
             button.classList.add('ring-2', 'ring-green-400');
         }
@@ -745,7 +751,7 @@ function checkAnswer(selectedChoice, selectedButton) {
     clearInterval(timerInterval);
 
     const currentQuiz = shuffledQuizData[currentQuestionIndex];
-    const isCorrect = selectedChoice === currentQuiz.answer;
+    const isCorrect = quizAnswersEqual(selectedChoice, currentQuiz.answer);
 
     userAnswers.push({
         questionData: currentQuiz,
@@ -757,7 +763,7 @@ function checkAnswer(selectedChoice, selectedButton) {
     Array.from(dom.choicesArea.children).forEach(button => {
         button.disabled = true;
         button.classList.remove('hover:bg-gray-600', 'active:translate-y-1');
-        if (button.textContent === currentQuiz.answer) {
+        if (quizAnswersEqual(button.dataset.choiceValue, currentQuiz.answer)) {
             button.classList.replace('bg-gray-700', 'bg-green-600');
             button.classList.add('ring-2', 'ring-green-400');
         } else if (button === selectedButton && !isCorrect) {

@@ -145,6 +145,14 @@ body #score-display,
     margin-bottom: 15px;
 }
 
+#question-area ruby rt,
+.choice-button ruby rt,
+#answers-list ruby rt {
+    font-size: 0.55em;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
 /* --- 写真で天体クイズ --- */
 .photo-question-media {
     margin: 0 0 0.9rem;

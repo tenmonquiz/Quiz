@@ -88,6 +88,43 @@ function showScreen(screenElement) {
     window.scrollTo(0, 0);
 }
 
+function formatQuizTextHtml(value, showFurigana = false, processFuriganaMarkup = true) {
+    const escapeHtml = (text) => String(text ?? '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;'
+    }[character]));
+    const text = String(value ?? '');
+    const furiganaPattern = /｜([^《｜]+)《([^》]+)》/g;
+    let html = '';
+    let lastIndex = 0;
+    let match;
+
+    while ((match = furiganaPattern.exec(text)) !== null) {
+        html += escapeHtml(text.slice(lastIndex, match.index));
+        if (!processFuriganaMarkup) {
+            html += escapeHtml(match[0]);
+        } else {
+            html += showFurigana
+                ? `<ruby>${escapeHtml(match[1])}<rt>${escapeHtml(match[2])}</rt></ruby>`
+                : escapeHtml(match[1]);
+        }
+        lastIndex = furiganaPattern.lastIndex;
+    }
+
+    return html + escapeHtml(text.slice(lastIndex));
+}
+
+function stripQuizFurigana(value) {
+    return String(value ?? '').replace(/｜([^《｜]+)《([^》]+)》/g, '$1');
+}
+
+function quizAnswersEqual(firstAnswer, secondAnswer) {
+    return stripQuizFurigana(firstAnswer) === stripQuizFurigana(secondAnswer);
+}
+
 function animateValue(obj, start, end, duration, total, formattedTime) {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -152,6 +189,9 @@ function showAnswersList() {
     }
     
     dom.answersList.innerHTML = '';
+    const processFuriganaMarkup = currentMode === 'timed' || currentMode === 'untimed';
+    const showFurigana = processFuriganaMarkup && (currentLevel === '0' || currentLevel === '1');
+    const formatAnswerText = (value) => formatQuizTextHtml(value, showFurigana, processFuriganaMarkup);
     
     userAnswers.forEach((ans, index) => {
         const item = document.createElement('div');
@@ -172,6 +212,9 @@ function showAnswersList() {
         const questionLabel = ans.questionData.kanji
             ? `「${ans.questionData.kanji}」の読み方`
             : ans.questionData.question;
+        const correctChoice = ans.questionData.choices?.find(choice =>
+            quizAnswersEqual(choice, ans.questionData.answer)
+        ) ?? ans.questionData.answer;
         const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
             '&': '&amp;',
             '<': '&lt;',
@@ -194,23 +237,23 @@ function showAnswersList() {
         item.innerHTML = `
             <div class="mb-3 border-b border-gray-600 pb-2">
                 <span class="text-sky-400 font-bold text-base">Q${index + 1}.</span> 
-                <span class="text-base">${escapeHtml(questionLabel)}</span>
+                <span class="text-base">${formatAnswerText(questionLabel)}</span>
                 ${statusBadge}
             </div>
             ${photoMarkup}
             <div class="mb-1">
                 <span class="text-gray-400">あなたの解答:</span> 
                 <span class="${ans.isCorrect ? 'text-green-400' : (ans.isTimeUp || ans.isSkipped ? 'text-gray-500' : 'text-red-400')} font-bold">
-                    ${escapeHtml(userChoiceText)}
+                    ${formatAnswerText(userChoiceText)}
                 </span>
             </div>
             <div class="mb-2">
                 <span class="text-gray-400">正解:</span> 
-                <span class="text-green-400 font-bold">${escapeHtml(ans.questionData.answer)}</span>
+                <span class="text-green-400 font-bold">${formatAnswerText(correctChoice)}</span>
             </div>
             <div class="mt-2 bg-gray-700 p-3 rounded text-sm text-gray-300">
                 <span class="text-gray-400 text-xs font-bold block mb-1">解説:</span>
-                ${escapeHtml(ans.questionData.exp || '解説はありません。')}
+                ${formatAnswerText(ans.questionData.exp || '解説はありません。')}
             </div>
         `;
         dom.answersList.appendChild(item);
