@@ -35,6 +35,7 @@ let photoIsComposing = false;
 let photoSubmitAfterComposition = false;
 let photoDeferredSubmitTimeout;
 let photoAutoSubmitQueued = false;
+let photoImageLoadToken = 0;
 
 // --- イベントリスナー設定 ---
 function initEventListeners() {
@@ -67,19 +68,21 @@ function initEventListeners() {
     });
 
     dom.homeButton.addEventListener('click', handleHomeClick);
-    dom.photoQuestionImage.addEventListener('load', () => {
-        dom.photoQuestionImage.classList.remove('hidden');
-        dom.photoQuestionImageFallback.classList.add('hidden');
-    });
-    dom.photoQuestionImage.addEventListener('error', () => {
-        dom.photoQuestionImage.classList.add('hidden');
-        dom.photoQuestionImageFallback.classList.remove('hidden');
-    });
     dom.startButton.addEventListener('click', startGame);
     dom.showRankingBtns.forEach(btn => btn.addEventListener('click', toggleRankingDisplay));
     dom.closeRankingBtn.addEventListener('click', closeRankingDisplay);
     dom.showAnswersBtn.addEventListener('click', showAnswersList);
     dom.backToResultBtn.addEventListener('click', () => showScreen(dom.resultScreen));
+    dom.levelMaxChallengeButton.addEventListener('click', startLevelMaxChallenge);
+    dom.levelMaxCloseButton.addEventListener('click', closeLevelMaxUnlockPopup);
+    dom.levelMaxUnlockPopup.addEventListener('click', (event) => {
+        if (event.target === dom.levelMaxUnlockPopup) closeLevelMaxUnlockPopup();
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !dom.levelMaxUnlockPopup.classList.contains('hidden')) {
+            closeLevelMaxUnlockPopup();
+        }
+    });
     dom.kanjiAnswerForm.addEventListener('submit', (event) => {
         event.preventDefault();
         if (kanjiAwaitingNext) {
@@ -188,6 +191,8 @@ function initEventListeners() {
 function selectMode(mode) {
     currentMode = mode;
     closeRankingDisplay();
+    dom.timeProgressWrap.classList.toggle('hidden', mode === 'photo');
+    dom.timeLeftDisplay.classList.toggle('hidden', mode === 'photo');
 
     if (mode === 'kanji') {
         currentLevel = 'GO';
@@ -209,10 +214,11 @@ function selectMode(mode) {
     if (mode === 'photo') {
         selectedQuizData = allPhotoQuizData;
         currentLevel = '写真';
-        dom.mainTitle.textContent = '写真で天体クイズ';
-        dom.startScreenTitle.textContent = `写真から天体を当てよう！全${selectedQuizData.length}問`;
-        dom.startScreenDescription.textContent = '天体写真を見て、答えを入力してください。時間制限はありません。写真の出典と解説は、クイズ後に確認できます。';
-        dom.startScreenDescription.classList.remove('hidden');
+        dom.mainTitle.textContent = '天文写真クイズ';
+        document.title = '天文写真クイズ';
+        dom.startScreenTitle.textContent = `天文写真クイズ（全${selectedQuizData.length}問）`;
+        dom.startScreenDescription.textContent = '';
+        dom.startScreenDescription.classList.add('hidden');
         dom.kanjiModeSummary.classList.add('hidden');
         dom.multipleChoiceContent.classList.remove('hidden');
         dom.kanjiQuizContent.classList.add('hidden');
@@ -280,6 +286,34 @@ function selectDifficulty(level) {
     showScreen(dom.startScreen);
 }
 
+function closeLevelMaxUnlockPopup() {
+    dom.levelMaxUnlockPopup.classList.add('hidden');
+}
+
+function startLevelMaxChallenge() {
+    closeLevelMaxUnlockPopup();
+    currentLevel = 'MAX';
+    dom.mainTitle.textContent = 'レベルMAX';
+
+    const maxQuestions = Array.isArray(allQuizData.MAX) ? allQuizData.MAX : [];
+    const levelFiveQuestions = Array.isArray(allQuizData['5']) ? allQuizData['5'] : [];
+    const hasMaxQuestions = maxQuestions.length > 0;
+    selectedQuizData = hasMaxQuestions ? maxQuestions : levelFiveQuestions;
+    dom.levelMaxDataNote.classList.toggle('hidden', hasMaxQuestions);
+
+    if (selectedQuizData.length > 0) {
+        startGame();
+        return;
+    }
+
+    dom.mainTitle.textContent = 'レベルMAX';
+    dom.startScreenTitle.textContent = 'レベルMAXの問題データがありません';
+    dom.startScreenDescription.textContent = 'QuizシートのlevelにMAXと入力して問題を追加し、JSONへ変換してください。';
+    dom.startButton.disabled = true;
+    dom.startButton.classList.add('opacity-50', 'cursor-not-allowed');
+    showScreen(dom.startScreen);
+}
+
 function handleHomeClick() {
     const isQuizInProgress = !dom.quizScreen.classList.contains('hidden');
     if (isQuizInProgress) {
@@ -295,6 +329,7 @@ function handleHomeClick() {
 function returnToHome() {
     dom.homeButton.classList.add('hidden');
     dom.mainTitle.textContent = "天文クイズ";
+    document.title = '天文クイズ';
     dom.scoreDisplay.textContent = "0 / 0";
     
     closeRankingDisplay();
@@ -410,7 +445,7 @@ function displayQuestion() {
         dom.photoQuestionImage.classList.remove('hidden');
         dom.photoQuestionImageFallback.classList.add('hidden');
         dom.photoQuestionImage.alt = currentQuiz.imageAlt || currentQuiz.question;
-        dom.photoQuestionImage.src = currentQuiz.image;
+        loadPhotoQuestionImage(currentQuiz.image);
         const hasImageCredit = Boolean(currentQuiz.imageCredit);
         const hasImageSource = Boolean(currentQuiz.imageSource);
         dom.photoQuestionCreditText.textContent = hasImageCredit ? `画像: ${currentQuiz.imageCredit}` : '';
@@ -422,6 +457,8 @@ function displayQuestion() {
     } else {
         dom.photoQuestionMedia.classList.add('hidden');
     }
+    dom.timeProgressWrap.classList.toggle('hidden', isPhotoMode);
+    dom.timeLeftDisplay.classList.toggle('hidden', isPhotoMode);
     
     dom.choicesArea.innerHTML = ''; 
     if (!isPhotoMode) {
@@ -442,6 +479,38 @@ function displayQuestion() {
     dom.feedbackArea.className = 'mt-4 h-6 text-center text-lg font-bold transition-opacity';
     
     startTimer();
+}
+
+function loadPhotoQuestionImage(imagePath) {
+    const token = ++photoImageLoadToken;
+    const candidates = getPhotoImageUrlCandidates(imagePath);
+    let candidateIndex = 0;
+
+    const handleLoad = () => {
+        if (token !== photoImageLoadToken) return;
+        dom.photoQuestionImage.classList.remove('hidden');
+        dom.photoQuestionImageFallback.classList.add('hidden');
+    };
+    const handleError = () => {
+        if (token !== photoImageLoadToken) return;
+        candidateIndex++;
+        if (candidateIndex < candidates.length) {
+            dom.photoQuestionImage.src = candidates[candidateIndex];
+            return;
+        }
+        dom.photoQuestionImage.classList.add('hidden');
+        dom.photoQuestionImageFallback.textContent = '画像を表示できません。';
+        dom.photoQuestionImageFallback.classList.remove('hidden');
+    };
+
+    dom.photoQuestionImage.onload = handleLoad;
+    dom.photoQuestionImage.onerror = handleError;
+    dom.photoQuestionImage.classList.remove('hidden');
+    if (!candidates.length) {
+        handleError();
+        return;
+    }
+    dom.photoQuestionImage.src = candidates[0];
 }
 
 function startKanjiGame() {
@@ -794,10 +863,15 @@ function endGame() {
     clearTimeout(questionTransitionTimeout);
     dom.progressBar.style.width = '0%';
     dom.kanjiResultStats.classList.add('hidden');
+    dom.resultMessage.classList.remove('hidden');
     
     const endTime = Date.now();
     const clearTime = (endTime - startTime) / 1000;
     const total = shuffledQuizData.length;
+    const shouldUnlockLevelMax = currentMode !== 'photo'
+        && currentLevel === '5'
+        && total > 0
+        && score === total;
 
     if (currentMode === 'kanji') {
         endKanjiGame(total, clearTime);
@@ -817,7 +891,7 @@ function endGame() {
     // 💡 シェア文の分岐
     let shareText = "";
     if (currentMode === 'photo') {
-        shareText = `写真で天体クイズ\n${score} / ${total} 問正解しました！\n\nNASAの宇宙写真で天体を学ぼう！\n#天文クイズ #天体写真`;
+        shareText = `天文写真クイズ\n${score} / ${total} 問正解しました！\n#天文クイズ #天体写真`;
     } else if (currentMode === 'timed') {
         if (score === total) {
             shareText = `天文クイズ⚡タイムショック (レベル${currentLevel}) で【 👑 全問正解達成！！ 👑 】\nクリアタイム: ${formattedTime}\n\nあなたも宇宙博士を目指そう！\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`;
@@ -834,7 +908,7 @@ function endGame() {
     animateValue(dom.finalScoreText, 0, score, 1000, total, formattedTime);
 
     // 💡 タイムショックモードでのみランキング登録へ進む
-    if (currentMode === 'timed') {
+    if (currentMode === 'timed' && currentLevel !== 'MAX') {
         document.getElementById('result-message').textContent = "また挑戦して、宇宙博士を目指そう！";
         
         setTimeout(() => {
@@ -868,15 +942,28 @@ function endGame() {
 				
                 sendScoreToGAS(safeUserName, score, currentLevel, clearTime, formattedTime);
             }
+
+            if (shouldUnlockLevelMax) showLevelMaxUnlockPopup();
         }, 1100);
+    } else if (currentMode === 'timed' && currentLevel === 'MAX') {
+        document.getElementById('result-message').textContent = 'レベルMAXはランキング登録の対象外です。';
     } else if (currentMode === 'photo') {
-        document.getElementById('result-message').textContent = '写真の出典と解説を見て、天体についてさらに知ろう！';
+        dom.resultMessage.textContent = '';
+        dom.resultMessage.classList.add('hidden');
     } else {
         document.getElementById('result-message').textContent = "（ランキング登録はタイムショック限定です）";
         setTimeout(() => {
             alert("じっくりモードお疲れ様でした！\n解説を読んで知識を深めよう！\n※ランキングへの登録は「タイムショック」のみ可能です。");
+            if (shouldUnlockLevelMax) showLevelMaxUnlockPopup();
         }, 1100);
     }
+}
+
+function showLevelMaxUnlockPopup() {
+    const hasMaxQuestions = Array.isArray(allQuizData.MAX) && allQuizData.MAX.length > 0;
+    dom.levelMaxDataNote.classList.toggle('hidden', hasMaxQuestions);
+    dom.levelMaxUnlockPopup.classList.remove('hidden');
+    dom.levelMaxChallengeButton.focus({ preventScroll: true });
 }
 
 function endKanjiGame(total, clearTime) {
@@ -893,6 +980,7 @@ function endKanjiGame(total, clearTime) {
     }
 
     dom.scoreDisplay.textContent = `${score} / ${total}`;
+    dom.resultMessage.classList.remove('hidden');
     dom.resultMessage.textContent = `${attemptedQuestions} / ${total} 問に挑戦しました。`;
     dom.kanjiResultCorrect.textContent = `${score} / ${total}問`;
     dom.kanjiResultMisses.textContent = `${kanjiMissCount}回`;
@@ -915,6 +1003,7 @@ async function initializeApplication() {
     const status = document.getElementById('question-data-status');
     try {
         await loadQuestionData();
+        document.getElementById('photo-mode-count').textContent = `全${allPhotoQuizData.length}問`;
         document.querySelectorAll('.mode-button').forEach((button) => {
             button.disabled = false;
         });

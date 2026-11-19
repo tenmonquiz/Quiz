@@ -1,57 +1,64 @@
 [
   {
-    "question": "写っているのは何？ウツｔｔエナｎイ",
-    "answer": "M1NGC1952",
-    "exp": "解説が載るところだよカイセｔウ",
-    "image": "data/画像クイズ用画像置き場/M1NGC1952.jpg",
-    "imageAlt": "M1NGC1952",
+    "question": "この天体の名前は？",
+    "answer": "かに星雲",
+    "exp": "M1（NGC 1952）は、おうし座の方向にある超新星残骸で、「かに星雲」とも呼ばれます。",
+    "image": "data/photo-images/crab-nebula.jpg",
+    "imageAlt": "かに星雲（M1、NGC 1952）",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "かに星雲M1NGC1952,M1NGC1952,かに星雲 M1 NGC1952,かに星雲　M1    NGC1952,かに星雲　M1 NGC1952"
+      "M1",
+      "NGC 1952",
+      "NGC1952",
+      "M1 NGC 1952"
     ]
   },
   {
-    "question": "写っているのは何？ウツｔｔエナｎイ",
-    "answer": "M57",
-    "exp": "解説が載るところだよカイセｔウ",
-    "image": "data/画像クイズ用画像置き場/M57.jpg",
-    "imageAlt": "M57",
+    "question": "この天体の名前は？",
+    "answer": "環状星雲",
+    "exp": "M57は、こと座にある環状星雲です。ガスがリング状に見えることからこの名前で呼ばれます。",
+    "image": "data/photo-images/ring-nebula.jpg",
+    "imageAlt": "こと座の環状星雲（M57）",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "こと座の環状星雲M57,こと座環状星雲M57,環状星雲M57,こと座の星雲M57"
+      "M57",
+      "こと座の環状星雲",
+      "リング星雲"
     ]
   },
   {
-    "question": "写っているのは何？ウツｔｔエナｎイ",
+    "question": "この天体の名前は？",
     "answer": "M77",
-    "exp": "解説が載るところだよカイセｔウ",
-    "image": "data/画像クイズ用画像置き場/M77.jpg",
-    "imageAlt": "M77",
+    "exp": "M77は、くじら座の方向にある渦巻銀河です。NGC 1068というカタログ番号でも知られています。",
+    "image": "data/photo-images/m77-galaxy.jpg",
+    "imageAlt": "くじら座の渦巻銀河 M77（NGC 1068）",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "MGC1068"
+      "NGC 1068",
+      "NGC1068",
+      "くじら座の渦巻銀河"
     ]
   },
   {
-    "question": "写っているのは何？ウツｔｔエナｎイ",
+    "question": "この天体の名前は？",
     "answer": "土星",
-    "exp": "解説が載るところだよカイセｔウ",
-    "image": "data/画像クイズ用画像置き場/土星.jpg",
+    "exp": "土星は太陽から6番目の惑星です。写真では、氷や岩石の粒でできた環が見えます。",
+    "image": "data/photo-images/saturn.jpg",
     "imageAlt": "土星",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "どせい🪐"
+      "どせい"
     ]
   },
   {
-    "question": "写っているのは何？ウツｔｔエナｎイ",
+    "question": "この天体の名前は？",
     "answer": "海王星",
-    "exp": "解説が載るところだよカイセｔウ",
-    "image": "data/画像クイズ用画像置き場/海王星.jpg",
+    "exp": "海王星は太陽系で太陽から最も遠い惑星です。青く見える大気と強い風が特徴です。",
+    "image": "data/photo-images/neptune.jpg",
     "imageAlt": "海王星",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",

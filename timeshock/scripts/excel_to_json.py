@@ -33,7 +33,7 @@ SHEET_ALIASES = {
     "photo": {"photo", "写真", "写真クイズ"},
 }
 
-QUIZ_LEVELS = ["0", "1", "2", "3", "4", "5"]
+QUIZ_LEVELS = ["0", "1", "2", "3", "4", "5", "MAX"]
 KANJI_LEVELS = ["beginner", "intermediate", "advanced", "hayauchi"]
 
 
@@ -178,6 +178,14 @@ def split_list(value: str) -> list[str]:
     return [part.strip() for part in value.split("|") if part.strip()]
 
 
+def split_accepted_answers(value: str) -> list[str]:
+    # Pipe is the current separator. Accept comma-separated values from older
+    # workbooks too, so regenerating one mode does not collapse its alternatives.
+    if "|" in value:
+        return split_list(value)
+    return [part.strip() for part in value.split(",") if part.strip()]
+
+
 def choices_from_record(record: dict[str, str], sheet: str) -> list[str]:
     choice_fields = [f"choices{index}" for index in range(1, 5)]
     if any(field in record for field in choice_fields):
@@ -205,7 +213,7 @@ def convert_tables(tables: dict[str, list[dict[str, str]]]) -> dict[str, object]
         if level.endswith(".0"):
             level = level[:-2]
         if level not in quiz:
-            raise WorkbookError(f"Quizシート {record['__row__']}行目: level は0〜5で指定してください。")
+            raise WorkbookError(f"Quizシート {record['__row__']}行目: level は0〜5またはMAXで指定してください。")
         choices = choices_from_record(record, "Quiz")
         quiz[level].append({
             "question": required(record, "question", "Quiz"),
@@ -224,7 +232,7 @@ def convert_tables(tables: dict[str, list[dict[str, str]]]) -> dict[str, object]
             "answer": required(record, "answer", "Kanji"),
             "exp": record.get("exp", ""),
         }
-        accepted = split_list(record.get("accepted_answers", ""))
+        accepted = split_accepted_answers(record.get("accepted_answers", ""))
         if accepted:
             question["acceptedAnswers"] = accepted
         kanji[level].append(question)
@@ -243,7 +251,7 @@ def convert_tables(tables: dict[str, list[dict[str, str]]]) -> dict[str, object]
             "imageCredit": record.get("image_credit", ""),
             "imageSource": record.get("image_source", ""),
         }
-        accepted = split_list(record.get("accepted_answers", ""))
+        accepted = split_accepted_answers(record.get("accepted_answers", ""))
         if accepted:
             question["acceptedAnswers"] = accepted
         photo.append(question)

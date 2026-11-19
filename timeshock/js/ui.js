@@ -18,6 +18,8 @@ const dom = {
     
     scoreDisplay: document.getElementById('score-display'),
     questionNumber: document.getElementById('question-number'),
+    timeProgressWrap: document.getElementById('time-progress-wrap'),
+    timeLeftDisplay: document.getElementById('time-left-display'),
     progressBar: document.getElementById('progress-bar'),
     timeLeftText: document.getElementById('time-left'),
     questionArea: document.getElementById('question-area'),
@@ -39,6 +41,11 @@ const dom = {
     finalScoreText: document.getElementById('final-score-text'),
     resultMessage: document.getElementById('result-message'),
     shareButton: document.getElementById('share-button'),
+
+    levelMaxUnlockPopup: document.getElementById('level-max-unlock-popup'),
+    levelMaxChallengeButton: document.getElementById('level-max-challenge-button'),
+    levelMaxCloseButton: document.getElementById('level-max-close-button'),
+    levelMaxDataNote: document.getElementById('level-max-data-note'),
 	answersTitle: document.getElementById('answers-title'),
     
     mainTitle: document.querySelector('#quiz-container h1'),
@@ -80,6 +87,19 @@ const dom = {
     kanjiResultLives: document.getElementById('kanji-result-lives'),
     kanjiResultTime: document.getElementById('kanji-result-time')
 };
+
+function getPhotoImageUrlCandidates(imagePath) {
+    const value = String(imagePath ?? '').trim();
+    if (!value) return [];
+    if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(value)) return [value];
+
+    try {
+        const forms = [...new Set([value, value.normalize('NFC'), value.normalize('NFD')])];
+        return forms.map((path) => new URL(path, document.baseURI).href);
+    } catch {
+        return [value];
+    }
+}
 
 // --- UI制御関数 ---
 function showScreen(screenElement) {
@@ -183,7 +203,7 @@ function showAnswersList() {
     if (currentMode === 'kanji') {
         dom.answersTitle.textContent = `解答と解説（天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}）`;
     } else if (currentMode === 'photo') {
-        dom.answersTitle.textContent = '解答と解説（写真で天体クイズ）';
+        dom.answersTitle.textContent = '解答と解説（天文写真クイズ）';
     } else {
         dom.answersTitle.textContent = `解答と解説 (レベル ${currentLevel})`;
     }
@@ -227,9 +247,10 @@ function showAnswersList() {
             ? `<a href="${escapeHtml(ans.questionData.imageSource)}" target="_blank" rel="noopener noreferrer">画像情報</a>`
             : '';
         const photoCaption = [photoCredit, photoSource].filter(Boolean).join(' ・ ');
+        const photoImageCandidates = getPhotoImageUrlCandidates(ans.questionData.image);
         const photoMarkup = ans.questionData.image ? `
             <figure class="answer-photo">
-                <img src="${escapeHtml(ans.questionData.image)}" alt="${escapeHtml(ans.questionData.imageAlt || '')}" loading="lazy" decoding="async">
+                <img src="${escapeHtml(photoImageCandidates[0] || ans.questionData.image)}" alt="${escapeHtml(ans.questionData.imageAlt || '')}" loading="lazy" decoding="async">
                 ${photoCaption ? `<figcaption>${photoCaption}</figcaption>` : ''}
             </figure>
         ` : '';
@@ -256,6 +277,16 @@ function showAnswersList() {
                 ${formatAnswerText(ans.questionData.exp || '解説はありません。')}
             </div>
         `;
+        const answerPhotoImage = item.querySelector('.answer-photo img');
+        if (answerPhotoImage) {
+            let candidateIndex = 0;
+            answerPhotoImage.addEventListener('error', () => {
+                candidateIndex++;
+                if (candidateIndex < photoImageCandidates.length) {
+                    answerPhotoImage.src = photoImageCandidates[candidateIndex];
+                }
+            });
+        }
         dom.answersList.appendChild(item);
     });
     

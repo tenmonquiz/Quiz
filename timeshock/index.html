@@ -56,8 +56,8 @@
                     </button>
 
                     <button data-mode="photo" class="mode-button w-full p-4 bg-gradient-to-r from-emerald-700 to-teal-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
-                        <div class="text-xl mb-1">写真で天体クイズ</div>
-                        <div class="text-xs font-normal opacity-90">NASAの写真を見て答えよう！全8問・時間制限なし</div>
+                        <div class="text-xl mb-1">天文写真クイズ</div>
+                        <div id="photo-mode-count" class="text-xs font-normal opacity-90">全5問</div>
                     </button>
                 </div>
                 <p id="question-data-status" class="text-xs text-gray-400" role="status" aria-live="polite">問題データを読み込み中...</p>
@@ -141,12 +141,12 @@
             
             <div id="quiz-screen" class="screen hidden">
                 <div class="mb-4">
-                    <div class="w-full bg-gray-700 rounded-full h-2.5 mb-2 overflow-hidden">
+                    <div id="time-progress-wrap" class="w-full bg-gray-700 rounded-full h-2.5 mb-2 overflow-hidden">
                         <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
                     </div>
                     <div class="flex justify-between items-end mb-2">
                         <p id="question-number" class="text-sm font-medium text-sky-400 mb-1">問題 1 / 10</p>
-                        <div class="text-yellow-400 font-bold text-sm"><i class="fa-regular fa-clock"></i> 残り <span id="time-left" class="text-lg">10</span> 秒</div>
+                        <div id="time-left-display" class="text-yellow-400 font-bold text-sm"><i class="fa-regular fa-clock"></i> 残り <span id="time-left" class="text-lg">10</span> 秒</div>
                     </div>
                 </div>
                 <div id="multiple-choice-content">
@@ -223,6 +223,20 @@
                     <a id="share-button" href="#" target="_blank" rel="noopener noreferrer" class="block w-full px-6 py-3 bg-gray-900 hover:bg-gray-700 border border-gray-600 transition text-white font-bold text-base rounded-full shadow-xl">
                         <i class="fa-brands fa-x-twitter"></i> 結果をシェア
                     </a>
+                </div>
+            </div>
+
+            <div id="level-max-unlock-popup" class="level-max-unlock-popup hidden" role="dialog" aria-modal="true" aria-labelledby="level-max-popup-title" aria-describedby="level-max-popup-message">
+                <div class="level-max-popup-card">
+                    <div class="level-max-popup-star" aria-hidden="true">🌟</div>
+                    <p class="level-max-popup-kicker">NEW CHALLENGE</p>
+                    <h2 id="level-max-popup-title">レベルMAX解放！</h2>
+                    <p id="level-max-popup-message">レベル5を全問正解しました。<br>さらに難しいクイズに挑戦できます。</p>
+                    <p id="level-max-data-note" class="level-max-data-note hidden">レベルMAX専用問題が未登録のため、今回はレベル5の問題が出題されます。</p>
+                    <div class="level-max-popup-actions">
+                        <button id="level-max-challenge-button" type="button">レベルMAXに挑戦</button>
+                        <button id="level-max-close-button" type="button">結果を見る</button>
+                    </div>
                 </div>
             </div>
 
