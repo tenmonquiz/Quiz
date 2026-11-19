@@ -30,6 +30,11 @@ body {
     background: rgba(26, 30, 43, 0.80);   
 }
 
+.mode-button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
 /* --- ボタン共通スタイル --- */
 /* 選択肢、難易度、ランキング、スタートなどのボタンを一括設定 */
 .choice-button, 
@@ -138,6 +143,84 @@ body #score-display,
     font-weight: 700;
     padding-bottom: 15px;
     margin-bottom: 15px;
+}
+
+/* --- 写真で天体クイズ --- */
+.photo-question-media {
+    margin: 0 0 0.9rem;
+    padding: 0.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    border-radius: 0.75rem;
+    background: rgba(8, 13, 25, 0.78);
+}
+
+.photo-question-media.hidden {
+    display: none;
+}
+
+.photo-question-image {
+    display: block;
+    width: 100%;
+    max-height: min(38vh, 340px);
+    object-fit: contain;
+    border-radius: 0.5rem;
+    background: #080b12;
+}
+
+.photo-question-image.hidden {
+    display: none;
+}
+
+.photo-question-image-fallback {
+    padding: 2.5rem 1rem;
+    color: #cbd5e1;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.photo-question-image-fallback.hidden {
+    display: none;
+}
+
+.photo-question-credit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+    padding: 0.45rem 0.15rem 0.05rem;
+    color: #cbd5e1;
+    font-size: 0.65rem;
+    line-height: 1.4;
+}
+
+.photo-question-credit a,
+.answer-photo a {
+    color: #7dd3fc;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.answer-photo {
+    margin: 0 0 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.65rem;
+    background: rgba(8, 13, 25, 0.7);
+}
+
+.answer-photo img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 0.4rem;
+}
+
+.answer-photo figcaption {
+    padding-top: 0.4rem;
+    color: #cbd5e1;
+    font-size: 0.65rem;
+    line-height: 1.4;
 }
 
 /* 4. SNSアイコン */
@@ -364,7 +447,8 @@ body #score-display,
 }
 
 #kanji-submit-button:disabled,
-#kanji-skip-button:disabled {
+#kanji-skip-button:disabled,
+#photo-answer-submit:disabled {
     cursor: not-allowed;
     opacity: 0.55;
 }

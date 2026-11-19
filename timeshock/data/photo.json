@@ -1,0 +1,74 @@
+[
+  {
+    "question": "写真に写っている、輪を持つ惑星はどれ？",
+    "answer": "土星",
+    "exp": "土星の環は氷や岩石の粒でできています。",
+    "image": "https://images-assets.nasa.gov/image/PIA01959/PIA01959~medium.jpg",
+    "imageAlt": "ボイジャー2号が撮影した土星と環",
+    "imageCredit": "NASA/JPL",
+    "imageSource": "https://images.nasa.gov/details/PIA01959"
+  },
+  {
+    "question": "大赤斑が見えるこの惑星はどれ？",
+    "answer": "木星",
+    "exp": "大赤斑は木星の大気にある巨大な嵐です。この画像はJunoの観測データをもとに色を強調したものです。",
+    "image": "https://images-assets.nasa.gov/image/PIA22946/PIA22946~medium.jpg",
+    "imageAlt": "木星の大赤斑と雲の模様をとらえた画像",
+    "imageCredit": "NASA/JPL-Caltech/SwRI/MSSS、画像処理 Kevin M. Gill (CC BY)",
+    "imageSource": "https://images.nasa.gov/details/PIA22946"
+  },
+  {
+    "question": "この赤い惑星はどれ？",
+    "answer": "火星",
+    "exp": "この画像はバイキング探査機などの観測から作られた火星の全球カラー画像です。",
+    "image": "https://images-assets.nasa.gov/image/PIA00407/PIA00407~medium.jpg",
+    "imageAlt": "火星の全球カラー画像",
+    "imageCredit": "NASA/JPL/USGS",
+    "imageSource": "https://images.nasa.gov/details/PIA00407"
+  },
+  {
+    "question": "月の近くに見える、青い惑星はどれ？",
+    "answer": "地球",
+    "exp": "この写真はアルテミスIIの乗組員が月へ向かう途中に撮影した地球です。",
+    "image": "https://images-assets.nasa.gov/image/art002e014066/art002e014066~medium.jpg",
+    "imageAlt": "月軌道付近から見た三日月形の地球",
+    "imageCredit": "NASA",
+    "imageSource": "https://images.nasa.gov/details/art002e014066"
+  },
+  {
+    "question": "この渦巻く大銀河の名前は？",
+    "answer": "アンドロメダ銀河",
+    "exp": "アンドロメダ銀河は天の川銀河の近くにある大きな銀河です。この画像はGALEXとスピッツァー宇宙望遠鏡のデータを組み合わせています。",
+    "image": "https://images-assets.nasa.gov/image/PIA08787/PIA08787~medium.jpg",
+    "imageAlt": "紫外線と赤外線の観測データを合成したアンドロメダ銀河",
+    "imageCredit": "NASA/JPL-Caltech",
+    "imageSource": "https://images.nasa.gov/details/PIA08787"
+  },
+  {
+    "question": "ジェームズ・ウェッブ宇宙望遠鏡が撮影した、この星形成領域がある星雲は？",
+    "answer": "カリーナ星雲",
+    "exp": "「コズミック・クリフ」と呼ばれる領域は、カリーナ星雲の中にある若い星形成領域です。",
+    "image": "https://images-assets.nasa.gov/image/carina_nebula/carina_nebula~medium.jpg",
+    "imageAlt": "ジェームズ・ウェッブ宇宙望遠鏡が赤外線で撮影したカリーナ星雲のコズミック・クリフ",
+    "imageCredit": "NASA/ESA/CSA/STScI",
+    "imageSource": "https://images.nasa.gov/details/carina_nebula"
+  },
+  {
+    "question": "カッシーニ探査機が観測した、この衛星はどれ？",
+    "answer": "タイタン",
+    "exp": "タイタンは土星最大の衛星です。画像はカッシーニ探査機の赤外線データから作られています。",
+    "image": "https://images-assets.nasa.gov/image/PIA21923/PIA21923~medium.jpg",
+    "imageAlt": "カッシーニ探査機の赤外線データから作られたタイタンの全球画像",
+    "imageCredit": "NASA/JPL-Caltech/University of Nantes/University of Arizona",
+    "imageSource": "https://images.nasa.gov/details/PIA21923"
+  },
+  {
+    "question": "アルテミスIIの乗組員が撮影した、クレーターのある天体はどれ？",
+    "answer": "月",
+    "exp": "月面には衝突によってできたクレーターや大きな盆地が広がっています。",
+    "image": "https://images-assets.nasa.gov/image/art002e020904/art002e020904~medium.jpg",
+    "imageAlt": "アルテミスIIの乗組員が撮影した月面のクレーターと地形",
+    "imageCredit": "NASA",
+    "imageSource": "https://images.nasa.gov/details/art002e020904"
+  }
+]

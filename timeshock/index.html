@@ -40,21 +40,27 @@
                 <p class="text-base text-sky-400 mb-8">モードを選択してください</p>
 
                 <div class="flex flex-col gap-4 mb-8">
-                    <button data-mode="timed" class="mode-button w-full p-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                    <button data-mode="timed" class="mode-button w-full p-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
                         <div class="text-xl mb-1">タイムショック</div>
                         <div class="text-xs font-normal opacity-90">1問10秒！</div>
                     </button>
                     
-                    <button data-mode="untimed" class="mode-button w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                    <button data-mode="untimed" class="mode-button w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
                         <div class="text-xl mb-1">じっくり</div>
                         <div class="text-xs font-normal opacity-90">時間無制限（ランキング登録不可）</div>
                     </button>
 
-                    <button data-mode="kanji" class="mode-button w-full p-4 bg-gradient-to-r from-violet-700 to-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                    <button data-mode="kanji" class="mode-button w-full p-4 bg-gradient-to-r from-violet-700 to-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
                         <div class="text-xl mb-1">天体観測へGO!</div>
                         <div class="text-xs font-normal opacity-90">漢字の読みを入力！20秒・残機3</div>
                     </button>
+
+                    <button data-mode="photo" class="mode-button w-full p-4 bg-gradient-to-r from-emerald-700 to-teal-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
+                        <div class="text-xl mb-1">写真で天体クイズ</div>
+                        <div class="text-xs font-normal opacity-90">NASAの写真を見て答えよう！全8問・時間制限なし</div>
+                    </button>
                 </div>
+                <p id="question-data-status" class="text-xs text-gray-400" role="status" aria-live="polite">問題データを読み込み中...</p>
                 
                 <div>
                     <button id="show-ranking-button-main" class="show-ranking-btn px-6 py-2 bg-gray-700 hover:bg-gray-600 transition text-white font-bold text-base rounded-full shadow-lg border border-gray-600">
@@ -144,9 +150,24 @@
                     </div>
                 </div>
                 <div id="multiple-choice-content">
+                    <figure id="photo-question-media" class="photo-question-media hidden" aria-label="問題の天体写真">
+                        <img id="photo-question-image" class="photo-question-image" alt="" decoding="async">
+                        <p id="photo-question-image-fallback" class="hidden photo-question-image-fallback" role="status">写真を読み込めませんでした。問題文からお答えください。</p>
+                        <figcaption id="photo-question-credit" class="photo-question-credit">
+                            <span id="photo-question-credit-text"></span>
+                            <a id="photo-question-source" href="#" target="_blank" rel="noopener noreferrer">画像情報</a>
+                        </figcaption>
+                    </figure>
                     <div id="question-area" class="text-lg font-semibold text-gray-100 p-3 bg-gray-700 rounded-lg min-h-[80px]">
                         問題文がここに表示されます
                     </div>
+                    <form id="photo-answer-form" class="hidden mt-4">
+                        <label for="photo-answer-input" class="block text-sm font-bold text-gray-200 mb-2">答えを入力してください</label>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input id="photo-answer-input" class="kanji-answer-input flex-1 min-w-0 rounded-lg px-4 py-3 text-lg" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="例：土星">
+                            <button id="photo-answer-submit" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-gray-950 font-extrabold rounded-lg shadow-lg" type="submit">解答</button>
+                        </div>
+                    </form>
                     <div id="choices-area" class="grid grid-cols-1 gap-3"></div>
                     <div id="feedback-area" class="mt-4 h-6 text-center text-lg font-bold transition-opacity"></div>
                 </div>
@@ -218,7 +239,7 @@
         </div>
     </div>
 
-    <script src="js/data.js"></script>
+    <script src="js/data_loader.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>

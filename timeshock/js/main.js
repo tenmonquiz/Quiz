@@ -8,7 +8,7 @@ const KANJI_LEVEL_LABELS = {
     advanced: '上級',
     hayauchi: '早撃級'
 };
-let currentMode = 'timed'; // 'timed', 'untimed', or 'kanji'
+let currentMode = 'timed'; // 'timed', 'untimed', 'kanji', or 'photo'
 let currentQuestionIndex = 0;
 let score = 0;
 let advancedScore = 0; 
@@ -31,6 +31,10 @@ let kanjiMissCount = 0;
 let kanjiSkippedCount = 0;
 let kanjiTimeoutCount = 0;
 let kanjiAwaitingNext = false;
+let photoIsComposing = false;
+let photoSubmitAfterComposition = false;
+let photoDeferredSubmitTimeout;
+let photoAutoSubmitQueued = false;
 
 // --- イベントリスナー設定 ---
 function initEventListeners() {
@@ -63,6 +67,14 @@ function initEventListeners() {
     });
 
     dom.homeButton.addEventListener('click', handleHomeClick);
+    dom.photoQuestionImage.addEventListener('load', () => {
+        dom.photoQuestionImage.classList.remove('hidden');
+        dom.photoQuestionImageFallback.classList.add('hidden');
+    });
+    dom.photoQuestionImage.addEventListener('error', () => {
+        dom.photoQuestionImage.classList.add('hidden');
+        dom.photoQuestionImageFallback.classList.remove('hidden');
+    });
     dom.startButton.addEventListener('click', startGame);
     dom.showRankingBtns.forEach(btn => btn.addEventListener('click', toggleRankingDisplay));
     dom.closeRankingBtn.addEventListener('click', closeRankingDisplay);
@@ -113,6 +125,46 @@ function initEventListeners() {
     });
     dom.kanjiSkipButton.addEventListener('click', skipKanjiQuestion);
 
+    dom.photoAnswerForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (photoIsComposing) {
+            photoSubmitAfterComposition = true;
+            return;
+        }
+        if (photoAutoSubmitQueued) return;
+        if (photoDeferredSubmitTimeout) {
+            clearTimeout(photoDeferredSubmitTimeout);
+            photoDeferredSubmitTimeout = null;
+            photoAutoSubmitQueued = false;
+        }
+        submitPhotoAnswer();
+    });
+    dom.photoAnswerInput.addEventListener('compositionstart', () => {
+        photoIsComposing = true;
+        photoSubmitAfterComposition = false;
+    });
+    dom.photoAnswerInput.addEventListener('compositionend', () => {
+        photoIsComposing = false;
+        if (photoSubmitAfterComposition) {
+            photoSubmitAfterComposition = false;
+            photoAutoSubmitQueued = true;
+            photoDeferredSubmitTimeout = window.setTimeout(() => {
+                photoDeferredSubmitTimeout = null;
+                photoAutoSubmitQueued = false;
+                submitPhotoAnswer();
+            }, 0);
+        }
+    });
+    dom.photoAnswerInput.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return;
+        if (event.isComposing || event.keyCode === 229 || photoIsComposing) {
+            photoSubmitAfterComposition = true;
+            return;
+        }
+        event.preventDefault();
+        submitPhotoAnswer();
+    });
+
     window.addEventListener('keydown', (event) => {
         if (currentMode !== 'kanji' || !quizActive || event.repeat || kanjiIsComposing || event.isComposing || event.keyCode === 229) return;
         if (event.key.toLowerCase() === 'q' && !event.ctrlKey && !event.metaKey && !event.altKey) {
@@ -126,6 +178,7 @@ function initEventListeners() {
     });
     dom.restartBtn.addEventListener('click', () => {
         if (currentMode === 'kanji') startKanjiGame();
+        else if (currentMode === 'photo') startGame();
         else returnToHome();
     });
 }
@@ -148,6 +201,25 @@ function selectMode(mode) {
         dom.kanjiHayauchiCount.textContent = `${allKanjiQuizData.hayauchi.length}問`;
         dom.kanjiSecretLevelOption.classList.add('hidden');
         selectKanjiLevel('beginner');
+        dom.homeButton.classList.remove('hidden');
+        showScreen(dom.startScreen);
+        return;
+    }
+
+    if (mode === 'photo') {
+        selectedQuizData = allPhotoQuizData;
+        currentLevel = '写真';
+        dom.mainTitle.textContent = '写真で天体クイズ';
+        dom.startScreenTitle.textContent = `写真から天体を当てよう！全${selectedQuizData.length}問`;
+        dom.startScreenDescription.textContent = '天体写真を見て、答えを入力してください。時間制限はありません。写真の出典と解説は、クイズ後に確認できます。';
+        dom.startScreenDescription.classList.remove('hidden');
+        dom.kanjiModeSummary.classList.add('hidden');
+        dom.multipleChoiceContent.classList.remove('hidden');
+        dom.kanjiQuizContent.classList.add('hidden');
+        dom.startButton.disabled = selectedQuizData.length === 0;
+        dom.startButton.classList.toggle('opacity-50', selectedQuizData.length === 0);
+        dom.startButton.classList.toggle('cursor-not-allowed', selectedQuizData.length === 0);
+        dom.scoreDisplay.textContent = `0 / ${selectedQuizData.length}`;
         dom.homeButton.classList.remove('hidden');
         showScreen(dom.startScreen);
         return;
@@ -198,7 +270,7 @@ function selectDifficulty(level) {
         dom.startButton.classList.remove('opacity-50', 'cursor-not-allowed');
     } else {
         dom.startScreenTitle.textContent = "問題データがありません";
-        dom.startScreenDescription.textContent = "js/data.js のレベル0配列に問題を追加してください。";
+        dom.startScreenDescription.textContent = "data/questions.xlsx の Quiz シートに問題を追加し、JSONへ変換してください。";
         dom.startButton.disabled = true;
         dom.startButton.classList.add('opacity-50', 'cursor-not-allowed');
     }
@@ -250,6 +322,18 @@ function returnToHome() {
     dom.kanjiQuizContent.classList.add('hidden');
     dom.kanjiModeSummary.classList.add('hidden');
     dom.kanjiExplanationArea.classList.add('hidden');
+    dom.photoQuestionMedia.classList.add('hidden');
+    dom.photoQuestionImageFallback.classList.add('hidden');
+    dom.photoAnswerForm.classList.add('hidden');
+    dom.choicesArea.classList.remove('hidden');
+    dom.photoAnswerInput.value = '';
+    dom.photoAnswerInput.disabled = false;
+    dom.photoAnswerSubmit.disabled = false;
+    photoIsComposing = false;
+    photoSubmitAfterComposition = false;
+    clearTimeout(photoDeferredSubmitTimeout);
+    photoDeferredSubmitTimeout = null;
+    photoAutoSubmitQueued = false;
     dom.kanjiAnswerInput.value = '';
     dom.kanjiAnswerInput.disabled = false;
     setKanjiActionButtonToAnswer();
@@ -286,6 +370,9 @@ function startGame() {
     updateScoreDisplay();
     displayQuestion();
     showScreen(dom.quizScreen);
+    if (currentMode === 'photo' && window.matchMedia('(min-width: 768px)').matches) {
+        dom.photoAnswerInput.focus({ preventScroll: true });
+    }
 }
 
 function displayQuestion() {
@@ -302,21 +389,51 @@ function displayQuestion() {
     const currentQuiz = shuffledQuizData[currentQuestionIndex];
     dom.questionNumber.textContent = `問題 ${currentQuestionIndex + 1} / ${shuffledQuizData.length}`;
     dom.questionArea.textContent = currentQuiz.question;
+    const isPhotoMode = currentMode === 'photo';
+    dom.photoAnswerForm.classList.toggle('hidden', !isPhotoMode);
+    dom.choicesArea.classList.toggle('hidden', isPhotoMode);
+    dom.photoAnswerInput.value = '';
+    dom.photoAnswerInput.disabled = false;
+    dom.photoAnswerSubmit.disabled = false;
+    photoIsComposing = false;
+    photoSubmitAfterComposition = false;
+    clearTimeout(photoDeferredSubmitTimeout);
+    photoDeferredSubmitTimeout = null;
+    photoAutoSubmitQueued = false;
+
+    if (currentQuiz.image) {
+        dom.photoQuestionImage.classList.remove('hidden');
+        dom.photoQuestionImageFallback.classList.add('hidden');
+        dom.photoQuestionImage.alt = currentQuiz.imageAlt || currentQuiz.question;
+        dom.photoQuestionImage.src = currentQuiz.image;
+        const hasImageCredit = Boolean(currentQuiz.imageCredit);
+        const hasImageSource = Boolean(currentQuiz.imageSource);
+        dom.photoQuestionCreditText.textContent = hasImageCredit ? `画像: ${currentQuiz.imageCredit}` : '';
+        dom.photoQuestionCreditText.classList.toggle('hidden', !hasImageCredit);
+        dom.photoQuestionSource.href = hasImageSource ? currentQuiz.imageSource : '#';
+        dom.photoQuestionSource.classList.toggle('hidden', !hasImageSource);
+        dom.photoQuestionCredit.classList.toggle('hidden', !hasImageCredit && !hasImageSource);
+        dom.photoQuestionMedia.classList.remove('hidden');
+    } else {
+        dom.photoQuestionMedia.classList.add('hidden');
+    }
     
     dom.choicesArea.innerHTML = ''; 
-    
-    const shuffledChoices = shuffleArray(currentQuiz.choices);
-    shuffledChoices.forEach(choice => {
-        const button = document.createElement('button');
-        button.textContent = choice;
-        button.className = 'choice-button w-full p-4 rounded-lg text-left shadow-md transition duration-200 text-base md:text-lg active:translate-y-1 bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600';
-        
-        button.addEventListener('click', () => checkAnswer(choice, button));
-        dom.choicesArea.appendChild(button);
-    });
+    if (!isPhotoMode) {
+        const shuffledChoices = shuffleArray(currentQuiz.choices);
+        shuffledChoices.forEach(choice => {
+            const button = document.createElement('button');
+            button.textContent = choice;
+            button.className = 'choice-button w-full p-4 rounded-lg text-left shadow-md transition duration-200 text-base md:text-lg active:translate-y-1 bg-gray-700 hover:bg-gray-600 text-gray-100 border border-gray-600';
+
+            button.addEventListener('click', () => checkAnswer(choice, button));
+            dom.choicesArea.appendChild(button);
+        });
+    }
     
     quizActive = true;
     dom.feedbackArea.textContent = '';
+    dom.feedbackArea.className = 'mt-4 h-6 text-center text-lg font-bold transition-opacity';
     
     startTimer();
 }
@@ -385,6 +502,53 @@ function normalizeKanjiReading(reading) {
         .trim()
         .replace(/[\s　]+/g, '')
         .replace(/[\u30a1-\u30f6]/g, (character) => String.fromCharCode(character.charCodeAt(0) - 0x60));
+}
+
+function normalizePhotoAnswer(answer) {
+    return String(answer ?? '')
+        .normalize('NFKC')
+        .trim()
+        .replace(/[\s　]+/g, '')
+        .toLocaleLowerCase('ja');
+}
+
+function submitPhotoAnswer() {
+    if (!quizActive || currentMode !== 'photo') return;
+
+    const submittedAnswer = dom.photoAnswerInput.value.trim();
+    if (!normalizePhotoAnswer(submittedAnswer)) {
+        dom.feedbackArea.textContent = '答えを入力してください';
+        dom.feedbackArea.className = 'mt-4 h-6 text-center text-lg font-bold text-yellow-300';
+        return;
+    }
+
+    quizActive = false;
+    clearInterval(timerInterval);
+
+    const currentQuiz = shuffledQuizData[currentQuestionIndex];
+    const acceptedAnswers = [currentQuiz.answer, ...(currentQuiz.acceptedAnswers || [])];
+    const normalizedAnswer = normalizePhotoAnswer(submittedAnswer);
+    const isCorrect = acceptedAnswers.some((answer) => normalizePhotoAnswer(answer) === normalizedAnswer);
+    userAnswers.push({
+        questionData: currentQuiz,
+        selectedChoice: submittedAnswer,
+        isCorrect,
+        isTimeUp: false
+    });
+
+    dom.photoAnswerInput.disabled = true;
+    dom.photoAnswerSubmit.disabled = true;
+    if (isCorrect) {
+        score++;
+        dom.feedbackArea.textContent = '✅ 正解！';
+        dom.feedbackArea.className = 'mt-4 h-6 text-center text-lg font-bold text-green-400';
+    } else {
+        dom.feedbackArea.textContent = `❌ 不正解... 正解：${currentQuiz.answer}`;
+        dom.feedbackArea.className = 'mt-4 h-6 text-center text-lg font-bold text-red-400';
+    }
+
+    updateScoreDisplay();
+    questionTransitionTimeout = setTimeout(nextQuestion, 1500);
 }
 
 function submitKanjiAnswer() {
@@ -502,7 +666,7 @@ function startTimer() {
     clearInterval(timerInterval);
 
     // 💡 じっくりモードの時の処理
-    if (currentMode === 'untimed') {
+    if (currentMode === 'untimed' || currentMode === 'photo') {
         dom.timeLeftText.textContent = "∞";
         dom.timeLeftText.className = "text-xl text-cyan-400";
         dom.progressBar.className = "h-2.5 rounded-full bg-cyan-500"; 
@@ -646,7 +810,9 @@ function endGame() {
     
     // 💡 シェア文の分岐
     let shareText = "";
-    if (currentMode === 'timed') {
+    if (currentMode === 'photo') {
+        shareText = `写真で天体クイズ\n${score} / ${total} 問正解しました！\n\nNASAの宇宙写真で天体を学ぼう！\n#天文クイズ #天体写真`;
+    } else if (currentMode === 'timed') {
         if (score === total) {
             shareText = `天文クイズ⚡タイムショック (レベル${currentLevel}) で【 👑 全問正解達成！！ 👑 】\nクリアタイム: ${formattedTime}\n\nあなたも宇宙博士を目指そう！\n６号館3階でプラネタリウムも開催中⭐️\n\n#千葉工大 #天文研究部 #文化の祭典 #文祭天文クイズ`;
         } else {
@@ -697,6 +863,8 @@ function endGame() {
                 sendScoreToGAS(safeUserName, score, currentLevel, clearTime, formattedTime);
             }
         }, 1100);
+    } else if (currentMode === 'photo') {
+        document.getElementById('result-message').textContent = '写真の出典と解説を見て、天体についてさらに知ろう！';
     } else {
         document.getElementById('result-message').textContent = "（ランキング登録はタイムショック限定です）";
         setTimeout(() => {
@@ -736,5 +904,21 @@ function endKanjiGame(total, clearTime) {
     animateValue(dom.finalScoreText, 0, score, 1000, total, formattedTime);
 }
 
-// アプリケーション開始
-initEventListeners();
+// 問題JSONを読み込んでからモードを操作可能にする。
+async function initializeApplication() {
+    const status = document.getElementById('question-data-status');
+    try {
+        await loadQuestionData();
+        document.querySelectorAll('.mode-button').forEach((button) => {
+            button.disabled = false;
+        });
+        status.classList.add('hidden');
+        initEventListeners();
+    } catch (error) {
+        console.error('問題データの読み込みに失敗しました:', error);
+        status.textContent = '問題データを読み込めません。dataフォルダーのJSONを確認し、Webサーバー経由で開いてください。';
+        status.classList.add('text-red-300');
+    }
+}
+
+initializeApplication();

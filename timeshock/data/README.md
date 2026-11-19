@@ -1,0 +1,30 @@
+# クイズ問題データ
+
+`questions.xlsx` が問題データの編集元です。ブックには3つのシートがあります。
+
+- `Quiz`: タイムショックとじっくりで共通の問題。`level` は `0`〜`5`。選択肢は `Choices1`〜`Choices4` の各セルに1つずつ入れます。
+- `Kanji`: 漢字読み問題。`level` は `beginner`、`intermediate`、`advanced`、`hayauchi`。
+- `Photo`: 写真を見て答えを入力するクイズ。`question` と `answer` を記入します。表記違いも正解にする場合は `accepted_answers` に `|` 区切りで記入できます。`image` には画像URLかプロジェクト内の相対パスを指定し、代替テキスト、クレジット、出典URLは必要に応じて登録します。
+
+複数の `accepted_answers` がある場合だけ `|` で区切ります。例: `げっしょく | がっしょく`。
+写真モードの従来ブックに `Choices1`〜`Choices4` 列が残っている場合、その値は変換時に無視されます。
+画像置き場のJPGを使う場合は、例のように `image` 列へプロジェクト先頭からの相対パスを記入します: `data/画像クイズ用画像置き場/M57.jpg`。写真行の `question` と `answer` が両方空欄なら、問題作成中のテンプレートとしてJSON変換時に読み飛ばします。どちらかだけ入力された行は、入力漏れとして変換エラーになります。
+
+## 変換方法
+
+Excelを保存したあと、使うOSに合わせてプロジェクトのフォルダーにある変換ファイルをダブルクリックします。
+
+- Mac: `Mac_JSONに変換.command`。ターミナルに結果が表示され、Returnキーで閉じます。
+- Windows: `Win_JSONに変換.bat`。コマンド画面に結果が表示され、キーを押すと閉じます。
+
+どちらもPython 3が必要です。追加のPythonライブラリは不要です。
+
+ターミナルから実行する場合は、プロジェクトのフォルダーで次を使えます。
+
+```sh
+python3 scripts/excel_to_json.py
+```
+
+出力先は `quiz.json`、`kanji.json`、`photo.json` です。タイムショックとじっくりは同じ `quiz.json` を使います。初期ブックは旧 `js/data.js` から作成済みです。`js/data.js` は保管用に残し、アプリからは読み込んでいません。
+
+JSONはブラウザーの `fetch` で読み込むため、ローカルで試すときは `index.html` を直接開かず、プロジェクトのフォルダーで `python3 -m http.server 8000` を実行して `http://localhost:8000` を開いてください。

@@ -21,6 +21,15 @@ const dom = {
     progressBar: document.getElementById('progress-bar'),
     timeLeftText: document.getElementById('time-left'),
     questionArea: document.getElementById('question-area'),
+    photoQuestionMedia: document.getElementById('photo-question-media'),
+    photoQuestionImage: document.getElementById('photo-question-image'),
+    photoQuestionImageFallback: document.getElementById('photo-question-image-fallback'),
+    photoQuestionCredit: document.getElementById('photo-question-credit'),
+    photoQuestionCreditText: document.getElementById('photo-question-credit-text'),
+    photoQuestionSource: document.getElementById('photo-question-source'),
+    photoAnswerForm: document.getElementById('photo-answer-form'),
+    photoAnswerInput: document.getElementById('photo-answer-input'),
+    photoAnswerSubmit: document.getElementById('photo-answer-submit'),
     choicesArea: document.getElementById('choices-area'),
     feedbackArea: document.getElementById('feedback-area'),
     answersList: document.getElementById('answers-list'),
@@ -134,9 +143,13 @@ function showLevelSelect() {
 }
 
 function showAnswersList() {
-    dom.answersTitle.textContent = currentMode === 'kanji'
-        ? `解答と解説（天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}）`
-        : `解答と解説 (レベル ${currentLevel})`;
+    if (currentMode === 'kanji') {
+        dom.answersTitle.textContent = `解答と解説（天体観測へGO!・${KANJI_LEVEL_LABELS[currentKanjiLevel]}）`;
+    } else if (currentMode === 'photo') {
+        dom.answersTitle.textContent = '解答と解説（写真で天体クイズ）';
+    } else {
+        dom.answersTitle.textContent = `解答と解説 (レベル ${currentLevel})`;
+    }
     
     dom.answersList.innerHTML = '';
     
@@ -166,6 +179,17 @@ function showAnswersList() {
             '"': '&quot;',
             "'": '&#x27;'
         }[character]));
+        const photoCredit = ans.questionData.imageCredit ? escapeHtml(ans.questionData.imageCredit) : '';
+        const photoSource = ans.questionData.imageSource
+            ? `<a href="${escapeHtml(ans.questionData.imageSource)}" target="_blank" rel="noopener noreferrer">画像情報</a>`
+            : '';
+        const photoCaption = [photoCredit, photoSource].filter(Boolean).join(' ・ ');
+        const photoMarkup = ans.questionData.image ? `
+            <figure class="answer-photo">
+                <img src="${escapeHtml(ans.questionData.image)}" alt="${escapeHtml(ans.questionData.imageAlt || '')}" loading="lazy" decoding="async">
+                ${photoCaption ? `<figcaption>${photoCaption}</figcaption>` : ''}
+            </figure>
+        ` : '';
                                          
         item.innerHTML = `
             <div class="mb-3 border-b border-gray-600 pb-2">
@@ -173,6 +197,7 @@ function showAnswersList() {
                 <span class="text-base">${escapeHtml(questionLabel)}</span>
                 ${statusBadge}
             </div>
+            ${photoMarkup}
             <div class="mb-1">
                 <span class="text-gray-400">あなたの解答:</span> 
                 <span class="${ans.isCorrect ? 'text-green-400' : (ans.isTimeUp || ans.isSkipped ? 'text-gray-500' : 'text-red-400')} font-bold">
