@@ -26,7 +26,7 @@
                         <i class="fa-brands fa-x-twitter fa-lg"></i>
                     </a>
                 </div>
-                <div class="flex flex-col items-center justify-center px-3 py-1 rounded-lg bg-gray-800 shadow-lg min-w-[80px]">
+                <div id="score-panel" class="flex flex-col items-center justify-center px-3 py-1 rounded-lg bg-gray-800 shadow-lg min-w-[80px]">
                     <span class="text-[10px] font-bold text-gray-400 mb-0.5">SCORE</span>
                     <div id="score-display" class="text-lg font-bold text-yellow-400 leading-none">0 / 0</div>
                 </div>
@@ -58,6 +58,11 @@
                     <button data-mode="photo" class="mode-button w-full p-4 bg-gradient-to-r from-emerald-700 to-teal-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
                         <div class="text-xl mb-1">天文写真クイズ</div>
                         <div id="photo-mode-count" class="text-xs font-normal opacity-90">全5問</div>
+                    </button>
+
+                    <button data-mode="solar" class="mode-button w-full p-4 bg-gradient-to-r from-amber-600 to-yellow-500 text-gray-950 font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
+                        <div class="text-xl mb-1">太陽系を作ろう</div>
+                        <div class="text-xs font-normal opacity-90">惑星の距離を想像して配置！</div>
                     </button>
                 </div>
                 <p id="question-data-status" class="text-xs text-gray-400" role="status" aria-live="polite">問題データを読み込み中...</p>
@@ -164,7 +169,7 @@
                     <form id="photo-answer-form" class="hidden mt-4">
                         <label for="photo-answer-input" class="block text-sm font-bold text-gray-200 mb-2">答えを入力してください</label>
                         <div class="flex flex-col sm:flex-row gap-2">
-                            <input id="photo-answer-input" class="kanji-answer-input flex-1 min-w-0 rounded-lg px-4 py-3 text-lg" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="例：土星">
+                            <input id="photo-answer-input" class="kanji-answer-input flex-1 min-w-0 rounded-lg px-4 py-3 text-lg" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
                             <button id="photo-answer-submit" class="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-gray-950 font-extrabold rounded-lg shadow-lg" type="submit">解答</button>
                         </div>
                     </form>
@@ -250,12 +255,140 @@
                     </button>
                 </div>
             </div>
+
+            <section id="solar-intro-screen" class="screen solar-screen solar-intro-screen hidden" aria-labelledby="solar-intro-title">
+                <div class="solar-kicker">SOLAR SYSTEM CHALLENGE</div>
+                <h2 id="solar-intro-title" class="solar-title">あなたの太陽系</h2>
+                <div class="solar-instructions">
+                    <p>水星から土星まで、1つずつ位置を決めます。</p>
+                    <p>配置した惑星や正解の位置は、最後の答え合わせまで見えません。</p>
+                    <p>メインバーで大まかな位置を決め、拡大バーで微調整してから「この位置に決定」を押してください。</p>
+                </div>
+                <div class="solar-endpoints solar-intro-endpoints" aria-label="左端は太陽、右端は天王星">
+                    <span class="solar-endpoint-sun"><i aria-hidden="true"></i>太陽 <small>0 AU</small></span>
+                    <span class="solar-endpoint-uranus"><i aria-hidden="true"></i>天王星 <small>19.2 AU</small></span>
+                </div>
+                <button id="solar-start-button" class="solar-primary-button" type="button">太陽系を作る</button>
+                <button id="solar-intro-back-button" class="solar-secondary-button" type="button">モード選択に戻る</button>
+            </section>
+
+            <section id="solar-play-screen" class="screen solar-screen hidden" aria-labelledby="solar-current-title">
+                <div class="solar-progress-heading">
+                    <span>配置中</span>
+                    <strong id="solar-step-count">惑星 1 / 6</strong>
+                </div>
+                <div class="solar-progress-track" aria-hidden="true"><span id="solar-progress-fill"></span></div>
+                <h2 id="solar-current-title" class="solar-current-title"></h2>
+                <div class="solar-distance-control">
+                    <div class="solar-endpoints"><span>太陽 <small>0</small></span><span>天王星 <small>19.2</small></span></div>
+                    <div class="solar-range-wrap">
+                        <div class="solar-range-track" aria-hidden="true"></div>
+                        <div class="solar-range-tick-marks" aria-hidden="true"></div>
+                        <span class="solar-planet-orb solar-slider-endpoint solar-slider-endpoint-sun" data-planet="sun" role="img" aria-label="太陽、左端"></span>
+                        <span class="solar-planet-orb solar-slider-endpoint solar-slider-endpoint-uranus" data-planet="uranus" role="img" aria-label="天王星、右端"></span>
+                        <span id="solar-current-marker" class="solar-planet-orb solar-current-marker" aria-hidden="true"></span>
+                        <input id="solar-distance-input" class="solar-range-input" type="range" min="0" max="19.2" step="0.1" value="9.6" aria-label="メインバーで太陽からの距離を大まかに選択">
+                    </div>
+                    <div class="solar-range-ticks" aria-hidden="true"><span>0</span><span>19.2</span></div>
+                </div>
+                <div id="solar-zoom-preview" class="solar-zoom-preview" aria-label="拡大バーで距離を微調整">
+                    <div class="solar-zoom-heading"><span>拡大バーで微調整</span><span>表示幅 1</span></div>
+                    <div class="solar-zoom-track">
+                        <span id="solar-zoom-marker" class="solar-planet-orb solar-zoom-marker" aria-hidden="true"></span>
+                        <input id="solar-zoom-distance-input" class="solar-range-input" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="拡大バーで太陽からの距離を微調整">
+                    </div>
+                    <div class="solar-zoom-range"><span id="solar-zoom-start"></span><span id="solar-zoom-end"></span></div>
+                </div>
+                <div class="solar-guess-readout"><span>現在の配置</span><strong id="solar-guess-value">9.60</strong></div>
+                <button id="solar-confirm-button" class="solar-primary-button" type="button">この位置に決定</button>
+            </section>
+
+            <section id="solar-result-screen" class="screen solar-screen solar-result-screen hidden" aria-labelledby="solar-result-heading">
+                <div class="solar-kicker">GAME RESULT</div>
+                <h2 id="solar-result-heading" class="solar-title">あなたの太陽系</h2>
+                <div class="solar-score-card">
+                    <strong id="solar-score-value">0%</strong>
+                    <span>太陽系の正確度</span>
+                    <b id="solar-rank-name"></b>
+                    <span id="solar-rank-description" class="solar-rank-description"></span>
+                </div>
+
+                <div class="solar-section-heading">
+                    <span>①</span><div><h3>あなたの太陽系</h3><small>MY SOLAR SYSTEM</small></div>
+                </div>
+                <div class="solar-chart-card">
+                    <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
+                    <div id="solar-player-chart" class="solar-marker-chart" role="img" aria-label="あなたが配置した惑星の距離"></div>
+                    <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
+                    <button class="solar-chart-zoom-button" type="button" data-chart-zoom="player" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="あなたの太陽系のシークバーを拡大表示">
+                        <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
+                    </button>
+                </div>
+
+                <div class="solar-section-heading">
+                    <span>②</span><div><h3>本来の太陽系</h3><small>REAL SOLAR SYSTEM</small></div>
+                </div>
+                <div class="solar-chart-card">
+                    <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
+                    <div id="solar-real-chart" class="solar-marker-chart" role="img" aria-label="実際の惑星の距離"></div>
+                    <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
+                    <button class="solar-chart-zoom-button" type="button" data-chart-zoom="real" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="実際の太陽系のシークバーを拡大表示">
+                        <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
+                    </button>
+                </div>
+                <p class="solar-chart-note">2つの図は同じ線形縮尺です。印の位置が太陽からの距離を表します。</p>
+                <div id="solar-chart-legend" class="solar-chart-legend" aria-label="惑星の凡例"></div>
+
+                <div class="solar-earth-card">
+                    <div class="solar-section-heading"><span>③</span><div><h3>この太陽系の地球は……</h3></div></div>
+                    <h4 id="solar-earth-title"></h4>
+                    <p id="solar-earth-description"></p>
+                    <div class="solar-earth-flux">配置距離 <strong id="solar-earth-distance"></strong><span>日射量の目安 <strong id="solar-earth-flux"></strong></span></div>
+                    <div class="solar-earth-estimates">
+                        <div><span>平均気温の目安</span><strong id="solar-earth-temperature"></strong></div>
+                        <div><span>人間の生存確率<br><small>ゲーム内の目安</small></span><strong id="solar-earth-survival-probability"></strong></div>
+                    </div>
+                    <small>気温は地球と同じ反射率・温室効果を仮定した簡易推定です。生存確率は平均気温だけのゲーム内指標（0〜30℃で100%、−50℃・60℃で0%、間は直線換算）。大気圧・酸素・水・湿度・放射線などは考慮していません。</small>
+                </div>
+
+                <div class="solar-section-heading">
+                    <span>④</span><div><h3>惑星別の評価</h3></div>
+                </div>
+                <div id="solar-planet-results" class="solar-planet-results"></div>
+
+                <div class="solar-share-actions">
+                    <button id="solar-share-button" class="solar-primary-button" type="button">画像付きで共有</button>
+                    <a id="solar-x-share-button" class="solar-secondary-button solar-x-button" href="#" target="_blank" rel="noopener noreferrer">𝕏 に投稿</a>
+                    <button id="solar-save-image-button" class="solar-secondary-button" type="button">結果画像を保存</button>
+                    <p id="solar-share-status" class="solar-share-status" role="status" aria-live="polite"></p>
+                    <button id="solar-restart-button" class="solar-secondary-button" type="button">もう一度挑戦</button>
+                    <button id="solar-home-button" class="solar-tertiary-button" type="button">モード選択に戻る</button>
+                </div>
+            </section>
+
+            <div id="solar-chart-zoom-modal" class="solar-chart-zoom-modal hidden" role="dialog" aria-modal="true" aria-labelledby="solar-chart-zoom-title" aria-describedby="solar-chart-zoom-help">
+                <div class="solar-chart-zoom-dialog">
+                    <div class="solar-chart-zoom-header">
+                        <div>
+                            <p>MAGNIFIED VIEW</p>
+                            <h2 id="solar-chart-zoom-title">太陽系を拡大</h2>
+                        </div>
+                        <button id="solar-chart-zoom-close" class="solar-chart-zoom-close" type="button" aria-label="拡大表示を閉じる">×</button>
+                    </div>
+                    <p id="solar-chart-zoom-help" class="solar-chart-zoom-help">シークバーを横にスクロールして全体を確認できます。</p>
+                    <div id="solar-chart-zoom-viewport" class="solar-chart-zoom-viewport" tabindex="0" aria-label="拡大シークバー。左右にスクロールできます">
+                        <div id="solar-chart-zoom-chart" class="solar-marker-chart solar-marker-chart-zoom" role="img"></div>
+                        <div class="solar-chart-zoom-axis"><span>太陽　0 AU</span><span>天王星　19.2 AU</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="js/data_loader.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/solar_system.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

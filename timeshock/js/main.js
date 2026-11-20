@@ -8,7 +8,7 @@ const KANJI_LEVEL_LABELS = {
     advanced: '上級',
     hayauchi: '早撃級'
 };
-let currentMode = 'timed'; // 'timed', 'untimed', 'kanji', or 'photo'
+let currentMode = 'timed'; // 'timed', 'untimed', 'kanji', 'photo', or 'solar'
 let currentQuestionIndex = 0;
 let score = 0;
 let advancedScore = 0; 
@@ -69,6 +69,7 @@ function initEventListeners() {
 
     dom.homeButton.addEventListener('click', handleHomeClick);
     dom.startButton.addEventListener('click', startGame);
+    initializeSolarSystemEvents();
     dom.showRankingBtns.forEach(btn => btn.addEventListener('click', toggleRankingDisplay));
     dom.closeRankingBtn.addEventListener('click', closeRankingDisplay);
     dom.showAnswersBtn.addEventListener('click', showAnswersList);
@@ -182,6 +183,7 @@ function initEventListeners() {
     dom.restartBtn.addEventListener('click', () => {
         if (currentMode === 'kanji') startKanjiGame();
         else if (currentMode === 'photo') startGame();
+        else if (currentMode === 'solar') startSolarSystemGame();
         else returnToHome();
     });
 }
@@ -191,8 +193,18 @@ function initEventListeners() {
 function selectMode(mode) {
     currentMode = mode;
     closeRankingDisplay();
+    dom.scorePanel.classList.toggle('hidden', mode === 'solar');
     dom.timeProgressWrap.classList.toggle('hidden', mode === 'photo');
     dom.timeLeftDisplay.classList.toggle('hidden', mode === 'photo');
+
+    if (mode === 'solar') {
+        dom.mainTitle.textContent = '太陽系を作ろう';
+        document.title = 'あなたの太陽系';
+        dom.homeButton.classList.remove('hidden');
+        resetSolarSystemGame();
+        showScreen(dom.solarIntroScreen);
+        return;
+    }
 
     if (mode === 'kanji') {
         currentLevel = 'GO';
@@ -316,8 +328,9 @@ function startLevelMaxChallenge() {
 
 function handleHomeClick() {
     const isQuizInProgress = !dom.quizScreen.classList.contains('hidden');
-    if (isQuizInProgress) {
-        if (confirm("クイズの進行度は失われます。それでもホームに戻りますか？")) {
+    const isSolarPlacementInProgress = !dom.solarPlayScreen.classList.contains('hidden');
+    if (isQuizInProgress || isSolarPlacementInProgress) {
+        if (confirm("ゲームの進行度は失われます。それでもホームに戻りますか？")) {
             clearInterval(timerInterval);
             returnToHome();
         }
@@ -331,6 +344,8 @@ function returnToHome() {
     dom.mainTitle.textContent = "天文クイズ";
     document.title = '天文クイズ';
     dom.scoreDisplay.textContent = "0 / 0";
+    dom.scorePanel.classList.remove('hidden');
+    resetSolarSystemGame();
     
     closeRankingDisplay();
     showScreen(dom.modeScreen);
@@ -1001,6 +1016,7 @@ function endKanjiGame(total, clearTime) {
 // 問題JSONを読み込んでからモードを操作可能にする。
 async function initializeApplication() {
     const status = document.getElementById('question-data-status');
+    initEventListeners();
     try {
         await loadQuestionData();
         document.getElementById('photo-mode-count').textContent = `全${allPhotoQuizData.length}問`;
@@ -1008,11 +1024,12 @@ async function initializeApplication() {
             button.disabled = false;
         });
         status.classList.add('hidden');
-        initEventListeners();
     } catch (error) {
         console.error('問題データの読み込みに失敗しました:', error);
         status.textContent = '問題データを読み込めません。dataフォルダーのJSONを確認し、Webサーバー経由で開いてください。';
         status.classList.add('text-red-300');
+        const solarButton = document.querySelector('[data-mode="solar"]');
+        solarButton.disabled = false;
     }
 }
 
