@@ -14,7 +14,6 @@ let solarSystemResultBlobPromise = null;
 let solarSystemRoughDistance = 9.6;
 let solarSystemSelectedDistance = 9.6;
 let solarSystemZoomStart = 9.1;
-let solarShareBusy = false;
 let solarZoomReturnFocus = null;
 
 function initializeSolarSystemEvents() {
@@ -28,7 +27,6 @@ function initializeSolarSystemEvents() {
     dom.solarZoomDistanceInput.addEventListener('input', handleSolarSystemZoomInput);
     bindSolarSystemRangeDrag(dom.solarZoomDistanceInput, handleSolarSystemZoomInput);
     window.addEventListener('resize', updateSolarSystemReadout);
-    dom.solarShareButton.addEventListener('click', shareSolarSystemResult);
     dom.solarSaveImageButton.addEventListener('click', saveSolarSystemResultImage);
     dom.solarRestartButton.addEventListener('click', startSolarSystemGame);
     dom.solarHomeButton.addEventListener('click', returnToHome);
@@ -293,7 +291,8 @@ function getSolarSystemEarthSummary(distance) {
         title,
         description,
         flux,
-        temperature
+        temperature,
+        temperatureC
     });
 
     if (distance < 0.3) {
@@ -330,6 +329,13 @@ function getSolarSystemEarthSummary(distance) {
         return createSummary('薄明の地球', '太陽は遠く小さく見え、日射量は本来の地球の1%未満です。', '約0.0044〜0.01倍');
     }
     return createSummary('はるかな地球', '太陽系の外側。本来の地球の約0.3〜0.4%の日射しか届きません。', '約0.0027〜0.0044倍');
+}
+
+function getSolarSystemHumanSurvivalProbability(temperatureC) {
+    if (temperatureC === null) return 0;
+    if (temperatureC < 0) return Math.max(0, Math.min(100, Math.round((temperatureC + 50) / 50 * 100)));
+    if (temperatureC <= 30) return 100;
+    return Math.max(0, Math.min(100, Math.round((60 - temperatureC) / 30 * 100)));
 }
 
 function finishSolarSystemGame() {
@@ -380,7 +386,7 @@ function renderSolarSystemResult(result) {
     });
 
     dom.solarShareStatus.textContent = '';
-    dom.solarXShareButton.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getSolarSystemShareText(true))}`;
+    dom.solarXShareButton.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getSolarSystemShareText())}`;
 }
 
 function renderSolarSystemChart(container, distances, isPlayerChart = container === dom.solarPlayerChart) {
@@ -432,29 +438,22 @@ function closeSolarSystemChartZoom() {
     solarZoomReturnFocus = null;
 }
 
-function getSolarSystemShareText(includeUrl = false) {
+function getSolarSystemShareText() {
     const result = solarSystemResult;
     if (!result) return '';
     const lines = [
-        '私の太陽系を作ってみた！',
-        `正確度：${result.score}%`,
-        `称号：${result.rank.name}`,
+        'わたしの太陽系は…',
+        `正確度：${result.score}%　　称号：${result.rank.name}`,
+        '',
         `この太陽系の地球は「${result.earth.title}」！`,
-        `平均気温の目安：${result.earth.temperature}`
+        `平均気温の目安：${result.earth.temperature}`,
+        `生存確率：${getSolarSystemHumanSurvivalProbability(result.earth.temperatureC)}%`,
+        '',
+        'あなたの太陽系は？👇️',
+        'tenmonquiz.github.io/Quiz/timeshock/',
+        '#わたしの太陽系 #津田沼祭 #天文研究部 #千葉工業大学天文研究部'
     ];
-    const gameUrl = getSolarSystemShareUrl();
-    if (includeUrl && gameUrl) lines.push(`あなたも挑戦！ ${gameUrl}`);
-    else lines.push('あなたも挑戦してみよう！');
-    lines.push('#わたしの太陽系');
-    lines.push('#千葉工業大学天文研究部');
-    lines.push('#津田沼祭');
     return lines.join('\n');
-}
-
-function getSolarSystemShareUrl() {
-    return window.location.protocol === 'http:' || window.location.protocol === 'https:'
-        ? window.location.href
-        : '';
 }
 
 async function createSolarSystemResultBlob() {
@@ -614,51 +613,3 @@ async function saveSolarSystemResultImage() {
     }
 }
 
-async function shareSolarSystemResult() {
-    if (!solarSystemResult || solarShareBusy) return;
-    solarShareBusy = true;
-    dom.solarShareButton.disabled = true;
-    dom.solarShareStatus.textContent = '共有画像を準備しています…';
-    try {
-        const blob = await (solarSystemResultBlobPromise || createSolarSystemResultBlob());
-        const imageFile = new File([blob], 'my-solar-system.png', { type: 'image/png' });
-        const shareData = { title: 'あなたの太陽系', text: getSolarSystemShareText(false) };
-        const gameUrl = getSolarSystemShareUrl();
-        if (gameUrl) shareData.url = gameUrl;
-
-        if (navigator.share && navigator.canShare && navigator.canShare({ files: [imageFile] })) {
-            await navigator.share({ ...shareData, files: [imageFile] });
-            dom.solarShareStatus.textContent = '共有メニューを開きました。';
-        } else {
-            downloadSolarSystemBlob(blob);
-            dom.solarShareStatus.textContent = 'この環境では画像付き共有に対応していないため、結果画像を保存しました。Xに画像を添付して投稿してください。';
-        }
-    } catch (error) {
-        if (error?.name === 'AbortError') {
-            dom.solarShareStatus.textContent = '共有をキャンセルしました。';
-        } else {
-            console.error('結果の共有に失敗しました:', error);
-            dom.solarShareStatus.textContent = '共有を開けなかったため、結果画像を保存します。';
-            try {
-                const blob = await (solarSystemResultBlobPromise || createSolarSystemResultBlob());
-                downloadSolarSystemBlob(blob);
-            } catch (saveError) {
-                console.error('共有画像の保存に失敗しました:', saveError);
-            }
-        }
-    } finally {
-        solarShareBusy = false;
-        dom.solarShareButton.disabled = false;
-    }
-}
-
-function downloadSolarSystemBlob(blob) {
-    const imageUrl = URL.createObjectURL(blob);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = imageUrl;
-    downloadLink.download = 'my-solar-system.png';
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    downloadLink.remove();
-    window.setTimeout(() => URL.revokeObjectURL(imageUrl), 1000);
-}

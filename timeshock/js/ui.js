@@ -44,7 +44,6 @@ const dom = {
     solarChartZoomCloseButton: document.getElementById('solar-chart-zoom-close'),
     solarChartZoomChart: document.getElementById('solar-chart-zoom-chart'),
     solarChartZoomViewport: document.getElementById('solar-chart-zoom-viewport'),
-    solarShareButton: document.getElementById('solar-share-button'),
     solarXShareButton: document.getElementById('solar-x-share-button'),
     solarSaveImageButton: document.getElementById('solar-save-image-button'),
     solarShareStatus: document.getElementById('solar-share-status'),
