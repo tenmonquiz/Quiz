@@ -37,7 +37,6 @@ const dom = {
     solarEarthDistance: document.getElementById('solar-earth-distance'),
     solarEarthFlux: document.getElementById('solar-earth-flux'),
     solarEarthTemperature: document.getElementById('solar-earth-temperature'),
-    solarEarthSurvivalProbability: document.getElementById('solar-earth-survival-probability'),
     solarPlanetResults: document.getElementById('solar-planet-results'),
     solarChartZoomButtons: document.querySelectorAll('.solar-chart-zoom-button'),
     solarChartZoomModal: document.getElementById('solar-chart-zoom-modal'),

@@ -1,5 +1,6 @@
 // --- グローバル変数 ---
 const TIME_LIMIT = 10;
+const QUIZ_QUESTIONS_PER_LEVEL = 10;
 const KANJI_TIME_LIMIT = 20;
 const KANJI_INITIAL_LIVES = 3;
 const KANJI_LEVEL_LABELS = {
@@ -296,11 +297,14 @@ function selectDifficulty(level) {
     
     selectedQuizData = allQuizData[currentLevel];
     const totalQuestions = selectedQuizData.length;
+    const questionsInRun = Math.min(QUIZ_QUESTIONS_PER_LEVEL, totalQuestions);
     
     dom.mainTitle.textContent = `レベル${currentLevel}`;
     if (totalQuestions > 0) {
-        dom.startScreenTitle.textContent = `全${totalQuestions}問！宇宙の知識を試そう！`;
-        dom.startScreenDescription.textContent = "";
+        dom.startScreenTitle.textContent = `全${questionsInRun}問！宇宙の知識を試そう！`;
+        dom.startScreenDescription.textContent = totalQuestions > QUIZ_QUESTIONS_PER_LEVEL
+            ? `このレベルの全${totalQuestions}問から、${questionsInRun}問をランダムに出題します。`
+            : `このレベルに登録されている${questionsInRun}問を出題します。`;
         dom.startButton.disabled = false;
         dom.startButton.classList.remove('opacity-50', 'cursor-not-allowed');
     } else {
@@ -309,7 +313,7 @@ function selectDifficulty(level) {
         dom.startButton.disabled = true;
         dom.startButton.classList.add('opacity-50', 'cursor-not-allowed');
     }
-    dom.scoreDisplay.textContent = `0 / ${totalQuestions}`;
+    dom.scoreDisplay.textContent = `0 / ${questionsInRun}`;
 
     dom.homeButton.classList.remove('hidden');
     showScreen(dom.startScreen);
@@ -427,7 +431,10 @@ function startGame() {
         return;
     }
 
-    shuffledQuizData = shuffleArray(selectedQuizData);
+    const questionCount = currentMode === 'timed' || currentMode === 'untimed'
+        ? QUIZ_QUESTIONS_PER_LEVEL
+        : selectedQuizData.length;
+    shuffledQuizData = shuffleArray(selectedQuizData).slice(0, questionCount);
     currentQuestionIndex = 0;
     score = 0;
     quizActive = true;

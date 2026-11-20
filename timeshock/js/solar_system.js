@@ -289,56 +289,47 @@ function getSolarSystemEarthSummary(distance) {
     const temperature = roundedTemperature === null
         ? '算出不可（太陽の中心）'
         : `${roundedTemperature > 0 ? '+' : ''}${roundedTemperature}℃`;
-    const survivalProbability = getSolarSystemTemperatureSurvivalProbability(temperatureC);
     const createSummary = (title, description, flux) => ({
         title,
         description,
         flux,
-        temperature,
-        survivalProbability
+        temperature
     });
 
     if (distance < 0.3) {
-        return createSummary('灼熱の地球', '太陽に近すぎる軌道。地球の11倍を超える日射を受ける世界です。', '約11.11倍以上');
+        return createSummary('灼熱の地球', '太陽に近すぎる軌道。本来の地球の11倍を超える日射を受ける世界です。', '約11.11倍以上');
     }
     if (distance < 0.5) {
-        return createSummary('超高温の地球', '地球よりずっと太陽に近く、日射量は地球の約4〜11倍です。', '約4〜11.11倍');
+        return createSummary('超高温の地球', '本来の地球よりずっと太陽に近く、日射量は地球の約4〜11倍です。', '約4〜11.11倍');
     }
     if (distance < 0.7) {
-        return createSummary('暑い地球', '地球より太陽に近く、日射量もかなり多い世界です。', '約2.04〜4倍');
+        return createSummary('暑い地球', '本来の地球より太陽に近く、日射量もかなり多い世界です。', '約2.04〜4倍');
     }
     if (distance < 0.9) {
-        return createSummary('あたたかい地球', '地球より少し太陽に近め。日射量は地球の約1.2〜2倍です。', '約1.23〜2.04倍');
+        return createSummary('あたたかい地球', '本来の地球より少し太陽に近め。日射量は地球の約1.2〜2倍です。', '約1.23〜2.04倍');
     }
     if (distance <= 1.1) {
-        return createSummary('地球に近い軌道', '地球によく似た距離。日射量も地球にかなり近い世界です。', '約0.83〜1.23倍');
+        return createSummary('ほぼ地球と同じ軌道', '本来の地球によく似た距離。日射量も地球にかなり近い世界です。', '約0.83〜1.23倍');
     }
     if (distance <= 1.5) {
-        return createSummary('少しひんやりする地球', '太陽から少し離れた軌道。地球より日射量は少なめです。', '約0.44〜0.83倍');
+        return createSummary('少しひんやりする地球', '太陽から少し離れた軌道。本来の地球より日射量は少なめです。', '約0.44〜0.83倍');
     }
     if (distance <= 2) {
         return createSummary('寒冷な地球', '太陽の光が弱まり、冷え込みが厳しそうな世界です。', '約0.25〜0.44倍');
     }
     if (distance <= 3) {
-        return createSummary('冷え込む地球', '地球よりかなり遠く、日射量は地球の4分の1以下です。', '約0.11〜0.25倍');
+        return createSummary('冷え込む地球', '本来の地球よりかなり遠く、日射量は4分の1以下です。', '約0.11〜0.25倍');
     }
     if (distance <= 5) {
-        return createSummary('氷の地球', '太陽の光は地球の約4〜11%。冷たい外側の世界です。', '約0.04〜0.11倍');
+        return createSummary('氷の地球', '太陽の光は本来の地球の約4〜11%。冷たい外側の世界です。', '約0.04〜0.11倍');
     }
     if (distance <= 10) {
         return createSummary('極寒の地球', '巨大惑星たちの領域。日射量は地球の約1〜4%です。', '約0.01〜0.04倍');
     }
     if (distance <= 15) {
-        return createSummary('薄明の地球', '太陽は遠く小さく見え、日射量は地球の1%未満です。', '約0.0044〜0.01倍');
+        return createSummary('薄明の地球', '太陽は遠く小さく見え、日射量は本来の地球の1%未満です。', '約0.0044〜0.01倍');
     }
-    return createSummary('はるかな地球', '太陽系の外側。地球の約0.3〜0.4%の日射しか届きません。', '約0.0027〜0.0044倍');
-}
-
-function getSolarSystemTemperatureSurvivalProbability(temperatureC) {
-    if (temperatureC === null) return 0;
-    if (temperatureC < 0) return Math.max(0, Math.min(100, Math.round((temperatureC + 50) / 50 * 100)));
-    if (temperatureC <= 30) return 100;
-    return Math.max(0, Math.min(100, Math.round((60 - temperatureC) / 30 * 100)));
+    return createSummary('はるかな地球', '太陽系の外側。本来の地球の約0.3〜0.4%の日射しか届きません。', '約0.0027〜0.0044倍');
 }
 
 function finishSolarSystemGame() {
@@ -374,7 +365,6 @@ function renderSolarSystemResult(result) {
     dom.solarEarthDistance.textContent = `${result.placements[2].toFixed(2)} AU`;
     dom.solarEarthFlux.textContent = result.earth.flux;
     dom.solarEarthTemperature.textContent = result.earth.temperature;
-    dom.solarEarthSurvivalProbability.textContent = `${result.earth.survivalProbability}%`;
 
     dom.solarPlanetResults.replaceChildren();
     result.planets.forEach((planet) => {
@@ -450,12 +440,12 @@ function getSolarSystemShareText(includeUrl = false) {
         `正確度：${result.score}%`,
         `称号：${result.rank.name}`,
         `この太陽系の地球は「${result.earth.title}」！`,
-        `平均気温の目安：${result.earth.temperature}・生存確率（ゲーム内目安）：${result.earth.survivalProbability}%`
+        `平均気温の目安：${result.earth.temperature}`
     ];
     const gameUrl = getSolarSystemShareUrl();
     if (includeUrl && gameUrl) lines.push(`あなたも挑戦！ ${gameUrl}`);
     else lines.push('あなたも挑戦してみよう！');
-    lines.push('#あなたの太陽系');
+    lines.push('#わたしの太陽系');
     return lines.join('\n');
 }
 
@@ -506,7 +496,7 @@ async function createSolarSystemResultBlob() {
 
     drawSolarCanvasText(context, `この太陽系の地球は「${solarSystemResult.earth.title}」`, 72, 1162, '800 34px sans-serif', '#7dd3fc');
     drawSolarCanvasText(context, `地球の位置 ${solarSystemResult.placements[2].toFixed(2)} AU ・ 日射量 ${solarSystemResult.earth.flux}`, 72, 1220, '500 24px sans-serif', '#e2e8f0');
-    drawSolarCanvasText(context, `平均気温 ${solarSystemResult.earth.temperature} ・ 人間の生存確率（ゲーム内目安） ${solarSystemResult.earth.survivalProbability}%`, 72, 1260, '500 24px sans-serif', '#e2e8f0');
+    drawSolarCanvasText(context, `平均気温の目安 ${solarSystemResult.earth.temperature}`, 72, 1260, '500 24px sans-serif', '#e2e8f0');
     drawSolarCanvasText(context, '横軸は太陽からの距離（0〜19.2 AU、線形縮尺）', 72, 1325, '500 22px sans-serif', '#94a3b8');
     drawSolarCanvasText(context, '#あなたの太陽系', 72, 1380, '800 26px sans-serif', '#facc15');
 

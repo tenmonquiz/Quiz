@@ -1118,8 +1118,8 @@ body #score-display,
 
 .solar-chart-comparison {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.45rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.55rem;
     margin-top: 1.15rem;
 }
 
@@ -1131,18 +1131,7 @@ body #score-display,
 
 .solar-chart-column .solar-section-heading {
     min-height: 2rem;
-    gap: 0.35rem;
-    margin: 0 0 0.45rem;
-}
-
-.solar-chart-column .solar-section-heading > span {
-    width: 1.55rem;
-    height: 1.55rem;
-    font-size: 0.72rem;
-}
-
-.solar-chart-column .solar-section-heading h3 {
-    font-size: 0.78rem;
+    margin: 0 0 0.4rem;
 }
 
 .solar-chart-card {
@@ -1155,8 +1144,7 @@ body #score-display,
 }
 
 .solar-chart-card .solar-endpoints {
-    gap: 0.15rem;
-    font-size: 0.56rem;
+    font-size: 0.62rem;
 }
 
 .solar-marker-chart {
@@ -1190,19 +1178,8 @@ body #score-display,
 .solar-axis-labels {
     margin-top: 0.3rem;
     color: #94a3b8;
-    font-size: 0.56rem;
+    font-size: 0.61rem;
     font-weight: 600;
-}
-
-.solar-chart-column .solar-chart-card {
-    padding: 0.45rem;
-}
-
-.solar-chart-column .solar-chart-zoom-button {
-    min-height: 32px;
-    gap: 0.25rem;
-    padding: 0.3rem 0.45rem;
-    font-size: 0.62rem;
 }
 
 .solar-chart-legend {
@@ -1272,7 +1249,7 @@ body #score-display,
 
 .solar-earth-estimates {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
     margin: 0.65rem 0;
 }
