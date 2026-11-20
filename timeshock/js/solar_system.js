@@ -446,6 +446,8 @@ function getSolarSystemShareText(includeUrl = false) {
     if (includeUrl && gameUrl) lines.push(`あなたも挑戦！ ${gameUrl}`);
     else lines.push('あなたも挑戦してみよう！');
     lines.push('#わたしの太陽系');
+    lines.push('#千葉工業大学天文研究部');
+    lines.push('#津田沼祭');
     return lines.join('\n');
 }
 

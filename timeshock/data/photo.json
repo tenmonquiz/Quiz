@@ -1,52 +1,52 @@
 [
   {
-    "question": "この天体の名前は？",
-    "answer": "かに星雲",
-    "exp": "M1（NGC 1952）は、おうし座の方向にある超新星残骸で、「かに星雲」とも呼ばれます。",
-    "image": "data/photo-images/crab-nebula.jpg",
-    "imageAlt": "かに星雲（M1、NGC 1952）",
+    "question": "写っているのは何？",
+    "answer": "M1NGC1952",
+    "exp": "解説が載るところだよ",
+    "image": "data/画像クイズ用画像置き場/M1NGC1952.jpg",
+    "imageAlt": "M1NGC1952",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "M1",
-      "NGC 1952",
-      "NGC1952",
-      "M1 NGC 1952"
+      "かに星雲M1NGC1952",
+      "M1NGC1952",
+      "かに星雲 M1 NGC1952",
+      "かに星雲　M1    NGC1952",
+      "かに星雲　M1 NGC1952"
     ]
   },
   {
-    "question": "この天体の名前は？",
-    "answer": "環状星雲",
-    "exp": "M57は、こと座にある環状星雲です。ガスがリング状に見えることからこの名前で呼ばれます。",
-    "image": "data/photo-images/ring-nebula.jpg",
-    "imageAlt": "こと座の環状星雲（M57）",
+    "question": "写っているのは何？",
+    "answer": "M57",
+    "exp": "解説が載るところだよ",
+    "image": "data/画像クイズ用画像置き場/M57.jpg",
+    "imageAlt": "M57",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "M57",
-      "こと座の環状星雲",
-      "リング星雲"
+      "こと座の環状星雲M57",
+      "こと座環状星雲M57",
+      "環状星雲M57",
+      "こと座の星雲M57"
     ]
   },
   {
-    "question": "この天体の名前は？",
+    "question": "写っているのは何？",
     "answer": "M77",
-    "exp": "M77は、くじら座の方向にある渦巻銀河です。NGC 1068というカタログ番号でも知られています。",
-    "image": "data/photo-images/m77-galaxy.jpg",
-    "imageAlt": "くじら座の渦巻銀河 M77（NGC 1068）",
+    "exp": "解説が載るところだよ",
+    "image": "data/画像クイズ用画像置き場/M77.jpg",
+    "imageAlt": "M77",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
-      "NGC 1068",
-      "NGC1068",
-      "くじら座の渦巻銀河"
+      "MGC1068"
     ]
   },
   {
-    "question": "この天体の名前は？",
+    "question": "写っているのは何？",
     "answer": "土星",
-    "exp": "土星は太陽から6番目の惑星です。写真では、氷や岩石の粒でできた環が見えます。",
-    "image": "data/photo-images/saturn.jpg",
+    "exp": "解説が載るところだよ",
+    "image": "data/画像クイズ用画像置き場/土星.jpg",
     "imageAlt": "土星",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
@@ -55,15 +55,92 @@
     ]
   },
   {
-    "question": "この天体の名前は？",
+    "question": "写っているのは何？",
     "answer": "海王星",
-    "exp": "海王星は太陽系で太陽から最も遠い惑星です。青く見える大気と強い風が特徴です。",
-    "image": "data/photo-images/neptune.jpg",
+    "exp": "解説が載るところだよ",
+    "image": "data/画像クイズ用画像置き場/海王星.jpg",
     "imageAlt": "海王星",
     "imageCredit": "",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
       "かいおうせい"
+    ]
+  },
+  {
+    "question": "写ってるのは何？",
+    "answer": "すばる",
+    "exp": "おうし座にある、青白い若い星が集まる散開星団です！",
+    "image": "data/画像クイズ用画像置き場/すばる.jpgスバル",
+    "imageAlt": "すばる",
+    "imageCredit": "",
+    "imageSource": "https://www.nao.ac.jp/gallery/messiers.html",
+    "acceptedAnswers": [
+      "プレアデス星団",
+      "M45",
+      "昴"
+    ]
+  },
+  {
+    "question": "写ってるのは何？",
+    "answer": "馬頭星雲",
+    "exp": "オリオン座の方向にある暗黒星雲です！後方にある赤い散光星雲を背景に、多量のチリやガスを遮って、馬の頭のようなシルエットを作っています！",
+    "image": "data/画像クイズ用画像置き場/馬頭星雲.jpgバトウセイウｎン",
+    "imageAlt": "馬頭星雲",
+    "imageCredit": "",
+    "imageSource": "https://www.nao.ac.jp/gallery/nebulae.html",
+    "acceptedAnswers": [
+      "オリオン座の馬頭星雲"
+    ]
+  },
+  {
+    "question": "写ってるのは何？",
+    "answer": "オリオン大星雲",
+    "exp": "オリオン座の三つ星の南にある小三つ星の中央付近に位置する、明るく巨大な散光星雲です！",
+    "image": "data/画像クイズ用画像置き場/M42.jpg",
+    "imageAlt": "オリオン大星雲",
+    "imageCredit": "",
+    "imageSource": "https://www.nao.ac.jp/gallery/messiers.html",
+    "acceptedAnswers": [
+      "M42"
+    ]
+  },
+  {
+    "question": "写ってるのは何座？",
+    "answer": "さそり座",
+    "exp": "代表的な夏の星座であり、心臓付近に赤く輝く1等星「アンタレス」が印象的です！",
+    "image": "data/画像クイズ用画像置き場/さそりざ.jpg",
+    "imageAlt": "さそり座",
+    "imageCredit": "",
+    "imageSource": "https://www.civillink.net/esozai/download/2960.html",
+    "acceptedAnswers": [
+      "蠍座",
+      "Scorpio"
+    ]
+  },
+  {
+    "question": "写ってるのは何座？",
+    "answer": "カシオペヤ座",
+    "exp": "北天の空に見られる、５つの明るい星が描く「W」の形が目印です！",
+    "image": "data/画像クイズ用画像置き場/カシオペヤ座.jpg",
+    "imageAlt": "カシオペヤ座",
+    "imageCredit": "",
+    "imageSource": "https://www.civillink.net/esozai/download/2458.html",
+    "acceptedAnswers": [
+      "Cassiopeia",
+      "カシオペア座"
+    ]
+  },
+  {
+    "question": "写ってるのは何座？",
+    "answer": "こと座",
+    "exp": "夏を代表する星座で、１等星のベガは七夕の織姫星としても知られています！",
+    "image": "data/画像クイズ用画像置き場/こと座.jpg",
+    "imageAlt": "こと座",
+    "imageCredit": "",
+    "imageSource": "https://www.civillink.net/esozai/download/2944.html",
+    "acceptedAnswers": [
+      "琴座",
+      "Lyra"
     ]
   }
 ]
