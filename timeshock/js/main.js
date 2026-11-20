@@ -46,6 +46,12 @@ function initEventListeners() {
         });
     });
 
+    document.querySelectorAll('.quiz-type-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectMode(btn.dataset.quizMode);
+        });
+    });
+
     // 難易度選択ボタン
     document.querySelectorAll('.difficulty-button').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -178,6 +184,9 @@ function initEventListeners() {
     });
     
     dom.backToModeBtn.addEventListener('click', () => {
+        showScreen(dom.quizTypeScreen);
+    });
+    dom.backToModeFromQuizTypeBtn.addEventListener('click', () => {
         showScreen(dom.modeScreen);
     });
     dom.restartBtn.addEventListener('click', () => {
@@ -191,6 +200,12 @@ function initEventListeners() {
 // --- ゲームロジック ---
 
 function selectMode(mode) {
+    if (mode === 'quiz') {
+        closeRankingDisplay();
+        showScreen(dom.quizTypeScreen);
+        return;
+    }
+
     currentMode = mode;
     closeRankingDisplay();
     dom.scorePanel.classList.toggle('hidden', mode === 'solar');

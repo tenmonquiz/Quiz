@@ -40,14 +40,9 @@
                 <p class="text-base text-sky-400 mb-8">モードを選択してください</p>
 
                 <div class="flex flex-col gap-4 mb-8">
-                    <button data-mode="timed" class="mode-button w-full p-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
-                        <div class="text-xl mb-1">タイムショック</div>
-                        <div class="text-xs font-normal opacity-90">1問10秒！</div>
-                    </button>
-                    
-                    <button data-mode="untimed" class="mode-button w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
-                        <div class="text-xl mb-1">じっくり</div>
-                        <div class="text-xs font-normal opacity-90">時間無制限（ランキング登録不可）</div>
+                    <button data-mode="quiz" class="mode-button w-full p-4 bg-gradient-to-r from-blue-700 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
+                        <div class="text-xl mb-1">4択クイズ</div>
+                        <div class="text-xs font-normal opacity-90">宇宙の知識に挑戦！</div>
                     </button>
 
                     <button data-mode="kanji" class="mode-button w-full p-4 bg-gradient-to-r from-violet-700 to-indigo-600 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform" disabled>
@@ -95,8 +90,30 @@
                 </div>
             </div>
 
+            <div id="quiz-type-select-screen" class="screen text-center hidden">
+                <h1 class="text-2xl font-bold text-gray-100 mb-2">4択クイズ</h1>
+                <p class="text-sm text-sky-400 mb-6">遊び方を選択してください</p>
+
+                <div class="flex flex-col gap-3">
+                    <button data-quiz-mode="timed" class="quiz-type-button w-full p-4 bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                        <div class="text-xl mb-1">タイムショック</div>
+                        <div class="text-xs font-normal opacity-90">1問10秒！</div>
+                    </button>
+                    <button data-quiz-mode="untimed" class="quiz-type-button w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] transition-transform">
+                        <div class="text-xl mb-1">じっくり</div>
+                        <div class="text-xs font-normal opacity-90">時間無制限（ランキング登録不可）</div>
+                    </button>
+                </div>
+
+                <div class="mt-6">
+                    <button id="back-to-mode-from-quiz-type-button" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 transition text-white font-bold text-base rounded-full shadow-lg border border-gray-500">
+                        モード選択に戻る
+                    </button>
+                </div>
+            </div>
+
             <div id="difficulty-select-screen" class="screen text-center hidden">
-                <h1 class="text-2xl font-bold text-gray-100 mb-2">難易度選択</h1>
+                <h1 class="text-2xl font-bold text-gray-100 mb-2">レベル選択</h1>
                 <p id="selected-mode-display" class="text-sm font-bold text-yellow-400 mb-4"></p>
 
                 <div class="flex flex-col gap-3">
@@ -283,13 +300,12 @@
                     <div class="solar-endpoints"><span>太陽 <small>0</small></span><span>天王星 <small>19.2</small></span></div>
                     <div class="solar-range-wrap">
                         <div class="solar-range-track" aria-hidden="true"></div>
-                        <div class="solar-range-tick-marks" aria-hidden="true"></div>
+                        <div id="solar-range-tick-marks" class="solar-range-tick-marks" aria-hidden="true"></div>
                         <span class="solar-planet-orb solar-slider-endpoint solar-slider-endpoint-sun" data-planet="sun" role="img" aria-label="太陽、左端"></span>
                         <span class="solar-planet-orb solar-slider-endpoint solar-slider-endpoint-uranus" data-planet="uranus" role="img" aria-label="天王星、右端"></span>
                         <span id="solar-current-marker" class="solar-planet-orb solar-current-marker" aria-hidden="true"></span>
                         <input id="solar-distance-input" class="solar-range-input" type="range" min="0" max="19.2" step="0.1" value="9.6" aria-label="メインバーで太陽からの距離を大まかに選択">
                     </div>
-                    <div class="solar-range-ticks" aria-hidden="true"><span>0</span><span>19.2</span></div>
                 </div>
                 <div id="solar-zoom-preview" class="solar-zoom-preview" aria-label="拡大バーで距離を微調整">
                     <div class="solar-zoom-heading"><span>拡大バーで微調整</span><span>表示幅 1</span></div>
@@ -299,7 +315,6 @@
                     </div>
                     <div class="solar-zoom-range"><span id="solar-zoom-start"></span><span id="solar-zoom-end"></span></div>
                 </div>
-                <div class="solar-guess-readout"><span>現在の配置</span><strong id="solar-guess-value">9.60</strong></div>
                 <button id="solar-confirm-button" class="solar-primary-button" type="button">この位置に決定</button>
             </section>
 
@@ -313,30 +328,35 @@
                     <span id="solar-rank-description" class="solar-rank-description"></span>
                 </div>
 
-                <div class="solar-section-heading">
-                    <span>①</span><div><h3>あなたの太陽系</h3><small>MY SOLAR SYSTEM</small></div>
-                </div>
-                <div class="solar-chart-card">
-                    <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
-                    <div id="solar-player-chart" class="solar-marker-chart" role="img" aria-label="あなたが配置した惑星の距離"></div>
-                    <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
-                    <button class="solar-chart-zoom-button" type="button" data-chart-zoom="player" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="あなたの太陽系のシークバーを拡大表示">
-                        <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
-                    </button>
-                </div>
+                <div class="solar-chart-comparison">
+                    <div class="solar-chart-column">
+                        <div class="solar-section-heading">
+                            <span>①</span><div><h3>あなたの太陽系</h3></div>
+                        </div>
+                        <div class="solar-chart-card">
+                            <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
+                            <div id="solar-player-chart" class="solar-marker-chart" role="img" aria-label="あなたが配置した惑星の距離"></div>
+                            <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
+                            <button class="solar-chart-zoom-button" type="button" data-chart-zoom="player" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="あなたの太陽系のシークバーを拡大表示">
+                                <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
+                            </button>
+                        </div>
+                    </div>
 
-                <div class="solar-section-heading">
-                    <span>②</span><div><h3>本来の太陽系</h3><small>REAL SOLAR SYSTEM</small></div>
+                    <div class="solar-chart-column">
+                        <div class="solar-section-heading">
+                            <span>②</span><div><h3>本来の太陽系</h3></div>
+                        </div>
+                        <div class="solar-chart-card">
+                            <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
+                            <div id="solar-real-chart" class="solar-marker-chart" role="img" aria-label="実際の惑星の距離"></div>
+                            <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
+                            <button class="solar-chart-zoom-button" type="button" data-chart-zoom="real" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="実際の太陽系のシークバーを拡大表示">
+                                <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="solar-chart-card">
-                    <div class="solar-endpoints"><span>太陽 <small>0 AU</small></span><span>天王星 <small>19.2 AU</small></span></div>
-                    <div id="solar-real-chart" class="solar-marker-chart" role="img" aria-label="実際の惑星の距離"></div>
-                    <div class="solar-axis-labels"><span>0 AU</span><span>19.2 AU</span></div>
-                    <button class="solar-chart-zoom-button" type="button" data-chart-zoom="real" aria-haspopup="dialog" aria-controls="solar-chart-zoom-modal" aria-label="実際の太陽系のシークバーを拡大表示">
-                        <i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i><span>拡大表示</span>
-                    </button>
-                </div>
-                <p class="solar-chart-note">2つの図は同じ線形縮尺です。印の位置が太陽からの距離を表します。</p>
                 <div id="solar-chart-legend" class="solar-chart-legend" aria-label="惑星の凡例"></div>
 
                 <div class="solar-earth-card">
@@ -346,7 +366,7 @@
                     <div class="solar-earth-flux">配置距離 <strong id="solar-earth-distance"></strong><span>日射量の目安 <strong id="solar-earth-flux"></strong></span></div>
                     <div class="solar-earth-estimates">
                         <div><span>平均気温の目安</span><strong id="solar-earth-temperature"></strong></div>
-                        <div><span>人間の生存確率<br><small>ゲーム内の目安</small></span><strong id="solar-earth-survival-probability"></strong></div>
+                        <div><span>人間の生存確率</span><strong id="solar-earth-survival-probability"></strong></div>
                     </div>
                     <small>気温は地球と同じ反射率・温室効果を仮定した簡易推定です。生存確率は平均気温だけのゲーム内指標（0〜30℃で100%、−50℃・60℃で0%、間は直線換算）。大気圧・酸素・水・湿度・放射線などは考慮していません。</small>
                 </div>

@@ -18,12 +18,15 @@ let solarShareBusy = false;
 let solarZoomReturnFocus = null;
 
 function initializeSolarSystemEvents() {
+    renderSolarSystemTickMarks();
     dom.solarStartButton.addEventListener('click', startSolarSystemGame);
     dom.solarIntroBackButton.addEventListener('click', returnToHome);
     dom.solarConfirmButton.addEventListener('click', confirmSolarSystemPlacement);
     dom.solarDistanceInput.addEventListener('input', handleSolarSystemMainInput);
     dom.solarDistanceInput.addEventListener('pointerdown', revealSolarSystemFineAdjustment);
+    bindSolarSystemRangeDrag(dom.solarDistanceInput, handleSolarSystemMainInput);
     dom.solarZoomDistanceInput.addEventListener('input', handleSolarSystemZoomInput);
+    bindSolarSystemRangeDrag(dom.solarZoomDistanceInput, handleSolarSystemZoomInput);
     window.addEventListener('resize', updateSolarSystemReadout);
     dom.solarShareButton.addEventListener('click', shareSolarSystemResult);
     dom.solarSaveImageButton.addEventListener('click', saveSolarSystemResultImage);
@@ -43,6 +46,92 @@ function initializeSolarSystemEvents() {
     });
 }
 
+function renderSolarSystemTickMarks() {
+    const ticks = [];
+    const halfStepAU = 0.5;
+    const lastHalfStepIndex = Math.floor(SOLAR_SYSTEM_MAX_AU / halfStepAU);
+
+    for (let index = 0; index <= lastHalfStepIndex; index++) {
+        const distance = index * halfStepAU;
+        const tick = document.createElement('span');
+        tick.className = index % 2 === 0 ? 'solar-range-tick-mark solar-range-tick-mark-major' : 'solar-range-tick-mark';
+        tick.style.left = `${distance / SOLAR_SYSTEM_MAX_AU * 100}%`;
+        ticks.push(tick);
+    }
+
+    dom.solarRangeTickMarks.replaceChildren(...ticks);
+}
+
+function bindSolarSystemRangeDrag(input, updateHandler) {
+    let activePointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+
+    const setValueFromPointer = (event) => {
+        const bounds = input.getBoundingClientRect();
+        if (bounds.width <= 0) return;
+
+        const min = Number.parseFloat(input.min) || 0;
+        const max = Number.parseFloat(input.max) || 1;
+        const step = Number.parseFloat(input.step) || 1;
+        const ratio = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+        const rawValue = min + (max - min) * ratio;
+        const steppedValue = min + Math.round((rawValue - min) / step) * step;
+        const precision = Math.max(0, (input.step.split('.')[1] || '').length);
+        const nextValue = Number(steppedValue.toFixed(precision));
+
+        if (Number(input.value) === nextValue) return;
+        input.value = nextValue.toFixed(precision);
+        updateHandler();
+    };
+
+    input.addEventListener('pointerdown', (event) => {
+        if (event.isPrimary === false || (event.button !== undefined && event.button !== 0)) return;
+        activePointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
+        isDragging = event.pointerType === 'mouse' || event.pointerType === 'pen';
+
+        if (isDragging) {
+            input.setPointerCapture?.(event.pointerId);
+            setValueFromPointer(event);
+        }
+    });
+
+    const handlePointerMove = (event) => {
+        if (event.pointerId !== activePointerId) return;
+
+        if (!isDragging) {
+            const deltaX = Math.abs(event.clientX - startX);
+            const deltaY = Math.abs(event.clientY - startY);
+            if (Math.max(deltaX, deltaY) < 6) return;
+            if (deltaY >= deltaX) {
+                activePointerId = null;
+                return;
+            }
+
+            isDragging = true;
+            input.setPointerCapture?.(event.pointerId);
+        }
+
+        setValueFromPointer(event);
+    };
+
+    const finishPointer = (event) => {
+        if (event.pointerId !== activePointerId) return;
+        if (!isDragging && Math.max(Math.abs(event.clientX - startX), Math.abs(event.clientY - startY)) < 6) {
+            setValueFromPointer(event);
+        }
+        activePointerId = null;
+        isDragging = false;
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', finishPointer);
+    window.addEventListener('pointercancel', finishPointer);
+}
+
 function resetSolarSystemGame() {
     solarSystemPlacements = [];
     solarSystemResult = null;
@@ -53,7 +142,6 @@ function resetSolarSystemGame() {
     dom.solarDistanceInput.value = '9.6';
     dom.solarZoomDistanceInput.value = '0.5';
     dom.solarZoomPreview.classList.add('hidden');
-    dom.solarGuessValue.textContent = '9.60';
     dom.solarCurrentMarker.textContent = '';
     dom.solarCurrentMarker.removeAttribute('data-planet');
     dom.solarCurrentMarker.style.setProperty('--solar-position', '50%');
@@ -137,7 +225,6 @@ function updateSolarSystemReadout() {
     dom.solarCurrentTitle.textContent = `${planet.name}を配置`;
     dom.solarDistanceInput.setAttribute('aria-valuetext', `大まかな位置 ${solarSystemRoughDistance.toFixed(1)} AU`);
     dom.solarZoomDistanceInput.setAttribute('aria-valuetext', `${value.toFixed(2)} AU`);
-    dom.solarGuessValue.textContent = value.toFixed(2);
     dom.solarCurrentMarker.dataset.planet = planet.id;
     dom.solarZoomMarker.dataset.planet = planet.id;
     const inputWidth = dom.solarDistanceInput.getBoundingClientRect().width;

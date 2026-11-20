@@ -2,6 +2,7 @@
 const dom = {
     homeButton: document.getElementById('home-button'),
     modeScreen: document.getElementById('mode-select-screen'),
+    quizTypeScreen: document.getElementById('quiz-type-select-screen'),
     difficultyScreen: document.getElementById('difficulty-select-screen'),
     startScreen: document.getElementById('start-screen'),
     quizScreen: document.getElementById('quiz-screen'),
@@ -23,7 +24,7 @@ const dom = {
     solarZoomDistanceInput: document.getElementById('solar-zoom-distance-input'),
     solarDistanceInput: document.getElementById('solar-distance-input'),
     solarCurrentMarker: document.getElementById('solar-current-marker'),
-    solarGuessValue: document.getElementById('solar-guess-value'),
+    solarRangeTickMarks: document.getElementById('solar-range-tick-marks'),
     solarConfirmButton: document.getElementById('solar-confirm-button'),
     solarScoreValue: document.getElementById('solar-score-value'),
     solarRankName: document.getElementById('solar-rank-name'),
@@ -57,6 +58,7 @@ const dom = {
     showAnswersBtn: document.getElementById('show-answers-button'),
     backToResultBtn: document.getElementById('back-to-result-button'),
     backToModeBtn: document.getElementById('back-to-mode-button'), 
+    backToModeFromQuizTypeBtn: document.getElementById('back-to-mode-from-quiz-type-button'),
     restartBtn: document.getElementById('restart-button'), 
     
     scoreDisplay: document.getElementById('score-display'),

@@ -602,7 +602,6 @@ body #score-display,
 }
 
 .solar-endpoints,
-.solar-range-ticks,
 .solar-axis-labels {
     display: flex;
     justify-content: space-between;
@@ -775,8 +774,21 @@ body #score-display,
     left: 0;
     height: 18px;
     transform: translateY(-50%);
-    background: repeating-linear-gradient(90deg, rgba(226, 232, 240, 0.78) 0 1px, transparent 1px 10%);
     pointer-events: none;
+}
+
+.solar-range-tick-mark {
+    position: absolute;
+    top: 50%;
+    width: 1px;
+    height: 8px;
+    transform: translate(-50%, -50%);
+    background: rgba(203, 213, 225, 0.78);
+}
+
+.solar-range-tick-mark-major {
+    height: 14px;
+    background: rgba(248, 250, 252, 0.95);
 }
 
 .solar-range-input {
@@ -962,31 +974,6 @@ body #score-display,
     content: "";
 }
 
-.solar-range-ticks {
-    color: #94a3b8;
-    font-size: 0.68rem;
-    font-weight: 600;
-}
-
-.solar-guess-readout {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0.75rem 0 1rem;
-    padding: 0.8rem 0.9rem;
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    border-radius: 0.75rem;
-    background: rgba(8, 13, 25, 0.72);
-    color: #cbd5e1;
-    font-size: 0.82rem;
-}
-
-.solar-guess-readout strong {
-    color: #7dd3fc;
-    font-size: 1.1rem;
-    font-variant-numeric: tabular-nums;
-}
-
 .solar-zoom-preview {
     margin: 0.4rem 0 0.8rem;
     padding: 0.75rem 0.8rem 0.55rem;
@@ -1129,7 +1116,38 @@ body #score-display,
     letter-spacing: 0.14em;
 }
 
+.solar-chart-comparison {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 1.15rem;
+}
+
+.solar-chart-column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.solar-chart-column .solar-section-heading {
+    min-height: 2rem;
+    gap: 0.35rem;
+    margin: 0 0 0.45rem;
+}
+
+.solar-chart-column .solar-section-heading > span {
+    width: 1.55rem;
+    height: 1.55rem;
+    font-size: 0.72rem;
+}
+
+.solar-chart-column .solar-section-heading h3 {
+    font-size: 0.78rem;
+}
+
 .solar-chart-card {
+    min-width: 0;
+    flex: 1;
     padding: 0.75rem;
     border: 1px solid rgba(148, 163, 184, 0.24);
     border-radius: 0.8rem;
@@ -1137,7 +1155,8 @@ body #score-display,
 }
 
 .solar-chart-card .solar-endpoints {
-    font-size: 0.62rem;
+    gap: 0.15rem;
+    font-size: 0.56rem;
 }
 
 .solar-marker-chart {
@@ -1171,15 +1190,19 @@ body #score-display,
 .solar-axis-labels {
     margin-top: 0.3rem;
     color: #94a3b8;
-    font-size: 0.61rem;
+    font-size: 0.56rem;
     font-weight: 600;
 }
 
-.solar-chart-note {
-    margin: 0.45rem 0 0.35rem;
-    color: #94a3b8;
-    font-size: 0.65rem;
-    line-height: 1.5;
+.solar-chart-column .solar-chart-card {
+    padding: 0.45rem;
+}
+
+.solar-chart-column .solar-chart-zoom-button {
+    min-height: 32px;
+    gap: 0.25rem;
+    padding: 0.3rem 0.45rem;
+    font-size: 0.62rem;
 }
 
 .solar-chart-legend {
