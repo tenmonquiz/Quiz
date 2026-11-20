@@ -4,7 +4,7 @@
     "answer": "M1",
     "exp": "平安時代に超新星爆発が起きて、その様子が明月記に記録されました。また、イギリスのロス卿が観察しフィラメント構造が、かに足のように見えたので「かに星雲」と名付けられました。",
     "image": "data/画像クイズ用画像置き場/M1NGC1952.jpg",
-    "imageAlt": "M1NGC1952",
+    "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
@@ -21,7 +21,7 @@
     "answer": "M57",
     "exp": "リング状に見えることで有名で環状星雲、リング星雲、ドーナツ星雲などとも呼ばれます。小口径の望遠鏡でも観測できます。",
     "image": "data/画像クイズ用画像置き場/M57.jpg",
-    "imageAlt": "M57",
+    "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
@@ -36,7 +36,7 @@
     "answer": "M77",
     "exp": "くじら座の渦巻銀河で、有名なセイファート銀河(活動性の高い銀河)の一つです。M(メシエ)天体で最大級の約17万光年という直径を持ちます。",
     "image": "data/画像クイズ用画像置き場/M77.jpg",
-    "imageAlt": "M77",
+    "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
@@ -48,7 +48,7 @@
     "answer": "土星",
     "exp": "皆さんご存知の通り太陽系の惑星です！！土星自体は肉眼でも見れますが、周りにある環が特徴的で、環が確実に見える望遠鏡の口径は4~5cm以上とされています。",
     "image": "data/画像クイズ用画像置き場/土星.jpg",
-    "imageAlt": "土星",
+    "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
@@ -60,7 +60,7 @@
     "answer": "海王星",
     "exp": "太陽系の惑星で、一番外側を公転しています。天王星上の1年は地球で言うところの165年に相当します。この画像はボイジャー2号によって撮影されました。",
     "image": "data/画像クイズ用画像置き場/海王星.jpg",
-    "imageAlt": "海王星",
+    "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "https://images.nasa.gov/",
     "acceptedAnswers": [
@@ -72,7 +72,7 @@
     "answer": "すばる",
     "exp": "おうし座にある、青白い若い星が集まる散開星団です！",
     "image": "data/画像クイズ用画像置き場/sbr.jpg",
-    "imageAlt": "すばる",
+    "imageAlt": "",
     "imageCredit": "Credit: NAOJ",
     "imageSource": "https://www.nao.ac.jp/gallery/messiers.html",
     "acceptedAnswers": [
@@ -86,7 +86,7 @@
     "answer": "馬頭星雲",
     "exp": "オリオン座の方向にある暗黒星雲です！後方にある赤い散光星雲を背景に、多量のチリやガスを遮って、馬の頭のようなシルエットを作っています！",
     "image": "data/画像クイズ用画像置き場/btu.jpg",
-    "imageAlt": "馬頭星雲",
+    "imageAlt": "",
     "imageCredit": "Credit: NAOJ",
     "imageSource": "https://www.nao.ac.jp/gallery/nebulae.html",
     "acceptedAnswers": [
@@ -98,7 +98,7 @@
     "answer": "オリオン大星雲",
     "exp": "オリオン座の三つ星の南にある小三つ星の中央付近に位置する、明るく巨大な散光星雲です！",
     "image": "data/画像クイズ用画像置き場/M42.jpg",
-    "imageAlt": "オリオン大星雲",
+    "imageAlt": "",
     "imageCredit": "Credit: NAOJ",
     "imageSource": "https://www.nao.ac.jp/gallery/messiers.html",
     "acceptedAnswers": [
@@ -110,7 +110,7 @@
     "answer": "さそり座",
     "exp": "代表的な夏の星座であり、心臓付近に赤く輝く1等星「アンタレス」が印象的です！",
     "image": "data/画像クイズ用画像置き場/ssrz.jpg",
-    "imageAlt": "さそり座",
+    "imageAlt": "",
     "imageCredit": "",
     "imageSource": "https://www.civillink.net/esozai/download/2960.html",
     "acceptedAnswers": [
@@ -123,7 +123,7 @@
     "answer": "カシオペヤ座",
     "exp": "北天の空に見られる、５つの明るい星が描く「W」の形が目印です！",
     "image": "data/画像クイズ用画像置き場/ksopy.jpg",
-    "imageAlt": "カシオペヤ座",
+    "imageAlt": "",
     "imageCredit": "",
     "imageSource": "https://www.civillink.net/esozai/download/2458.html",
     "acceptedAnswers": [
@@ -136,7 +136,7 @@
     "answer": "こと座",
     "exp": "夏を代表する星座で、１等星のベガは七夕の織姫星としても知られています！",
     "image": "data/画像クイズ用画像置き場/ktz.jpg",
-    "imageAlt": "こと座",
+    "imageAlt": "",
     "imageCredit": "",
     "imageSource": "https://www.civillink.net/esozai/download/2944.html",
     "acceptedAnswers": [
@@ -161,7 +161,7 @@
     "question": "この画像は何でしょう?",
     "answer": "皆既日食",
     "exp": "2024年4月8日月曜日、オハイオ州クリーブランドのNASAグレン研究センターで観測された皆既日食です。周りにあるもやもやしているのがコロナです。",
-    "image": "data/画像クイズ用画像置き場/皆既日食.jpgカイキニッショｋウニッショｋウ",
+    "image": "data/画像クイズ用画像置き場/kknsk.jpg",
     "imageAlt": "",
     "imageCredit": "Credit:NASA",
     "imageSource": "NASA Image and Video Library"
