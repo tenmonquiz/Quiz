@@ -187,7 +187,7 @@ function initEventListeners() {
         showScreen(dom.quizTypeScreen);
     });
     dom.backToModeFromQuizTypeBtn.addEventListener('click', () => {
-        showScreen(dom.modeScreen);
+        returnToHome();
     });
     dom.restartBtn.addEventListener('click', () => {
         if (currentMode === 'kanji') startKanjiGame();
@@ -202,6 +202,7 @@ function initEventListeners() {
 function selectMode(mode) {
     if (mode === 'quiz') {
         closeRankingDisplay();
+        dom.homeButton.classList.remove('hidden');
         showScreen(dom.quizTypeScreen);
         return;
     }
@@ -266,6 +267,7 @@ function selectMode(mode) {
         dom.selectedModeDisplay.innerHTML = '<i class="fa-solid fa-mug-hot"></i> じっくりモード';
         dom.selectedModeDisplay.className = "text-sm font-bold text-cyan-400 mb-4";
     }
+    dom.homeButton.classList.remove('hidden');
     showScreen(dom.difficultyScreen);
 }
 
